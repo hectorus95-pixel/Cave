@@ -313,87 +313,6 @@ header{
   mix-blend-mode:normal!important;
 }
 
-/* V5.4.11 — couleur d'âge unique : le bouton millésime du haut est la référence.
-   Dans les casiers et les résultats, la zone d'âge fait partie du fond du bouton
-   afin d'éviter les différences de rendu entre un bouton et un <span>. */
-
-/* Couleurs du vin sous forme de variables */
-.slot.red,.result-item.red{--wine-bg:#741a35}
-.slot.white,.result-item.white{--wine-bg:#b69032}
-.slot.rose,.result-item.rose{--wine-bg:#b95b72}
-.slot.spark,.result-item.spark{--wine-bg:#8b762c}
-
-/* Casiers : 28 px d'âge en haut, puis couleur du vin */
-.slot:not(.empty){
-  background:
-    linear-gradient(
-      to bottom,
-      var(--age-color,#777777) 0,
-      var(--age-color,#777777) 28px,
-      var(--wine-bg,#741a35) 28px,
-      var(--wine-bg,#741a35) 100%
-    ) !important;
-}
-.slot.empty{
-  background:#373434 !important;
-}
-.slot .vintage-strip{
-  background:transparent !important;
-  background-color:transparent !important;
-  background-image:none !important;
-}
-
-/* Résultats : année compacte à gauche, contenu à droite */
-.result-item{
-  --wine-bg:#242020;
-  display:grid;
-  grid-template-columns:72px minmax(0,1fr);
-  align-items:stretch;
-  min-height:62px;
-  padding:0 !important;
-  overflow:hidden;
-  background:
-    linear-gradient(
-      to right,
-      var(--age-color,#777777) 0,
-      var(--age-color,#777777) 72px,
-      var(--wine-bg,#242020) 72px,
-      var(--wine-bg,#242020) 100%
-    ) !important;
-}
-.result-year-zone{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 5px;
-  font-size:12px;
-  font-weight:900;
-  line-height:1;
-  color:#fff !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-}
-.result-main{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  min-width:0;
-  padding:9px 10px;
-  text-align:left;
-}
-.result-main b{
-  display:block;
-  font-size:12px;
-  line-height:1.2;
-}
-.result-main small{
-  display:block;
-  margin-top:4px;
-  font-size:10px;
-  line-height:1.25;
-  opacity:.78;
-}
-
-
 /* V5.4.12 — un seul affichage des casiers, directement cliquable dans l'en-tête */
 .top-casier-tabs{
   margin:10px 0 0;
@@ -417,6 +336,141 @@ header{
   margin-top:3px;
   font-size:10px;
   opacity:.72;
+}
+
+
+/* V5.4.13 — COULEURS UNIFIEES
+   Une même valeur est utilisée sans dégradé, sans transparence et sans filtre. */
+
+/* ---------- Couleur du vin : mêmes valeurs PARTOUT ---------- */
+.slot.red,
+.result-item.red .result-main{
+  background:#741a35 !important;
+  background-color:#741a35 !important;
+  color:#fff !important;
+}
+.slot.white,
+.result-item.white .result-main{
+  background:#b69032 !important;
+  background-color:#b69032 !important;
+  color:#171108 !important;
+}
+.slot.rose,
+.result-item.rose .result-main{
+  background:#b95b72 !important;
+  background-color:#b95b72 !important;
+  color:#fff !important;
+}
+.slot.spark,
+.result-item.spark .result-main{
+  background:#8b762c !important;
+  background-color:#8b762c !important;
+  color:#fff !important;
+}
+
+.slot.red,.slot.white,.slot.rose,.slot.spark,
+.result-item .result-main{
+  background-image:none !important;
+  opacity:1 !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+}
+
+/* ---------- Couleur du millésime : même --age-color PARTOUT ---------- */
+.year-chip,
+.slot .vintage-strip,
+.result-year-zone{
+  background:var(--age-color,#777777) !important;
+  background-color:var(--age-color,#777777) !important;
+  background-image:none !important;
+  opacity:1 !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  box-shadow:none !important;
+}
+
+/* Le bandeau du casier reste une vraie zone indépendante */
+.slot:not(.empty){
+  padding-top:28px;
+}
+.slot .vintage-strip{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  width:100%;
+  height:28px;
+  margin:0;
+  padding:6px 4px 5px;
+  border:0;
+  border-radius:0;
+  color:#fff !important;
+  text-align:center;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.05;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+}
+.slot.empty{
+  background:#373434 !important;
+  background-color:#373434 !important;
+  padding-top:7px;
+}
+
+/* Résultats : année à gauche, couleur du vin à droite.
+   Les deux zones sont séparées, donc aucune couleur ne se mélange. */
+.result-item{
+  display:grid !important;
+  grid-template-columns:72px minmax(0,1fr) !important;
+  align-items:stretch;
+  min-height:62px;
+  width:100%;
+  padding:0 !important;
+  overflow:hidden;
+  border:1px solid #403939;
+  border-radius:9px;
+  background:transparent !important;
+  background-color:transparent !important;
+  background-image:none !important;
+  color:#fff;
+  text-align:left;
+}
+.result-year-zone{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 5px;
+  color:#fff !important;
+  font-size:12px;
+  font-weight:900;
+  line-height:1;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+}
+.result-main{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+  padding:9px 10px;
+  text-align:left;
+}
+.result-main b{
+  display:block;
+  font-size:12px;
+  line-height:1.2;
+}
+.result-main small{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  line-height:1.25;
+  opacity:.78;
+}
+
+/* Boutons millésimes du haut : aucun effet qui puisse modifier la couleur */
+.year-chip{
+  color:#fff !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.30) !important;
 }
 
 </style>
@@ -547,6 +601,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.12"></script>
+<script src="app.js?v=5.4.13"></script>
 </body>
 </html>

@@ -163,7 +163,7 @@ function renderStats(){
   $('#yearStats').innerHTML=years.map(([y,n])=>{
     const color=y==='Sans année' ? '#777777' : couleurPourAge(Number(y));
     return `<button type="button" class="year-chip" data-year="${esc(y)}"
-      style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;">
+      style="--age-color:${color};border-color:${color} !important;">
       <b>${esc(y)}</b><small>${n} bt</small>
     </button>`;
   }).join('');
