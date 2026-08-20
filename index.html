@@ -498,6 +498,47 @@ dialog,
   color:#241b08 !important;
 }
 
+
+/* V5.4.22 — cases plus hautes pour afficher nom + domaine + jauge */
+.slot{
+  min-height:118px !important;
+  height:118px !important;
+  padding-bottom:25px !important;
+}
+
+.slot .pos{
+  margin-top:4px;
+}
+
+.slot .name{
+  display:block;
+  margin-top:3px;
+  line-height:1.08;
+}
+
+.slot .domain{
+  display:block;
+  margin-top:2px;
+  font-size:8px;
+  line-height:1.05;
+  max-height:17px;
+  overflow:hidden;
+  white-space:normal;
+}
+
+.slot .maturity-gauge{
+  position:absolute !important;
+  left:6px !important;
+  right:6px !important;
+  bottom:7px !important;
+  width:auto !important;
+  margin:0 !important;
+}
+
+.slot .maturity-gauge .maturity-cursor{
+  z-index:3;
+}
+
 </style>
 </head>
 <body>
@@ -626,6 +667,6 @@ dialog,
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.21"></script>
+<script src="app.js?v=5.4.22"></script>
 </body>
 </html>
