@@ -1,41 +1,394 @@
 
-const SEED_INV=[{"casier": 1, "ligne": 1, "position": 1, "emplacement": "C1-L1-P1", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 2, "emplacement": "C1-L1-P2", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 3, "emplacement": "C1-L1-P3", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 4, "emplacement": "C1-L1-P4", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 5, "emplacement": "C1-L1-P5", "refId": null}, {"casier": 1, "ligne": 2, "position": 1, "emplacement": "C1-L2-P1", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 2, "emplacement": "C1-L2-P2", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 3, "emplacement": "C1-L2-P3", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 4, "emplacement": "C1-L2-P4", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 5, "emplacement": "C1-L2-P5", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 1, "emplacement": "C1-L3-P1", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 2, "emplacement": "C1-L3-P2", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 3, "emplacement": "C1-L3-P3", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 4, "emplacement": "C1-L3-P4", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 5, "emplacement": "C1-L3-P5", "refId": "r2"}, {"casier": 1, "ligne": 4, "position": 1, "emplacement": "C1-L4-P1", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 2, "emplacement": "C1-L4-P2", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 3, "emplacement": "C1-L4-P3", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 4, "emplacement": "C1-L4-P4", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 5, "emplacement": "C1-L4-P5", "refId": "r3"}, {"casier": 1, "ligne": 5, "position": 1, "emplacement": "C1-L5-P1", "refId": "r4"}, {"casier": 1, "ligne": 5, "position": 2, "emplacement": "C1-L5-P2", "refId": "r5"}, {"casier": 1, "ligne": 5, "position": 3, "emplacement": "C1-L5-P3", "refId": null}, {"casier": 1, "ligne": 5, "position": 4, "emplacement": "C1-L5-P4", "refId": "r6"}, {"casier": 1, "ligne": 5, "position": 5, "emplacement": "C1-L5-P5", "refId": "r3"}, {"casier": 1, "ligne": 6, "position": 1, "emplacement": "C1-L6-P1", "refId": "r7"}, {"casier": 1, "ligne": 6, "position": 2, "emplacement": "C1-L6-P2", "refId": null}, {"casier": 1, "ligne": 6, "position": 3, "emplacement": "C1-L6-P3", "refId": "r8"}, {"casier": 1, "ligne": 6, "position": 4, "emplacement": "C1-L6-P4", "refId": "r8"}, {"casier": 1, "ligne": 6, "position": 5, "emplacement": "C1-L6-P5", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 1, "emplacement": "C1-L7-P1", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 2, "emplacement": "C1-L7-P2", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 3, "emplacement": "C1-L7-P3", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 4, "emplacement": "C1-L7-P4", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 5, "emplacement": "C1-L7-P5", "refId": "r8"}, {"casier": 1, "ligne": 8, "position": 1, "emplacement": "C1-L8-P1", "refId": "r9"}, {"casier": 1, "ligne": 8, "position": 2, "emplacement": "C1-L8-P2", "refId": "r9"}, {"casier": 1, "ligne": 8, "position": 3, "emplacement": "C1-L8-P3", "refId": "r10"}, {"casier": 1, "ligne": 8, "position": 4, "emplacement": "C1-L8-P4", "refId": "r10"}, {"casier": 1, "ligne": 8, "position": 5, "emplacement": "C1-L8-P5", "refId": "r10"}, {"casier": 1, "ligne": 9, "position": 1, "emplacement": "C1-L9-P1", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 2, "emplacement": "C1-L9-P2", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 3, "emplacement": "C1-L9-P3", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 4, "emplacement": "C1-L9-P4", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 5, "emplacement": "C1-L9-P5", "refId": "r9"}, {"casier": 1, "ligne": 10, "position": 1, "emplacement": "C1-L10-P1", "refId": "r11"}, {"casier": 1, "ligne": 10, "position": 2, "emplacement": "C1-L10-P2", "refId": "r11"}, {"casier": 1, "ligne": 10, "position": 3, "emplacement": "C1-L10-P3", "refId": "r11"}, {"casier": 1, "ligne": 10, "position": 4, "emplacement": "C1-L10-P4", "refId": "r12"}, {"casier": 1, "ligne": 10, "position": 5, "emplacement": "C1-L10-P5", "refId": "r13"}, {"casier": 1, "ligne": 11, "position": 1, "emplacement": "C1-L11-P1", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 2, "emplacement": "C1-L11-P2", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 3, "emplacement": "C1-L11-P3", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 4, "emplacement": "C1-L11-P4", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 5, "emplacement": "C1-L11-P5", "refId": null}, {"casier": 1, "ligne": 12, "position": 1, "emplacement": "C1-L12-P1", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 2, "emplacement": "C1-L12-P2", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 3, "emplacement": "C1-L12-P3", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 4, "emplacement": "C1-L12-P4", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 5, "emplacement": "C1-L12-P5", "refId": "r15"}, {"casier": 1, "ligne": 13, "position": 1, "emplacement": "C1-L13-P1", "refId": "r15"}, {"casier": 1, "ligne": 13, "position": 2, "emplacement": "C1-L13-P2", "refId": null}, {"casier": 1, "ligne": 13, "position": 3, "emplacement": "C1-L13-P3", "refId": null}, {"casier": 1, "ligne": 13, "position": 4, "emplacement": "C1-L13-P4", "refId": null}, {"casier": 1, "ligne": 13, "position": 5, "emplacement": "C1-L13-P5", "refId": null}, {"casier": 1, "ligne": 14, "position": 1, "emplacement": "C1-L14-P1", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 2, "emplacement": "C1-L14-P2", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 3, "emplacement": "C1-L14-P3", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 4, "emplacement": "C1-L14-P4", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 5, "emplacement": "C1-L14-P5", "refId": "r16"}, {"casier": 1, "ligne": 15, "position": 1, "emplacement": "C1-L15-P1", "refId": "r16"}, {"casier": 1, "ligne": 15, "position": 2, "emplacement": "C1-L15-P2", "refId": null}, {"casier": 1, "ligne": 15, "position": 3, "emplacement": "C1-L15-P3", "refId": null}, {"casier": 1, "ligne": 15, "position": 4, "emplacement": "C1-L15-P4", "refId": null}, {"casier": 1, "ligne": 15, "position": 5, "emplacement": "C1-L15-P5", "refId": null}, {"casier": 2, "ligne": 1, "position": 1, "emplacement": "C2-L1-P1", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 2, "emplacement": "C2-L1-P2", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 3, "emplacement": "C2-L1-P3", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 4, "emplacement": "C2-L1-P4", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 5, "emplacement": "C2-L1-P5", "refId": "r17"}, {"casier": 2, "ligne": 2, "position": 1, "emplacement": "C2-L2-P1", "refId": "r17"}, {"casier": 2, "ligne": 2, "position": 2, "emplacement": "C2-L2-P2", "refId": null}, {"casier": 2, "ligne": 2, "position": 3, "emplacement": "C2-L2-P3", "refId": "r18"}, {"casier": 2, "ligne": 2, "position": 4, "emplacement": "C2-L2-P4", "refId": null}, {"casier": 2, "ligne": 2, "position": 5, "emplacement": "C2-L2-P5", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 1, "emplacement": "C2-L3-P1", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 2, "emplacement": "C2-L3-P2", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 3, "emplacement": "C2-L3-P3", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 4, "emplacement": "C2-L3-P4", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 5, "emplacement": "C2-L3-P5", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 1, "emplacement": "C2-L4-P1", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 2, "emplacement": "C2-L4-P2", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 3, "emplacement": "C2-L4-P3", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 4, "emplacement": "C2-L4-P4", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 5, "emplacement": "C2-L4-P5", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 1, "emplacement": "C2-L5-P1", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 2, "emplacement": "C2-L5-P2", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 3, "emplacement": "C2-L5-P3", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 4, "emplacement": "C2-L5-P4", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 5, "emplacement": "C2-L5-P5", "refId": "r19"}, {"casier": 2, "ligne": 6, "position": 1, "emplacement": "C2-L6-P1", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 2, "emplacement": "C2-L6-P2", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 3, "emplacement": "C2-L6-P3", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 4, "emplacement": "C2-L6-P4", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 5, "emplacement": "C2-L6-P5", "refId": "r20"}, {"casier": 2, "ligne": 7, "position": 1, "emplacement": "C2-L7-P1", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 2, "emplacement": "C2-L7-P2", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 3, "emplacement": "C2-L7-P3", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 4, "emplacement": "C2-L7-P4", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 5, "emplacement": "C2-L7-P5", "refId": "r21"}, {"casier": 2, "ligne": 8, "position": 1, "emplacement": "C2-L8-P1", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 2, "emplacement": "C2-L8-P2", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 3, "emplacement": "C2-L8-P3", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 4, "emplacement": "C2-L8-P4", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 5, "emplacement": "C2-L8-P5", "refId": "r22"}, {"casier": 2, "ligne": 9, "position": 1, "emplacement": "C2-L9-P1", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 2, "emplacement": "C2-L9-P2", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 3, "emplacement": "C2-L9-P3", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 4, "emplacement": "C2-L9-P4", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 5, "emplacement": "C2-L9-P5", "refId": "r23"}, {"casier": 2, "ligne": 10, "position": 1, "emplacement": "C2-L10-P1", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 2, "emplacement": "C2-L10-P2", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 3, "emplacement": "C2-L10-P3", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 4, "emplacement": "C2-L10-P4", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 5, "emplacement": "C2-L10-P5", "refId": "r24"}, {"casier": 2, "ligne": 11, "position": 1, "emplacement": "C2-L11-P1", "refId": "r25"}, {"casier": 2, "ligne": 11, "position": 2, "emplacement": "C2-L11-P2", "refId": "r26"}, {"casier": 2, "ligne": 11, "position": 3, "emplacement": "C2-L11-P3", "refId": "r26"}, {"casier": 2, "ligne": 11, "position": 4, "emplacement": "C2-L11-P4", "refId": "r26"}, {"casier": 2, "ligne": 11, "position": 5, "emplacement": "C2-L11-P5", "refId": "r26"}, {"casier": 2, "ligne": 12, "position": 1, "emplacement": "C2-L12-P1", "refId": "r25"}, {"casier": 2, "ligne": 12, "position": 2, "emplacement": "C2-L12-P2", "refId": "r25"}, {"casier": 2, "ligne": 12, "position": 3, "emplacement": "C2-L12-P3", "refId": "r27"}, {"casier": 2, "ligne": 12, "position": 4, "emplacement": "C2-L12-P4", "refId": "r27"}, {"casier": 2, "ligne": 12, "position": 5, "emplacement": "C2-L12-P5", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 1, "emplacement": "C2-L13-P1", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 2, "emplacement": "C2-L13-P2", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 3, "emplacement": "C2-L13-P3", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 4, "emplacement": "C2-L13-P4", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 5, "emplacement": "C2-L13-P5", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 1, "emplacement": "C2-L14-P1", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 2, "emplacement": "C2-L14-P2", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 3, "emplacement": "C2-L14-P3", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 4, "emplacement": "C2-L14-P4", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 5, "emplacement": "C2-L14-P5", "refId": "r27"}, {"casier": 2, "ligne": 15, "position": 1, "emplacement": "C2-L15-P1", "refId": "r28"}, {"casier": 2, "ligne": 15, "position": 2, "emplacement": "C2-L15-P2", "refId": "r29"}, {"casier": 2, "ligne": 15, "position": 3, "emplacement": "C2-L15-P3", "refId": null}, {"casier": 2, "ligne": 15, "position": 4, "emplacement": "C2-L15-P4", "refId": "r30"}, {"casier": 2, "ligne": 15, "position": 5, "emplacement": "C2-L15-P5", "refId": "r30"}, {"casier": 3, "ligne": 1, "position": 1, "emplacement": "C3-L1-P1", "refId": "r31"}, {"casier": 3, "ligne": 1, "position": 2, "emplacement": "C3-L1-P2", "refId": "r31"}, {"casier": 3, "ligne": 1, "position": 3, "emplacement": "C3-L1-P3", "refId": null}, {"casier": 3, "ligne": 1, "position": 4, "emplacement": "C3-L1-P4", "refId": null}, {"casier": 3, "ligne": 1, "position": 5, "emplacement": "C3-L1-P5", "refId": null}, {"casier": 3, "ligne": 2, "position": 1, "emplacement": "C3-L2-P1", "refId": null}, {"casier": 3, "ligne": 2, "position": 2, "emplacement": "C3-L2-P2", "refId": null}, {"casier": 3, "ligne": 2, "position": 3, "emplacement": "C3-L2-P3", "refId": null}, {"casier": 3, "ligne": 2, "position": 4, "emplacement": "C3-L2-P4", "refId": null}, {"casier": 3, "ligne": 2, "position": 5, "emplacement": "C3-L2-P5", "refId": null}, {"casier": 3, "ligne": 3, "position": 1, "emplacement": "C3-L3-P1", "refId": null}, {"casier": 3, "ligne": 3, "position": 2, "emplacement": "C3-L3-P2", "refId": null}, {"casier": 3, "ligne": 3, "position": 3, "emplacement": "C3-L3-P3", "refId": null}, {"casier": 3, "ligne": 3, "position": 4, "emplacement": "C3-L3-P4", "refId": null}, {"casier": 3, "ligne": 3, "position": 5, "emplacement": "C3-L3-P5", "refId": null}, {"casier": 3, "ligne": 4, "position": 1, "emplacement": "C3-L4-P1", "refId": "r32"}, {"casier": 3, "ligne": 4, "position": 2, "emplacement": "C3-L4-P2", "refId": null}, {"casier": 3, "ligne": 4, "position": 3, "emplacement": "C3-L4-P3", "refId": null}, {"casier": 3, "ligne": 4, "position": 4, "emplacement": "C3-L4-P4", "refId": null}, {"casier": 3, "ligne": 4, "position": 5, "emplacement": "C3-L4-P5", "refId": null}, {"casier": 3, "ligne": 5, "position": 1, "emplacement": "C3-L5-P1", "refId": null}, {"casier": 3, "ligne": 5, "position": 2, "emplacement": "C3-L5-P2", "refId": null}, {"casier": 3, "ligne": 5, "position": 3, "emplacement": "C3-L5-P3", "refId": null}, {"casier": 3, "ligne": 5, "position": 4, "emplacement": "C3-L5-P4", "refId": null}, {"casier": 3, "ligne": 5, "position": 5, "emplacement": "C3-L5-P5", "refId": null}, {"casier": 3, "ligne": 6, "position": 1, "emplacement": "C3-L6-P1", "refId": null}, {"casier": 3, "ligne": 6, "position": 2, "emplacement": "C3-L6-P2", "refId": null}, {"casier": 3, "ligne": 6, "position": 3, "emplacement": "C3-L6-P3", "refId": null}, {"casier": 3, "ligne": 6, "position": 4, "emplacement": "C3-L6-P4", "refId": null}, {"casier": 3, "ligne": 6, "position": 5, "emplacement": "C3-L6-P5", "refId": null}, {"casier": 3, "ligne": 7, "position": 1, "emplacement": "C3-L7-P1", "refId": "r33"}, {"casier": 3, "ligne": 7, "position": 2, "emplacement": "C3-L7-P2", "refId": "r34"}, {"casier": 3, "ligne": 7, "position": 3, "emplacement": "C3-L7-P3", "refId": null}, {"casier": 3, "ligne": 7, "position": 4, "emplacement": "C3-L7-P4", "refId": null}, {"casier": 3, "ligne": 7, "position": 5, "emplacement": "C3-L7-P5", "refId": null}, {"casier": 3, "ligne": 8, "position": 1, "emplacement": "C3-L8-P1", "refId": null}, {"casier": 3, "ligne": 8, "position": 2, "emplacement": "C3-L8-P2", "refId": null}, {"casier": 3, "ligne": 8, "position": 3, "emplacement": "C3-L8-P3", "refId": null}, {"casier": 3, "ligne": 8, "position": 4, "emplacement": "C3-L8-P4", "refId": null}, {"casier": 3, "ligne": 8, "position": 5, "emplacement": "C3-L8-P5", "refId": null}, {"casier": 3, "ligne": 9, "position": 1, "emplacement": "C3-L9-P1", "refId": null}, {"casier": 3, "ligne": 9, "position": 2, "emplacement": "C3-L9-P2", "refId": null}, {"casier": 3, "ligne": 9, "position": 3, "emplacement": "C3-L9-P3", "refId": null}, {"casier": 3, "ligne": 9, "position": 4, "emplacement": "C3-L9-P4", "refId": null}, {"casier": 3, "ligne": 9, "position": 5, "emplacement": "C3-L9-P5", "refId": null}, {"casier": 3, "ligne": 10, "position": 1, "emplacement": "C3-L10-P1", "refId": "r35"}, {"casier": 3, "ligne": 10, "position": 2, "emplacement": "C3-L10-P2", "refId": null}, {"casier": 3, "ligne": 10, "position": 3, "emplacement": "C3-L10-P3", "refId": null}, {"casier": 3, "ligne": 10, "position": 4, "emplacement": "C3-L10-P4", "refId": null}, {"casier": 3, "ligne": 10, "position": 5, "emplacement": "C3-L10-P5", "refId": "r36"}, {"casier": 3, "ligne": 11, "position": 1, "emplacement": "C3-L11-P1", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 2, "emplacement": "C3-L11-P2", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 3, "emplacement": "C3-L11-P3", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 4, "emplacement": "C3-L11-P4", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 5, "emplacement": "C3-L11-P5", "refId": "r37"}, {"casier": 3, "ligne": 12, "position": 1, "emplacement": "C3-L12-P1", "refId": "r37"}, {"casier": 3, "ligne": 12, "position": 2, "emplacement": "C3-L12-P2", "refId": null}, {"casier": 3, "ligne": 12, "position": 3, "emplacement": "C3-L12-P3", "refId": null}, {"casier": 3, "ligne": 12, "position": 4, "emplacement": "C3-L12-P4", "refId": null}, {"casier": 3, "ligne": 12, "position": 5, "emplacement": "C3-L12-P5", "refId": null}, {"casier": 3, "ligne": 13, "position": 1, "emplacement": "C3-L13-P1", "refId": null}, {"casier": 3, "ligne": 13, "position": 2, "emplacement": "C3-L13-P2", "refId": null}, {"casier": 3, "ligne": 13, "position": 3, "emplacement": "C3-L13-P3", "refId": null}, {"casier": 3, "ligne": 13, "position": 4, "emplacement": "C3-L13-P4", "refId": null}, {"casier": 3, "ligne": 13, "position": 5, "emplacement": "C3-L13-P5", "refId": null}, {"casier": 3, "ligne": 14, "position": 1, "emplacement": "C3-L14-P1", "refId": null}, {"casier": 3, "ligne": 14, "position": 2, "emplacement": "C3-L14-P2", "refId": null}, {"casier": 3, "ligne": 14, "position": 3, "emplacement": "C3-L14-P3", "refId": null}, {"casier": 3, "ligne": 14, "position": 4, "emplacement": "C3-L14-P4", "refId": "r38"}, {"casier": 3, "ligne": 14, "position": 5, "emplacement": "C3-L14-P5", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 1, "emplacement": "C3-L15-P1", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 2, "emplacement": "C3-L15-P2", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 3, "emplacement": "C3-L15-P3", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 4, "emplacement": "C3-L15-P4", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 5, "emplacement": "C3-L15-P5", "refId": "r38"}], SEED_REFS=[{"id": "r1", "vin": "Silice rouge", "domaine": "Domaine des Ardoisières", "millesime": 2023, "couleur": "Rouge", "format": "Magnum 1,5 L", "prix": 38.0}, {"id": "r2", "vin": "Fleurie", "domaine": "Domaine des Marrans", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 13.0}, {"id": "r3", "vin": "Clos du Puy", "domaine": "Domaine des Pothiers", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 20.0}, {"id": "r4", "vin": "Les Hautes Brassières", "domaine": "Molozay", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 17.0}, {"id": "r5", "vin": "Mon P'tit Pithon", "domaine": "", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 11.0}, {"id": "r6", "vin": "Faustine", "domaine": "", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 30.0}, {"id": "r7", "vin": "Tandem – Syrah du Maroc", "domaine": "Alain Graillot & Thalvin", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 14.0}, {"id": "r8", "vin": "La Chapelle", "domaine": "Domaine des Pothiers", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 17.0}, {"id": "r9", "vin": "Les Clos", "domaine": "Molozay", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 20.0}, {"id": "r10", "vin": "Marius", "domaine": "La Dourbie", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 12.0}, {"id": "r11", "vin": "Morgon Côte du Py", "domaine": "Jean Foillard", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 28.0}, {"id": "r12", "vin": "Silice", "domaine": "Les Croisille", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 14.0}, {"id": "r13", "vin": "Les Rouillères", "domaine": "Frédéric Mabileau", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 17.0}, {"id": "r14", "vin": "Fleurie Corcelette", "domaine": "Domaine des Marrans", "millesime": 2022, "couleur": "Rouge", "format": "75 cl", "prix": 18.0}, {"id": "r15", "vin": "Cuvée Simon", "domaine": "Clos Marie", "millesime": 2021, "couleur": "Rouge", "format": "75 cl", "prix": 21.0}, {"id": "r16", "vin": "Tot çò que cal", "domaine": "Plaisance Penavayre", "millesime": 2019, "couleur": "Rouge", "format": "75 cl", "prix": 14.4}, {"id": "r17", "vin": "Faustine", "domaine": "", "millesime": 2025, "couleur": "Rouge", "format": "75 cl", "prix": 25.0}, {"id": "r18", "vin": "Colorcombo", "domaine": "Domaine Balansa", "millesime": 2025, "couleur": "Rouge", "format": "75 cl", "prix": 15.0}, {"id": "r19", "vin": "Crozes-Hermitage", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 17.0}, {"id": "r20", "vin": "Argile rouge", "domaine": "Domaine des Ardoisières", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 25.0}, {"id": "r21", "vin": "Oudan", "domaine": "Domaine Sérol", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 16.0}, {"id": "r22", "vin": "L’Intégrale", "domaine": "Domaine des Pothiers", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 22.0}, {"id": "r23", "vin": "Silice rouge", "domaine": "Domaine des Ardoisières", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 15.0}, {"id": "r24", "vin": "Éclat de Granit", "domaine": "Domaine Sérol", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 14.0}, {"id": "r25", "vin": "Collines Rhodaniennes", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 11.0}, {"id": "r26", "vin": "Abysses", "domaine": "Coume del Mas", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 35.0}, {"id": "r27", "vin": "Cuvée L", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 14.0}, {"id": "r28", "vin": "Bourgueil", "domaine": "Domaine des Rainettes", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 10.0}, {"id": "r29", "vin": "La Vinhota", "domaine": "Domaine Balansa", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 15.0}, {"id": "r30", "vin": "Faustine", "domaine": "", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 30.0}, {"id": "r31", "vin": "Perdrizière", "domaine": "Domaine Sérol", "millesime": 2021, "couleur": "Rouge", "format": "Magnum 1,5 L", "prix": 42.0}, {"id": "r32", "vin": "Limoncello", "domaine": "Briottet", "millesime": "", "couleur": "Liqueur", "format": "75 cl", "prix": 20.0}, {"id": "r33", "vin": "Non identifiée 1", "domaine": "", "millesime": "", "couleur": "Inconnue", "format": "75 cl", "prix": ""}, {"id": "r34", "vin": "Non identifiée 2", "domaine": "", "millesime": "", "couleur": "Inconnue", "format": "75 cl", "prix": ""}, {"id": "r35", "vin": "Cuvée L", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Blanc", "format": "75 cl", "prix": 14.0}, {"id": "r36", "vin": "Maddalena", "domaine": "Molozay", "millesime": 2023, "couleur": "Blanc", "format": "75 cl", "prix": 17.0}, {"id": "r37", "vin": "Argile blanc", "domaine": "Domaine des Ardoisières", "millesime": 2024, "couleur": "Blanc", "format": "75 cl", "prix": 21.0}, {"id": "r38", "vin": "Les Deux Albion", "domaine": "Domaine de Saint Cosme", "millesime": 2022, "couleur": "Rouge", "format": "75 cl", "prix": 14.0}];
+const SEED_INV=[{"casier": 1, "ligne": 1, "position": 1, "emplacement": "C1-L1-P1", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 2, "emplacement": "C1-L1-P2", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 3, "emplacement": "C1-L1-P3", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 4, "emplacement": "C1-L1-P4", "refId": "r1"}, {"casier": 1, "ligne": 1, "position": 5, "emplacement": "C1-L1-P5", "refId": null}, {"casier": 1, "ligne": 2, "position": 1, "emplacement": "C1-L2-P1", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 2, "emplacement": "C1-L2-P2", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 3, "emplacement": "C1-L2-P3", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 4, "emplacement": "C1-L2-P4", "refId": "r2"}, {"casier": 1, "ligne": 2, "position": 5, "emplacement": "C1-L2-P5", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 1, "emplacement": "C1-L3-P1", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 2, "emplacement": "C1-L3-P2", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 3, "emplacement": "C1-L3-P3", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 4, "emplacement": "C1-L3-P4", "refId": "r2"}, {"casier": 1, "ligne": 3, "position": 5, "emplacement": "C1-L3-P5", "refId": "r2"}, {"casier": 1, "ligne": 4, "position": 1, "emplacement": "C1-L4-P1", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 2, "emplacement": "C1-L4-P2", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 3, "emplacement": "C1-L4-P3", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 4, "emplacement": "C1-L4-P4", "refId": "r3"}, {"casier": 1, "ligne": 4, "position": 5, "emplacement": "C1-L4-P5", "refId": "r3"}, {"casier": 1, "ligne": 5, "position": 1, "emplacement": "C1-L5-P1", "refId": "r4"}, {"casier": 1, "ligne": 5, "position": 2, "emplacement": "C1-L5-P2", "refId": "r5"}, {"casier": 1, "ligne": 5, "position": 3, "emplacement": "C1-L5-P3", "refId": null}, {"casier": 1, "ligne": 5, "position": 4, "emplacement": "C1-L5-P4", "refId": "r6"}, {"casier": 1, "ligne": 5, "position": 5, "emplacement": "C1-L5-P5", "refId": "r3"}, {"casier": 1, "ligne": 6, "position": 1, "emplacement": "C1-L6-P1", "refId": "r7"}, {"casier": 1, "ligne": 6, "position": 2, "emplacement": "C1-L6-P2", "refId": null}, {"casier": 1, "ligne": 6, "position": 3, "emplacement": "C1-L6-P3", "refId": "r8"}, {"casier": 1, "ligne": 6, "position": 4, "emplacement": "C1-L6-P4", "refId": "r8"}, {"casier": 1, "ligne": 6, "position": 5, "emplacement": "C1-L6-P5", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 1, "emplacement": "C1-L7-P1", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 2, "emplacement": "C1-L7-P2", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 3, "emplacement": "C1-L7-P3", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 4, "emplacement": "C1-L7-P4", "refId": "r8"}, {"casier": 1, "ligne": 7, "position": 5, "emplacement": "C1-L7-P5", "refId": "r8"}, {"casier": 1, "ligne": 8, "position": 1, "emplacement": "C1-L8-P1", "refId": "r9"}, {"casier": 1, "ligne": 8, "position": 2, "emplacement": "C1-L8-P2", "refId": "r9"}, {"casier": 1, "ligne": 8, "position": 3, "emplacement": "C1-L8-P3", "refId": "r10"}, {"casier": 1, "ligne": 8, "position": 4, "emplacement": "C1-L8-P4", "refId": "r10"}, {"casier": 1, "ligne": 8, "position": 5, "emplacement": "C1-L8-P5", "refId": "r10"}, {"casier": 1, "ligne": 9, "position": 1, "emplacement": "C1-L9-P1", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 2, "emplacement": "C1-L9-P2", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 3, "emplacement": "C1-L9-P3", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 4, "emplacement": "C1-L9-P4", "refId": "r9"}, {"casier": 1, "ligne": 9, "position": 5, "emplacement": "C1-L9-P5", "refId": "r9"}, {"casier": 1, "ligne": 10, "position": 1, "emplacement": "C1-L10-P1", "refId": "r11"}, {"casier": 1, "ligne": 10, "position": 2, "emplacement": "C1-L10-P2", "refId": "r11"}, {"casier": 1, "ligne": 10, "position": 3, "emplacement": "C1-L10-P3", "refId": "r11"}, {"casier": 1, "ligne": 10, "position": 4, "emplacement": "C1-L10-P4", "refId": "r12"}, {"casier": 1, "ligne": 10, "position": 5, "emplacement": "C1-L10-P5", "refId": "r13"}, {"casier": 1, "ligne": 11, "position": 1, "emplacement": "C1-L11-P1", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 2, "emplacement": "C1-L11-P2", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 3, "emplacement": "C1-L11-P3", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 4, "emplacement": "C1-L11-P4", "refId": "r14"}, {"casier": 1, "ligne": 11, "position": 5, "emplacement": "C1-L11-P5", "refId": null}, {"casier": 1, "ligne": 12, "position": 1, "emplacement": "C1-L12-P1", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 2, "emplacement": "C1-L12-P2", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 3, "emplacement": "C1-L12-P3", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 4, "emplacement": "C1-L12-P4", "refId": "r15"}, {"casier": 1, "ligne": 12, "position": 5, "emplacement": "C1-L12-P5", "refId": "r15"}, {"casier": 1, "ligne": 13, "position": 1, "emplacement": "C1-L13-P1", "refId": "r15"}, {"casier": 1, "ligne": 13, "position": 2, "emplacement": "C1-L13-P2", "refId": null}, {"casier": 1, "ligne": 13, "position": 3, "emplacement": "C1-L13-P3", "refId": null}, {"casier": 1, "ligne": 13, "position": 4, "emplacement": "C1-L13-P4", "refId": null}, {"casier": 1, "ligne": 13, "position": 5, "emplacement": "C1-L13-P5", "refId": null}, {"casier": 1, "ligne": 14, "position": 1, "emplacement": "C1-L14-P1", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 2, "emplacement": "C1-L14-P2", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 3, "emplacement": "C1-L14-P3", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 4, "emplacement": "C1-L14-P4", "refId": "r16"}, {"casier": 1, "ligne": 14, "position": 5, "emplacement": "C1-L14-P5", "refId": "r16"}, {"casier": 1, "ligne": 15, "position": 1, "emplacement": "C1-L15-P1", "refId": "r16"}, {"casier": 1, "ligne": 15, "position": 2, "emplacement": "C1-L15-P2", "refId": null}, {"casier": 1, "ligne": 15, "position": 3, "emplacement": "C1-L15-P3", "refId": null}, {"casier": 1, "ligne": 15, "position": 4, "emplacement": "C1-L15-P4", "refId": null}, {"casier": 1, "ligne": 15, "position": 5, "emplacement": "C1-L15-P5", "refId": null}, {"casier": 2, "ligne": 1, "position": 1, "emplacement": "C2-L1-P1", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 2, "emplacement": "C2-L1-P2", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 3, "emplacement": "C2-L1-P3", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 4, "emplacement": "C2-L1-P4", "refId": "r17"}, {"casier": 2, "ligne": 1, "position": 5, "emplacement": "C2-L1-P5", "refId": "r17"}, {"casier": 2, "ligne": 2, "position": 1, "emplacement": "C2-L2-P1", "refId": "r17"}, {"casier": 2, "ligne": 2, "position": 2, "emplacement": "C2-L2-P2", "refId": null}, {"casier": 2, "ligne": 2, "position": 3, "emplacement": "C2-L2-P3", "refId": "r18"}, {"casier": 2, "ligne": 2, "position": 4, "emplacement": "C2-L2-P4", "refId": null}, {"casier": 2, "ligne": 2, "position": 5, "emplacement": "C2-L2-P5", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 1, "emplacement": "C2-L3-P1", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 2, "emplacement": "C2-L3-P2", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 3, "emplacement": "C2-L3-P3", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 4, "emplacement": "C2-L3-P4", "refId": "r19"}, {"casier": 2, "ligne": 3, "position": 5, "emplacement": "C2-L3-P5", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 1, "emplacement": "C2-L4-P1", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 2, "emplacement": "C2-L4-P2", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 3, "emplacement": "C2-L4-P3", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 4, "emplacement": "C2-L4-P4", "refId": "r19"}, {"casier": 2, "ligne": 4, "position": 5, "emplacement": "C2-L4-P5", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 1, "emplacement": "C2-L5-P1", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 2, "emplacement": "C2-L5-P2", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 3, "emplacement": "C2-L5-P3", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 4, "emplacement": "C2-L5-P4", "refId": "r19"}, {"casier": 2, "ligne": 5, "position": 5, "emplacement": "C2-L5-P5", "refId": "r19"}, {"casier": 2, "ligne": 6, "position": 1, "emplacement": "C2-L6-P1", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 2, "emplacement": "C2-L6-P2", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 3, "emplacement": "C2-L6-P3", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 4, "emplacement": "C2-L6-P4", "refId": "r20"}, {"casier": 2, "ligne": 6, "position": 5, "emplacement": "C2-L6-P5", "refId": "r20"}, {"casier": 2, "ligne": 7, "position": 1, "emplacement": "C2-L7-P1", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 2, "emplacement": "C2-L7-P2", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 3, "emplacement": "C2-L7-P3", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 4, "emplacement": "C2-L7-P4", "refId": "r21"}, {"casier": 2, "ligne": 7, "position": 5, "emplacement": "C2-L7-P5", "refId": "r21"}, {"casier": 2, "ligne": 8, "position": 1, "emplacement": "C2-L8-P1", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 2, "emplacement": "C2-L8-P2", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 3, "emplacement": "C2-L8-P3", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 4, "emplacement": "C2-L8-P4", "refId": "r22"}, {"casier": 2, "ligne": 8, "position": 5, "emplacement": "C2-L8-P5", "refId": "r22"}, {"casier": 2, "ligne": 9, "position": 1, "emplacement": "C2-L9-P1", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 2, "emplacement": "C2-L9-P2", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 3, "emplacement": "C2-L9-P3", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 4, "emplacement": "C2-L9-P4", "refId": "r23"}, {"casier": 2, "ligne": 9, "position": 5, "emplacement": "C2-L9-P5", "refId": "r23"}, {"casier": 2, "ligne": 10, "position": 1, "emplacement": "C2-L10-P1", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 2, "emplacement": "C2-L10-P2", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 3, "emplacement": "C2-L10-P3", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 4, "emplacement": "C2-L10-P4", "refId": "r24"}, {"casier": 2, "ligne": 10, "position": 5, "emplacement": "C2-L10-P5", "refId": "r24"}, {"casier": 2, "ligne": 11, "position": 1, "emplacement": "C2-L11-P1", "refId": "r25"}, {"casier": 2, "ligne": 11, "position": 2, "emplacement": "C2-L11-P2", "refId": "r26"}, {"casier": 2, "ligne": 11, "position": 3, "emplacement": "C2-L11-P3", "refId": "r26"}, {"casier": 2, "ligne": 11, "position": 4, "emplacement": "C2-L11-P4", "refId": "r26"}, {"casier": 2, "ligne": 11, "position": 5, "emplacement": "C2-L11-P5", "refId": "r26"}, {"casier": 2, "ligne": 12, "position": 1, "emplacement": "C2-L12-P1", "refId": "r25"}, {"casier": 2, "ligne": 12, "position": 2, "emplacement": "C2-L12-P2", "refId": "r25"}, {"casier": 2, "ligne": 12, "position": 3, "emplacement": "C2-L12-P3", "refId": "r27"}, {"casier": 2, "ligne": 12, "position": 4, "emplacement": "C2-L12-P4", "refId": "r27"}, {"casier": 2, "ligne": 12, "position": 5, "emplacement": "C2-L12-P5", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 1, "emplacement": "C2-L13-P1", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 2, "emplacement": "C2-L13-P2", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 3, "emplacement": "C2-L13-P3", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 4, "emplacement": "C2-L13-P4", "refId": "r27"}, {"casier": 2, "ligne": 13, "position": 5, "emplacement": "C2-L13-P5", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 1, "emplacement": "C2-L14-P1", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 2, "emplacement": "C2-L14-P2", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 3, "emplacement": "C2-L14-P3", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 4, "emplacement": "C2-L14-P4", "refId": "r27"}, {"casier": 2, "ligne": 14, "position": 5, "emplacement": "C2-L14-P5", "refId": "r27"}, {"casier": 2, "ligne": 15, "position": 1, "emplacement": "C2-L15-P1", "refId": "r28"}, {"casier": 2, "ligne": 15, "position": 2, "emplacement": "C2-L15-P2", "refId": "r29"}, {"casier": 2, "ligne": 15, "position": 3, "emplacement": "C2-L15-P3", "refId": null}, {"casier": 2, "ligne": 15, "position": 4, "emplacement": "C2-L15-P4", "refId": "r30"}, {"casier": 2, "ligne": 15, "position": 5, "emplacement": "C2-L15-P5", "refId": "r30"}, {"casier": 3, "ligne": 1, "position": 1, "emplacement": "C3-L1-P1", "refId": "r31"}, {"casier": 3, "ligne": 1, "position": 2, "emplacement": "C3-L1-P2", "refId": "r31"}, {"casier": 3, "ligne": 1, "position": 3, "emplacement": "C3-L1-P3", "refId": null}, {"casier": 3, "ligne": 1, "position": 4, "emplacement": "C3-L1-P4", "refId": null}, {"casier": 3, "ligne": 1, "position": 5, "emplacement": "C3-L1-P5", "refId": null}, {"casier": 3, "ligne": 2, "position": 1, "emplacement": "C3-L2-P1", "refId": null}, {"casier": 3, "ligne": 2, "position": 2, "emplacement": "C3-L2-P2", "refId": null}, {"casier": 3, "ligne": 2, "position": 3, "emplacement": "C3-L2-P3", "refId": null}, {"casier": 3, "ligne": 2, "position": 4, "emplacement": "C3-L2-P4", "refId": null}, {"casier": 3, "ligne": 2, "position": 5, "emplacement": "C3-L2-P5", "refId": null}, {"casier": 3, "ligne": 3, "position": 1, "emplacement": "C3-L3-P1", "refId": null}, {"casier": 3, "ligne": 3, "position": 2, "emplacement": "C3-L3-P2", "refId": null}, {"casier": 3, "ligne": 3, "position": 3, "emplacement": "C3-L3-P3", "refId": null}, {"casier": 3, "ligne": 3, "position": 4, "emplacement": "C3-L3-P4", "refId": null}, {"casier": 3, "ligne": 3, "position": 5, "emplacement": "C3-L3-P5", "refId": null}, {"casier": 3, "ligne": 4, "position": 1, "emplacement": "C3-L4-P1", "refId": "r32"}, {"casier": 3, "ligne": 4, "position": 2, "emplacement": "C3-L4-P2", "refId": null}, {"casier": 3, "ligne": 4, "position": 3, "emplacement": "C3-L4-P3", "refId": null}, {"casier": 3, "ligne": 4, "position": 4, "emplacement": "C3-L4-P4", "refId": null}, {"casier": 3, "ligne": 4, "position": 5, "emplacement": "C3-L4-P5", "refId": null}, {"casier": 3, "ligne": 5, "position": 1, "emplacement": "C3-L5-P1", "refId": null}, {"casier": 3, "ligne": 5, "position": 2, "emplacement": "C3-L5-P2", "refId": null}, {"casier": 3, "ligne": 5, "position": 3, "emplacement": "C3-L5-P3", "refId": null}, {"casier": 3, "ligne": 5, "position": 4, "emplacement": "C3-L5-P4", "refId": null}, {"casier": 3, "ligne": 5, "position": 5, "emplacement": "C3-L5-P5", "refId": null}, {"casier": 3, "ligne": 6, "position": 1, "emplacement": "C3-L6-P1", "refId": null}, {"casier": 3, "ligne": 6, "position": 2, "emplacement": "C3-L6-P2", "refId": null}, {"casier": 3, "ligne": 6, "position": 3, "emplacement": "C3-L6-P3", "refId": null}, {"casier": 3, "ligne": 6, "position": 4, "emplacement": "C3-L6-P4", "refId": null}, {"casier": 3, "ligne": 6, "position": 5, "emplacement": "C3-L6-P5", "refId": null}, {"casier": 3, "ligne": 7, "position": 1, "emplacement": "C3-L7-P1", "refId": "r33"}, {"casier": 3, "ligne": 7, "position": 2, "emplacement": "C3-L7-P2", "refId": "r34"}, {"casier": 3, "ligne": 7, "position": 3, "emplacement": "C3-L7-P3", "refId": null}, {"casier": 3, "ligne": 7, "position": 4, "emplacement": "C3-L7-P4", "refId": null}, {"casier": 3, "ligne": 7, "position": 5, "emplacement": "C3-L7-P5", "refId": null}, {"casier": 3, "ligne": 8, "position": 1, "emplacement": "C3-L8-P1", "refId": null}, {"casier": 3, "ligne": 8, "position": 2, "emplacement": "C3-L8-P2", "refId": null}, {"casier": 3, "ligne": 8, "position": 3, "emplacement": "C3-L8-P3", "refId": null}, {"casier": 3, "ligne": 8, "position": 4, "emplacement": "C3-L8-P4", "refId": null}, {"casier": 3, "ligne": 8, "position": 5, "emplacement": "C3-L8-P5", "refId": null}, {"casier": 3, "ligne": 9, "position": 1, "emplacement": "C3-L9-P1", "refId": null}, {"casier": 3, "ligne": 9, "position": 2, "emplacement": "C3-L9-P2", "refId": null}, {"casier": 3, "ligne": 9, "position": 3, "emplacement": "C3-L9-P3", "refId": null}, {"casier": 3, "ligne": 9, "position": 4, "emplacement": "C3-L9-P4", "refId": null}, {"casier": 3, "ligne": 9, "position": 5, "emplacement": "C3-L9-P5", "refId": null}, {"casier": 3, "ligne": 10, "position": 1, "emplacement": "C3-L10-P1", "refId": "r35"}, {"casier": 3, "ligne": 10, "position": 2, "emplacement": "C3-L10-P2", "refId": null}, {"casier": 3, "ligne": 10, "position": 3, "emplacement": "C3-L10-P3", "refId": null}, {"casier": 3, "ligne": 10, "position": 4, "emplacement": "C3-L10-P4", "refId": null}, {"casier": 3, "ligne": 10, "position": 5, "emplacement": "C3-L10-P5", "refId": "r36"}, {"casier": 3, "ligne": 11, "position": 1, "emplacement": "C3-L11-P1", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 2, "emplacement": "C3-L11-P2", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 3, "emplacement": "C3-L11-P3", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 4, "emplacement": "C3-L11-P4", "refId": "r37"}, {"casier": 3, "ligne": 11, "position": 5, "emplacement": "C3-L11-P5", "refId": "r37"}, {"casier": 3, "ligne": 12, "position": 1, "emplacement": "C3-L12-P1", "refId": "r37"}, {"casier": 3, "ligne": 12, "position": 2, "emplacement": "C3-L12-P2", "refId": null}, {"casier": 3, "ligne": 12, "position": 3, "emplacement": "C3-L12-P3", "refId": null}, {"casier": 3, "ligne": 12, "position": 4, "emplacement": "C3-L12-P4", "refId": null}, {"casier": 3, "ligne": 12, "position": 5, "emplacement": "C3-L12-P5", "refId": null}, {"casier": 3, "ligne": 13, "position": 1, "emplacement": "C3-L13-P1", "refId": null}, {"casier": 3, "ligne": 13, "position": 2, "emplacement": "C3-L13-P2", "refId": null}, {"casier": 3, "ligne": 13, "position": 3, "emplacement": "C3-L13-P3", "refId": null}, {"casier": 3, "ligne": 13, "position": 4, "emplacement": "C3-L13-P4", "refId": null}, {"casier": 3, "ligne": 13, "position": 5, "emplacement": "C3-L13-P5", "refId": null}, {"casier": 3, "ligne": 14, "position": 1, "emplacement": "C3-L14-P1", "refId": null}, {"casier": 3, "ligne": 14, "position": 2, "emplacement": "C3-L14-P2", "refId": null}, {"casier": 3, "ligne": 14, "position": 3, "emplacement": "C3-L14-P3", "refId": null}, {"casier": 3, "ligne": 14, "position": 4, "emplacement": "C3-L14-P4", "refId": "r38"}, {"casier": 3, "ligne": 14, "position": 5, "emplacement": "C3-L14-P5", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 1, "emplacement": "C3-L15-P1", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 2, "emplacement": "C3-L15-P2", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 3, "emplacement": "C3-L15-P3", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 4, "emplacement": "C3-L15-P4", "refId": "r38"}, {"casier": 3, "ligne": 15, "position": 5, "emplacement": "C3-L15-P5", "refId": "r38"}];
+const SEED_REFS=[{"id": "r1", "vin": "Silice rouge", "domaine": "Domaine des Ardoisières", "millesime": 2023, "couleur": "Rouge", "format": "Magnum 1,5 L", "prix": 38.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r2", "vin": "Fleurie", "domaine": "Domaine des Marrans", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 13.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r3", "vin": "Clos du Puy", "domaine": "Domaine des Pothiers", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 20.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r4", "vin": "Les Hautes Brassières", "domaine": "Molozay", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 17.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r5", "vin": "Mon P'tit Pithon", "domaine": "", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 11.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r6", "vin": "Faustine", "domaine": "", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 30.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r7", "vin": "Tandem – Syrah du Maroc", "domaine": "Alain Graillot & Thalvin", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 14.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r8", "vin": "La Chapelle", "domaine": "Domaine des Pothiers", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 17.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r9", "vin": "Les Clos", "domaine": "Molozay", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 20.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r10", "vin": "Marius", "domaine": "La Dourbie", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 12.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r11", "vin": "Morgon Côte du Py", "domaine": "Jean Foillard", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 28.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r12", "vin": "Silice", "domaine": "Les Croisille", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 14.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r13", "vin": "Les Rouillères", "domaine": "Frédéric Mabileau", "millesime": 2023, "couleur": "Rouge", "format": "75 cl", "prix": 17.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r14", "vin": "Fleurie Corcelette", "domaine": "Domaine des Marrans", "millesime": 2022, "couleur": "Rouge", "format": "75 cl", "prix": 18.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r15", "vin": "Cuvée Simon", "domaine": "Clos Marie", "millesime": 2021, "couleur": "Rouge", "format": "75 cl", "prix": 21.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r16", "vin": "Tot çò que cal", "domaine": "Plaisance Penavayre", "millesime": 2019, "couleur": "Rouge", "format": "75 cl", "prix": 14.4, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r17", "vin": "Faustine", "domaine": "", "millesime": 2025, "couleur": "Rouge", "format": "75 cl", "prix": 25.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r18", "vin": "Colorcombo", "domaine": "Domaine Balansa", "millesime": 2025, "couleur": "Rouge", "format": "75 cl", "prix": 15.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r19", "vin": "Crozes-Hermitage", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 17.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r20", "vin": "Argile rouge", "domaine": "Domaine des Ardoisières", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 25.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r21", "vin": "Oudan", "domaine": "Domaine Sérol", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 16.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r22", "vin": "L’Intégrale", "domaine": "Domaine des Pothiers", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 22.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r23", "vin": "Silice rouge", "domaine": "Domaine des Ardoisières", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 15.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r24", "vin": "Éclat de Granit", "domaine": "Domaine Sérol", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 14.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r25", "vin": "Collines Rhodaniennes", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 11.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r26", "vin": "Abysses", "domaine": "Coume del Mas", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 35.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r27", "vin": "Cuvée L", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 14.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r28", "vin": "Bourgueil", "domaine": "Domaine des Rainettes", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 10.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r29", "vin": "La Vinhota", "domaine": "Domaine Balansa", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 15.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r30", "vin": "Faustine", "domaine": "", "millesime": 2024, "couleur": "Rouge", "format": "75 cl", "prix": 30.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r31", "vin": "Perdrizière", "domaine": "Domaine Sérol", "millesime": 2021, "couleur": "Rouge", "format": "Magnum 1,5 L", "prix": 42.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r32", "vin": "Limoncello", "domaine": "Briottet", "millesime": "", "couleur": "Liqueur", "format": "75 cl", "prix": 20.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r33", "vin": "Non identifiée 1", "domaine": "", "millesime": "", "couleur": "Inconnue", "format": "75 cl", "prix": "", "maturiteDebut": "", "maturiteFin": ""}, {"id": "r34", "vin": "Non identifiée 2", "domaine": "", "millesime": "", "couleur": "Inconnue", "format": "75 cl", "prix": "", "maturiteDebut": "", "maturiteFin": ""}, {"id": "r35", "vin": "Cuvée L", "domaine": "Laurent Combier", "millesime": 2024, "couleur": "Blanc", "format": "75 cl", "prix": 14.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r36", "vin": "Maddalena", "domaine": "Molozay", "millesime": 2023, "couleur": "Blanc", "format": "75 cl", "prix": 17.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r37", "vin": "Argile blanc", "domaine": "Domaine des Ardoisières", "millesime": 2024, "couleur": "Blanc", "format": "75 cl", "prix": 21.0, "maturiteDebut": "", "maturiteFin": ""}, {"id": "r38", "vin": "Les Deux Albion", "domaine": "Domaine de Saint Cosme", "millesime": 2022, "couleur": "Rouge", "format": "75 cl", "prix": 14.0, "maturiteDebut": "", "maturiteFin": ""}];
+
+// On conserve volontairement les clés V2 : une personne qui met à jour
+// l'application garde ses prix / ajouts / sorties déjà enregistrés.
 const KI='ma-cave-v2-inv', KR='ma-cave-v2-refs';
-let inv=JSON.parse(localStorage.getItem(KI)||'null')||structuredClone(SEED_INV);
-let refs=JSON.parse(localStorage.getItem(KR)||'null')||structuredClone(SEED_REFS);
-let activeCasier=1, selected=null;
-const $=s=>document.querySelector(s), ref=id=>refs.find(r=>r.id===id);
-function save(){localStorage.setItem(KI,JSON.stringify(inv));localStorage.setItem(KR,JSON.stringify(refs));render()}
-function euro(v){return Number(v||0).toLocaleString('fr-FR',{style:'currency',currency:'EUR'})}
-function ageClass(y){let a=(new Date().getFullYear())-Number(y);return !y?'age0':a<=1?'age1':a<=3?'age2':a<=5?'age3':a<=8?'age4':'age5'}
-function wineClass(c){c=(c||'').toLowerCase();return c.includes('blanc')?'white':c.includes('ros')?'rose':c.includes('eff')?'spark':'red'}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+let inv=load(KI,SEED_INV);
+let refs=load(KR,SEED_REFS);
+let activeCasier=1;
+let selected=null;
+let dialogHistory=false;
+
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const ref=id=>refs.find(r=>r.id===id);
+
+function load(key,seed){
+  try{
+    const x=JSON.parse(localStorage.getItem(key)||'null');
+    if(!x) return structuredClone(seed);
+    return x;
+  }catch(e){ return structuredClone(seed); }
+}
+
+// Migration douce V2 -> V3
+refs.forEach(r=>{
+  if(r.maturiteDebut===undefined) r.maturiteDebut='';
+  if(r.maturiteFin===undefined) r.maturiteFin='';
+});
+
+function persist(){
+  localStorage.setItem(KI,JSON.stringify(inv));
+  localStorage.setItem(KR,JSON.stringify(refs));
+}
+function save(){ persist(); render(); }
+
+function esc(s){
+  return String(s??'').replace(/[&<>"']/g,m=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
+function euro(v){
+  return Number(v||0).toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
+}
+function wineClass(c){
+  c=(c||'').toLowerCase();
+  if(c.includes('blanc')) return 'white';
+  if(c.includes('ros')) return 'rose';
+  if(c.includes('eff')) return 'spark';
+  return 'red';
+}
+function currentDecimalYear(){
+  const d=new Date(), y=d.getFullYear();
+  const start=new Date(y,0,1), end=new Date(y+1,0,1);
+  return y + (d-start)/(end-start);
+}
+function ageClass(y){
+  const a=new Date().getFullYear()-Number(y);
+  if(!y || !Number.isFinite(a)) return 'age0';
+  return a<=1?'age1':a<=3?'age2':a<=5?'age3':a<=8?'age4':'age5';
+}
+function maturityInfo(r){
+  const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
+  if(!s && !e) return {known:false,pct:0,label:'Maturité non renseignée',cls:'m-none'};
+  const start=s||Number(r?.millesime)||Math.floor(now);
+  const end=e||start;
+  if(now < start) return {known:true,pct:0,label:`À partir de ${start}`,cls:'m-early'};
+  if(now > end) return {known:true,pct:100,label:`À boire rapidement · fin ${end}`,cls:'m-late'};
+  const span=Math.max(1,end-start);
+  const pct=Math.max(0,Math.min(100,((now-start)/span)*100));
+  let label=`Fenêtre ${start}–${end}`;
+  let cls='m-good';
+  if(pct>=75){ label=`Fin de fenêtre · avant ${end}`; cls='m-soon'; }
+  return {known:true,pct,label,cls};
+}
+function allOccupied(){
+  return inv.filter(x=>x.refId && ref(x.refId));
+}
+function statsData(){
+  const occ=allOccupied();
+  const byCasier={1:0,2:0,3:0};
+  const byYear={};
+  const valueCasier={1:0,2:0,3:0};
+  occ.forEach(x=>{
+    const r=ref(x.refId);
+    byCasier[x.casier]++;
+    valueCasier[x.casier]+=Number(r?.prix)||0;
+    const y=String(r?.millesime||'Sans année');
+    byYear[y]=(byYear[y]||0)+1;
+  });
+  return {occ,byCasier,byYear,valueCasier};
+}
+
+function renderStats(){
+  const s=statsData();
+  $('#count').textContent=s.occ.length;
+  $('#free').textContent=inv.length-s.occ.length;
+  $('#casierStats').innerHTML=[1,2,3].map(c=>
+    `<span class="stat-chip"><b>C${c}</b> ${s.byCasier[c]} bt.</span>`
+  ).join('');
+  const years=Object.entries(s.byYear).sort((a,b)=>{
+    if(a[0]==='Sans année') return 1;
+    if(b[0]==='Sans année') return -1;
+    return Number(b[0])-Number(a[0]);
+  });
+  $('#yearStats').innerHTML=years.map(([y,n])=>
+    `<span class="year-chip"><b>${esc(y)}</b> ${n}</span>`
+  ).join('');
+  $('#valueByCasier').innerHTML=[1,2,3].map(c=>
+    `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
+  ).join('');
+  $('#valueTotal').textContent=euro(s.occ.reduce((sum,x)=>sum+(Number(ref(x.refId)?.prix)||0),0));
+}
+
 function render(){
- let occ=inv.filter(x=>x.refId); $('#count').textContent=occ.length; $('#free').textContent=inv.length-occ.length;
- $('#value').textContent=euro(occ.reduce((s,x)=>s+(Number(ref(x.refId)?.prix)||0),0));
- let q=$('#search').value.toLowerCase(), g=$('#grid');g.innerHTML='';
- inv.filter(x=>x.casier===activeCasier).forEach(x=>{
-  let r=ref(x.refId), hay=r?[r.vin,r.domaine,r.millesime,r.couleur,x.emplacement].join(' ').toLowerCase():'';
-  let b=document.createElement('button'); b.className='slot '+(r?wineClass(r.couleur):'empty')+' '+(r?ageClass(r.millesime):'age0')+(q&&!hay.includes(q)?' dim':'');
-  b.innerHTML=`<span class=pos>L${x.ligne}·P${x.position}</span><span class=name>${r?esc(r.vin):'＋ Vide'}</span><span class=year>${r?.millesime||''}</span>`;
-  b.onclick=()=>r?editRef(x,r):chooseAdd(x);g.appendChild(b)
- });
- document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',+b.dataset.c===activeCasier))
+  renderStats();
+  const q=$('#search').value.trim().toLowerCase();
+  const g=$('#grid');
+  g.innerHTML='';
+  inv.filter(x=>x.casier===activeCasier).forEach(x=>{
+    const r=ref(x.refId);
+    const hay=r?[r.vin,r.domaine,r.millesime,r.couleur,r.format,x.emplacement].join(' ').toLowerCase():'';
+    const mi=maturityInfo(r);
+    const b=document.createElement('button');
+    b.type='button';
+    b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'age0'} ${q&&!hay.includes(q)?'dim':''}`;
+    b.innerHTML=`
+      <span class="pos">L${x.ligne}·P${x.position}</span>
+      <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
+      <span class="year">${r?.millesime||''}</span>
+      ${r&&mi.known?`
+        <span class="maturity-mini ${mi.cls}" title="${esc(mi.label)}">
+          <span style="width:${mi.pct}%"></span>
+        </span>`:''}
+    `;
+    b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
+    g.appendChild(b);
+  });
+  $$('.tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.c)===activeCasier));
 }
-function fill(r){['vin','domaine','millesime','couleur','format','prix'].forEach(k=>$('#f_'+k).value=r?.[k]??'')}
-function editRef(x,r){selected=x;$('#dialogTitle').textContent=r.vin;$('#where').textContent=x.emplacement;fill(r);$('#remove').hidden=false;$('#dialog').showModal()}
-function chooseAdd(x){selected=x;$('#pick').innerHTML='<option value="">— Choisir dans ma base —</option>'+refs.slice().sort((a,b)=>a.vin.localeCompare(b.vin)).map(r=>`<option value="${r.id}">${esc(r.vin)} ${r.millesime||''} — ${esc(r.domaine)}</option>`).join('');$('#addDialog').showModal()}
-$('#useRef').onclick=()=>{if($('#pick').value){selected.refId=$('#pick').value;save();$('#addDialog').close()}}
-$('#newRef').onclick=()=>{$('#addDialog').close();$('#dialogTitle').textContent='Nouveau vin';$('#where').textContent=selected.emplacement;fill(null);$('#remove').hidden=true;$('#dialog').showModal()}
-$('#save').onclick=()=>{
- let vals={};['vin','domaine','millesime','couleur','format'].forEach(k=>vals[k]=$('#f_'+k).value.trim()); vals.prix=parseFloat($('#f_prix').value.replace(',','.'))||0;
- if(!vals.vin)return alert('Indique la cuvée.');
- if(selected.refId){Object.assign(ref(selected.refId),vals)} else {vals.id='r'+Date.now();refs.push(vals);selected.refId=vals.id}
- save();$('#dialog').close()
+
+function pushDialogHistory(){
+  if(dialogHistory) return;
+  history.pushState({wineDialog:true},'');
+  dialogHistory=true;
 }
-$('#remove').onclick=()=>{if(confirm('Sortir cette bouteille ?')){selected.refId=null;save();$('#dialog').close()}}
-$('#cancel').onclick=()=>$('#dialog').close();$('#cancelAdd').onclick=()=>$('#addDialog').close();
-$('#search').oninput=render;document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{activeCasier=+b.dataset.c;render()});
-$('#export').onclick=()=>{let blob=new Blob([JSON.stringify({inv,refs},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sauvegarde-ma-cave-v2.json';a.click()}
-$('#import').onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());inv=d.inv;refs=d.refs;save();alert('Sauvegarde restaurée')}catch{alert('Sauvegarde invalide')}};
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');render();
+function showDialog(d){
+  pushDialogHistory();
+  d.showModal();
+}
+function closeDialogsFromPop(){
+  [$('#dialog'),$('#addDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
+  dialogHistory=false;
+  selected=null;
+}
+window.addEventListener('popstate',closeDialogsFromPop);
+
+function requestClose(d){
+  if(!d.open) return;
+  if(dialogHistory){
+    history.back(); // le popstate ferme réellement la fenêtre
+  }else{
+    d.close();
+  }
+}
+function backdropClose(e){
+  const d=e.currentTarget;
+  if(e.target!==d) return;
+  const r=d.getBoundingClientRect();
+  const inside=e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom;
+  if(!inside) requestClose(d);
+}
+$('#dialog').addEventListener('click',backdropClose);
+$('#addDialog').addEventListener('click',backdropClose);
+
+function fill(r){
+  ['vin','domaine','millesime','couleur','format','prix','maturiteDebut','maturiteFin'].forEach(k=>{
+    $('#f_'+k).value=r?.[k]??'';
+  });
+  updateMaturityPreview();
+}
+function updateMaturityPreview(){
+  const draft={
+    millesime:$('#f_millesime').value,
+    maturiteDebut:$('#f_maturiteDebut').value,
+    maturiteFin:$('#f_maturiteFin').value
+  };
+  const mi=maturityInfo(draft);
+  $('#maturityStatus').textContent=mi.label;
+  $('#maturityBar').className='maturity-bar '+mi.cls;
+  $('#maturityBarFill').style.width=(mi.known?mi.pct:0)+'%';
+}
+
+function editRef(x,r){
+  selected=x;
+  $('#dialogTitle').textContent=r.vin;
+  $('#where').textContent=x.emplacement+' · modification de la référence';
+  fill(r);
+  $('#remove').hidden=false;
+  showDialog($('#dialog'));
+}
+function chooseAdd(x){
+  selected=x;
+  $('#pick').innerHTML='<option value="">— Choisir dans ma base —</option>'+
+    refs.slice().sort((a,b)=>String(a.vin).localeCompare(String(b.vin),'fr')).map(r=>
+      `<option value="${r.id}">${esc(r.vin)} ${r.millesime||''} — ${esc(r.domaine)}</option>`
+    ).join('');
+  showDialog($('#addDialog'));
+}
+
+$('#useRef').addEventListener('click',()=>{
+  const id=$('#pick').value;
+  if(!id) return alert('Choisis une référence.');
+  selected.refId=id;
+  persist(); render();
+  requestClose($('#addDialog'));
+});
+$('#newRef').addEventListener('click',()=>{
+  // On ferme la boîte "ajouter" sans quitter l'état historique, puis on ouvre la fiche.
+  $('#addDialog').close();
+  $('#dialogTitle').textContent='Nouveau vin';
+  $('#where').textContent=selected.emplacement+' · nouvelle référence';
+  fill(null);
+  $('#remove').hidden=true;
+  $('#dialog').showModal();
+});
+$('#save').addEventListener('click',()=>{
+  const vals={};
+  ['vin','domaine','millesime','couleur','format','maturiteDebut','maturiteFin'].forEach(k=>vals[k]=$('#f_'+k).value.trim());
+  const p=parseFloat($('#f_prix').value.replace(',','.'));
+  vals.prix=Number.isFinite(p)?p:0;
+  if(!vals.vin) return alert('Indique la cuvée.');
+  if(vals.maturiteDebut && vals.maturiteFin && Number(vals.maturiteFin)<Number(vals.maturiteDebut)){
+    return alert('La fin de maturité doit être après le début.');
+  }
+  if(selected.refId){
+    Object.assign(ref(selected.refId),vals);
+  }else{
+    vals.id='r'+Date.now();
+    refs.push(vals);
+    selected.refId=vals.id;
+  }
+  persist(); render();
+  requestClose($('#dialog'));
+});
+$('#remove').addEventListener('click',()=>{
+  if(!selected || !confirm('Sortir cette bouteille de la cave ?')) return;
+  selected.refId=null;
+  persist(); render();
+  requestClose($('#dialog'));
+});
+$('#cancel').addEventListener('click',()=>requestClose($('#dialog')));
+$('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
+['f_millesime','f_maturiteDebut','f_maturiteFin'].forEach(id=>$('#'+id).addEventListener('input',updateMaturityPreview));
+
+$('#search').addEventListener('input',render);
+$$('.tab').forEach(b=>b.addEventListener('click',async()=>{activeCasier=Number(b.dataset.c);render();await refreshPhotoButtons()}));
+
+$('#export').addEventListener('click',()=>{
+  const payload={version:3,exportedAt:new Date().toISOString(),inv,refs};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='sauvegarde-ma-cave-v3.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+$('#import').addEventListener('change',async e=>{
+  const f=e.target.files?.[0]; if(!f) return;
+  try{
+    const d=JSON.parse(await f.text());
+    if(!Array.isArray(d.inv)||!Array.isArray(d.refs)) throw new Error();
+    inv=d.inv; refs=d.refs;
+    refs.forEach(r=>{
+      if(r.maturiteDebut===undefined) r.maturiteDebut='';
+      if(r.maturiteFin===undefined) r.maturiteFin='';
+    });
+    persist(); render(); alert('Sauvegarde restaurée.');
+  }catch(err){ alert('Sauvegarde invalide.'); }
+  e.target.value='';
+});
+
+
+// ---- Photos des casiers : 2 photos maximum par casier (actuelle + précédente) ----
+const PHOTO_DB='ma-cave-photos-v1';
+const PHOTO_STORE='photos';
+
+function openPhotoDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(PHOTO_DB,1);
+    req.onupgradeneeded=()=>{
+      const db=req.result;
+      if(!db.objectStoreNames.contains(PHOTO_STORE)) db.createObjectStore(PHOTO_STORE);
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function photoGet(key){
+  const db=await openPhotoDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readonly');
+    const req=tx.objectStore(PHOTO_STORE).get(key);
+    req.onsuccess=()=>resolve(req.result||null);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function photoSet(key,val){
+  const db=await openPhotoDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    tx.objectStore(PHOTO_STORE).put(val,key);
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error);
+  });
+}
+async function photoDelete(key){
+  const db=await openPhotoDB();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(PHOTO_STORE,'readwrite');
+    tx.objectStore(PHOTO_STORE).delete(key);
+    tx.oncomplete=()=>resolve();
+    tx.onerror=()=>reject(tx.error);
+  });
+}
+function photoKey(casier,slot){ return `c${casier}-${slot}`; }
+
+async function refreshPhotoButtons(){
+  $('#photoCasier').textContent=activeCasier;
+  const cur=await photoGet(photoKey(activeCasier,'current'));
+  const prev=await photoGet(photoKey(activeCasier,'previous'));
+  const set=(btn,obj,label)=>{
+    btn.classList.toggle('has-photo',!!obj);
+    btn.querySelector('.photo-state').textContent=obj ? `${label} · ${new Date(obj.date).toLocaleDateString('fr-FR')}` : 'Aucune photo';
+  };
+  set($('#photoCurrent'),cur,'Voir');
+  set($('#photoPrevious'),prev,'Voir');
+}
+async function saveNewPhoto(file){
+  if(!file) return;
+  if(!file.type.startsWith('image/')) return alert('Choisis une image.');
+  try{
+    const cur=await photoGet(photoKey(activeCasier,'current'));
+    if(cur) await photoSet(photoKey(activeCasier,'previous'),cur);
+    const blob=file;
+    await photoSet(photoKey(activeCasier,'current'),{
+      blob,
+      name:file.name||'photo',
+      type:file.type,
+      date:new Date().toISOString()
+    });
+    await refreshPhotoButtons();
+    alert(`Photo du casier ${activeCasier} enregistrée.`);
+  }catch(e){
+    console.error(e);
+    alert("Impossible d'enregistrer la photo. L'espace de stockage du navigateur est peut-être insuffisant.");
+  }
+}
+async function showPhoto(slot){
+  const obj=await photoGet(photoKey(activeCasier,slot));
+  if(!obj) return alert(slot==='current'?'Aucune photo actuelle.':'Aucune photo précédente.');
+  const url=URL.createObjectURL(obj.blob);
+  const img=$('#photoViewerImg');
+  const cleanup=()=>{
+    if(img.dataset.url){ URL.revokeObjectURL(img.dataset.url); delete img.dataset.url; }
+  };
+  cleanup();
+  img.src=url;
+  img.dataset.url=url;
+  $('#photoViewerTitle').textContent=`Casier ${activeCasier} · ${slot==='current'?'Photo actuelle':'Photo précédente'}`;
+  $('#photoViewerDate').textContent=new Date(obj.date).toLocaleString('fr-FR');
+  showDialog($('#photoDialog'));
+}
+$('#photoInput').addEventListener('change',async e=>{
+  const f=e.target.files?.[0];
+  if(f) await saveNewPhoto(f);
+  e.target.value='';
+});
+$('#photoCurrent').addEventListener('click',()=>showPhoto('current'));
+$('#photoPrevious').addEventListener('click',()=>showPhoto('previous'));
+$('#photoClose').addEventListener('click',()=>requestClose($('#photoDialog')));
+$('#photoDialog').addEventListener('click',backdropClose);
+$('#photoDialog').addEventListener('close',()=>{
+  const img=$('#photoViewerImg');
+  if(img.dataset.url){ URL.revokeObjectURL(img.dataset.url); delete img.dataset.url; }
+  img.removeAttribute('src');
+});
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+persist();
+render();
+refreshPhotoButtons();

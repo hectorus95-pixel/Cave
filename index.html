@@ -1,7 +1,199 @@
-<!doctype html><html lang=fr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=theme-color content="#4b0d1b"><title>Ma Cave à Vin</title><link rel=manifest href=manifest.webmanifest>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4b0d1b">
+<title>Ma Cave à Vin</title>
+<link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{font-family:system-ui,sans-serif;background:#171313;color:#fff}*{box-sizing:border-box}body{margin:0;background:#171313}header{background:#4b0d1b;padding:18px 16px;position:sticky;top:0;z-index:2}h1{margin:0 0 12px;font-size:23px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat b{font-size:20px;display:block}.stat span{font-size:12px}main{padding:14px;max-width:760px;margin:auto}.search{width:100%;padding:13px;border-radius:12px;border:1px solid #777;background:#2b2929;color:white;font-size:16px}.tabs{display:flex;gap:8px;margin:12px 0}.tab{flex:1;padding:11px;border:0;border-radius:11px;background:#555;color:white}.tab.active{background:#6d1930}#grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.slot{min-height:82px;border:0;border-top:6px solid #777;border-radius:11px;padding:6px;text-align:left;color:white}.slot.red{background:#641f31}.slot.white{background:#b08b31;color:#18130a}.slot.rose{background:#b55c6d}.slot.spark{background:#86722b}.slot.empty{background:#3a3737;color:#aaa}.slot.age1{border-top-color:#58a85b}.slot.age2{border-top-color:#a7b64c}.slot.age3{border-top-color:#d5a43c}.slot.age4{border-top-color:#c96c35}.slot.age5{border-top-color:#8c3542}.pos,.year{font-size:11px;opacity:.75;display:block}.name{font-size:12px;font-weight:700;display:block;margin:5px 0}.dim{opacity:.15}.actions{display:flex;gap:8px;margin:16px 0}.actions button,.filelabel{background:#333;color:white;border:1px solid #666;border-radius:10px;padding:11px;flex:1;text-align:center}.filelabel input{display:none}
-dialog{width:min(92vw,520px);border:0;border-radius:16px;background:#262222;color:white}dialog::backdrop{background:#0009}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wide{grid-column:1/-1}.form input,.form select,#pick{width:100%;padding:10px;margin-top:4px;border-radius:8px;border:1px solid #777;background:#333;color:white}.dlgactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.dlgactions button{padding:11px;border:0;border-radius:9px}.primary{background:#7b1e37;color:white}.danger{background:#733;color:white}.secondary{background:#555;color:white}.where{opacity:.7}
-</style></head><body><header><h1>🍷 Ma Cave à Vin</h1><div class=stats><div class=stat><b id=count></b><span>contenants</span></div><div class=stat><b id=free></b><span>places libres</span></div><div class=stat><b id=value></b><span>valeur</span></div></div></header><main><input id=search class=search placeholder="Rechercher un vin, domaine, millésime…"><div class=tabs><button class="tab active" data-c=1>Casier 1</button><button class=tab data-c=2>Casier 2</button><button class=tab data-c=3>Casier 3</button></div><div id=grid></div><div class=actions><button id=export>Sauvegarder</button><label class=filelabel>Restaurer<input id=import type=file></label></div></main>
-<dialog id=addDialog><h2>Ajouter une bouteille</h2><p>Choisis un vin existant ou crée une nouvelle référence.</p><select id=pick></select><div class=dlgactions><button id=useRef class=primary>Ajouter depuis ma base</button><button id=newRef class=primary>Créer un nouveau vin</button><button id=cancelAdd class=secondary>Annuler</button></div></dialog>
-<dialog id=dialog><h2 id=dialogTitle></h2><p id=where class=where></p><div class=form><label class=wide>Vin / Cuvée<input id=f_vin></label><label class=wide>Domaine<input id=f_domaine></label><label>Millésime<input id=f_millesime></label><label>Couleur<select id=f_couleur><option>Rouge</option><option>Blanc</option><option>Rosé</option><option>Effervescent</option></select></label><label>Format<input id=f_format></label><label>Prix (€)<input id=f_prix></label></div><div class=dlgactions><button id=save class=primary>Enregistrer la référence</button><button id=remove class=danger>Sortir cette bouteille</button><button id=cancel class=secondary>Annuler</button></div></dialog><script src=app.js></script></body></html>
+:root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:#0d0b0b;color:#fff}
+header{background:#4b0d1b;padding:17px 16px 15px;position:sticky;top:0;z-index:2}
+h1{margin:0 0 12px;font-size:23px}
+.topstats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{background:#ffffff10;border-radius:11px;padding:8px 10px}
+.metric b{font-size:22px;display:block}.metric span{font-size:12px;opacity:.8}
+.statline{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}
+.stat-chip,.year-chip{font-size:11px;padding:5px 7px;border-radius:999px;background:#ffffff13;white-space:nowrap}
+.yearbox{margin-top:8px;display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.yearbox::-webkit-scrollbar{display:none}
+main{padding:14px;max-width:760px;margin:auto}
+.search{width:100%;padding:13px;border-radius:12px;border:1px solid #686363;background:#242121;color:white;font-size:16px}
+.tabs{display:flex;gap:8px;margin:12px 0}
+.tab{flex:1;min-width:0;padding:11px 4px;border:0;border-radius:11px;background:#494646;color:white}
+.tab.active{background:#7a1837}
+#grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;width:100%}
+.slot{width:100%;min-width:0;min-height:91px;border:0;border-top:6px solid #777;border-radius:11px;padding:7px 6px;text-align:left;color:white;overflow:hidden}
+.slot.red{background:#741a35}.slot.white{background:#b69032;color:#171108}.slot.rose{background:#b95b72}.slot.spark{background:#8b762c}.slot.empty{background:#373434;color:#aaa}
+.slot.age1{border-top-color:#58a85b}.slot.age2{border-top-color:#91a932}.slot.age3{border-top-color:#d4a63c}.slot.age4{border-top-color:#c96c35}.slot.age5{border-top-color:#7e2c3e}
+.pos,.year{font-size:11px;opacity:.76;display:block;white-space:nowrap}
+.name{font-size:12px;font-weight:700;display:block;margin:5px 0;line-height:1.14;overflow:hidden}
+.dim{opacity:.15}
+.maturity-mini{display:block;height:5px;border-radius:999px;background:#0004;margin-top:7px;overflow:hidden;border:1px solid #ffffff22}
+.maturity-mini span{display:block;height:100%;background:currentColor}
+.maturity-mini.m-early{color:#74a9e8}.maturity-mini.m-good{color:#61bc69}.maturity-mini.m-soon{color:#e0a740}.maturity-mini.m-late{color:#e05a5a}
+.actions{display:flex;gap:8px;margin:18px 0}
+.actions button,.filelabel{background:#302d2d;color:white;border:1px solid #625d5d;border-radius:10px;padding:11px;flex:1;text-align:center;font-size:14px}
+.filelabel input{display:none}
+.valuebox{border-top:1px solid #403b3b;padding:18px 0 28px}
+.valuebox h2{font-size:16px;margin:0 0 10px}
+#valueByCasier{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+#valueByCasier div{background:#211e1e;border-radius:10px;padding:9px}
+#valueByCasier span{display:block;font-size:11px;opacity:.7}
+#valueByCasier b{font-size:14px}
+.totalvalue{margin-top:10px;display:flex;align-items:end;justify-content:space-between;padding:2px}
+.totalvalue span{opacity:.75}.totalvalue b{font-size:22px}
+dialog{width:min(92vw,520px);border:0;border-radius:16px;background:#171414;color:white;padding:0;max-height:90vh;overflow:auto}
+dialog::backdrop{background:#000b}
+.dlg{padding:18px}
+.dlg h2{margin:0 0 4px}.where{opacity:.67;margin:0 0 14px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form label{font-size:13px}.wide{grid-column:1/-1}
+.form input,.form select,#pick{width:100%;padding:10px;margin-top:4px;border-radius:8px;border:1px solid #686363;background:#292626;color:white;font:inherit}
+.maturity-panel{grid-column:1/-1;background:#211e1e;border-radius:10px;padding:10px}
+.maturity-panel small{opacity:.72}
+.maturity-bar{height:9px;background:#3a3636;border-radius:999px;overflow:hidden;margin-top:7px}
+.maturity-bar span{height:100%;display:block;background:currentColor}
+.maturity-bar.m-none{color:#777}.maturity-bar.m-early{color:#74a9e8}.maturity-bar.m-good{color:#61bc69}.maturity-bar.m-soon{color:#e0a740}.maturity-bar.m-late{color:#e05a5a}
+.dlgactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.dlgactions button{padding:11px 13px;border:0;border-radius:9px;font:inherit}
+.primary{background:#841b3d;color:white}.danger{background:#752323;color:white}.secondary{background:#484444;color:white}
+
+.photos-panel{margin:0 0 12px;padding:11px;background:#181515;border:1px solid #373232;border-radius:12px}
+.photos-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.photos-head b{display:block;font-size:14px}.photos-head small{display:block;font-size:11px;opacity:.65;margin-top:2px}
+.photo-upload{background:#7a1837;color:#fff;border-radius:9px;padding:9px 11px;font-size:12px;white-space:nowrap}
+.photo-upload input{display:none}
+.photo-slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.photo-slot{min-width:0;min-height:54px;padding:9px;border:1px solid #4c4646;border-radius:10px;background:#272323;color:#fff;text-align:left}
+.photo-slot.has-photo{background:#3b222b;border-color:#713148}
+.photo-label{display:block;font-size:11px;opacity:.65}.photo-state{display:block;font-size:12px;font-weight:700;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.photo-dialog{width:min(96vw,720px);background:#0e0c0c;padding:0}
+.photo-viewer{padding:12px}.photo-viewer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.photo-viewer-head small{display:block;opacity:.65;margin-top:2px}
+#photoViewerImg{display:block;width:100%;max-height:75vh;object-fit:contain;border-radius:10px;background:#000}
+
+@media(max-width:380px){
+  #grid{gap:5px}.slot{padding:6px 4px;min-height:88px}.name{font-size:11px}.pos,.year{font-size:10px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍷 Ma Cave à Vin</h1>
+  <div class="topstats">
+    <div class="metric"><b id="count">—</b><span>contenants</span></div>
+    <div class="metric"><b id="free">—</b><span>places libres</span></div>
+  </div>
+  <div id="casierStats" class="statline"></div>
+  <div id="yearStats" class="yearbox" aria-label="Répartition par millésime"></div>
+</header>
+
+<main>
+  <input id="search" class="search" placeholder="Rechercher un vin, domaine, millésime…">
+  <div class="tabs">
+    <button class="tab active" data-c="1">Casier 1</button>
+    <button class="tab" data-c="2">Casier 2</button>
+    <button class="tab" data-c="3">Casier 3</button>
+  </div>
+
+  <section class="photos-panel">
+    <div class="photos-head">
+      <div>
+        <b>Photos du casier <span id="photoCasier">1</span></b>
+        <small>2 photos conservées : actuelle + précédente</small>
+      </div>
+      <label class="photo-upload">
+        Nouvelle photo
+        <input id="photoInput" type="file" accept="image/*">
+      </label>
+    </div>
+    <div class="photo-slots">
+      <button id="photoCurrent" class="photo-slot" type="button">
+        <span class="photo-label">Actuelle</span>
+        <span class="photo-state">Aucune photo</span>
+      </button>
+      <button id="photoPrevious" class="photo-slot" type="button">
+        <span class="photo-label">Précédente</span>
+        <span class="photo-state">Aucune photo</span>
+      </button>
+    </div>
+  </section>
+
+  <div id="grid"></div>
+
+  <div class="actions">
+    <button id="export">Sauvegarder</button>
+    <label class="filelabel">Restaurer<input id="import" type="file" accept="application/json"></label>
+  </div>
+
+  <section class="valuebox">
+    <h2>Valeur estimée de la cave</h2>
+    <div id="valueByCasier"></div>
+    <div class="totalvalue"><span>Total</span><b id="valueTotal">—</b></div>
+  </section>
+</main>
+
+<dialog id="addDialog">
+  <div class="dlg">
+    <h2>Ajouter une bouteille</h2>
+    <p>Choisis un vin existant ou crée une nouvelle référence.</p>
+    <select id="pick"></select>
+    <div class="dlgactions">
+      <button id="useRef" class="primary">Ajouter depuis ma base</button>
+      <button id="newRef" class="primary">Créer un nouveau vin</button>
+      <button id="cancelAdd" class="secondary">Annuler</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="dialog">
+  <div class="dlg">
+    <h2 id="dialogTitle"></h2>
+    <p id="where" class="where"></p>
+    <div class="form">
+      <label class="wide">Vin / Cuvée<input id="f_vin"></label>
+      <label class="wide">Domaine<input id="f_domaine"></label>
+      <label>Millésime<input id="f_millesime" inputmode="numeric"></label>
+      <label>Couleur
+        <select id="f_couleur">
+          <option>Rouge</option><option>Blanc</option><option>Rosé</option><option>Effervescent</option>
+        </select>
+      </label>
+      <label>Format<input id="f_format" placeholder="75 cl"></label>
+      <label>Prix (€)<input id="f_prix" inputmode="decimal"></label>
+      <label>Maturité : à partir de<input id="f_maturiteDebut" inputmode="numeric" placeholder="2026"></label>
+      <label>À boire avant / jusqu'à<input id="f_maturiteFin" inputmode="numeric" placeholder="2031"></label>
+      <div class="maturity-panel">
+        <b id="maturityStatus">Maturité non renseignée</b>
+        <div id="maturityBar" class="maturity-bar m-none"><span id="maturityBarFill" style="width:0%"></span></div>
+        <small>La jauge évolue automatiquement avec la date du téléphone.</small>
+      </div>
+    </div>
+    <div class="dlgactions">
+      <button id="save" class="primary">Enregistrer la référence</button>
+      <button id="remove" class="danger">Sortir cette bouteille</button>
+      <button id="cancel" class="secondary">Annuler</button>
+    </div>
+  </div>
+</dialog>
+
+
+<dialog id="photoDialog" class="photo-dialog">
+  <div class="photo-viewer">
+    <div class="photo-viewer-head">
+      <div>
+        <b id="photoViewerTitle">Photo du casier</b>
+        <small id="photoViewerDate"></small>
+      </div>
+      <button id="photoClose" class="secondary" type="button">Fermer</button>
+    </div>
+    <img id="photoViewerImg" alt="Photo du casier">
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

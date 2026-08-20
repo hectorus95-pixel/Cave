@@ -1,1 +1,9 @@
-{"name": "Ma Cave à Vin", "short_name": "Ma Cave", "start_url": "./", "display": "standalone", "background_color": "#171313", "theme_color": "#4b0d1b"}
+{
+  "name": "Ma Cave à Vin",
+  "short_name": "Ma Cave",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d0b0b",
+  "theme_color": "#4b0d1b"
+}
