@@ -187,13 +187,50 @@ function refsWithLocations(filterFn){
 }
 function showResultPanel(title,items){
   const panel=$('#resultPanel'),list=$('#resultList');
-  $('#resultTitle').textContent=title; list.innerHTML='';
-  if(!items.length) list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
+  panel.classList.remove('hidden');
+  $('#resultTitle').textContent=title;
+  list.innerHTML='';
+
+  const groups=new Map();
+
   items.forEach(({r,p})=>{
+    const key=[
+      r.id||'',
+      r.vin||'',
+      r.domaine||r.producteur||'',
+      r.appellation||'',
+      r.millesime||'',
+      r.format||''
+    ].join('|');
+
+    if(!groups.has(key)) groups.set(key,{r,positions:[]});
+    groups.get(key).positions.push(p);
+  });
+
+  groups.forEach(({r,positions})=>{
     const btn=document.createElement('button');
-    btn.type='button'; btn.className='result-item';
-    btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}</b><small>Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}</small>`;
+    btn.type='button';
+    btn.className='resultItem';
+
+    const qty=positions.length;
+    const mill=r.millesime||'Sans année';
+    const producer=r.domaine||r.producteur||'';
+    const appellation=r.appellation||'';
+
+    const locations=positions
+      .sort((a,b)=>a.casier-b.casier||a.ligne-b.ligne||a.position-b.position)
+      .map(p=>`Casier ${p.casier} · L${p.ligne}-P${p.position}`)
+      .join('  •  ');
+
+    btn.innerHTML=`
+      <strong>${escapeHtml(r.vin||'Vin')} · ${escapeHtml(mill)} <span>×${qty}</span></strong>
+      ${producer?`<div>${escapeHtml(producer)}</div>`:''}
+      ${appellation?`<div>${escapeHtml(appellation)}</div>`:''}
+      <small>${escapeHtml(locations)}</small>
+    `;
+
     btn.addEventListener('click',()=>{
+      const p=positions[0];
       activeCasier=p.casier;
       render();
       refreshPhotoButtons();
@@ -201,39 +238,31 @@ function showResultPanel(title,items){
         .find(el=>Number(el.dataset.line)===p.ligne && Number(el.dataset.pos)===p.position);
       if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
     });
+
     list.appendChild(btn);
   });
-  panel.hidden=false;
 }
 function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
 function showSearchResults(){
   const raw=$('#search').value.trim();
   const q=raw.toLowerCase();
-  if(!q){
-    hideResultPanel();
-    return;
-  }
+  if(!q){hideResultPanel();return;}
 
   const items=refsWithLocations((r,p)=>{
     const hay=[
-      r.vin,
-      r.domaine,
-      r.producteur,
-      r.appellation,
-      r.millesime,
-      r.couleur,
-      r.format,
-      p.emplacement,
-      `casier ${p.casier}`,
-      `ligne ${p.ligne}`,
-      `position ${p.position}`
+      r.vin,r.domaine,r.producteur,r.appellation,r.millesime,
+      r.couleur,r.format,p.emplacement,
+      `casier ${p.casier}`,`ligne ${p.ligne}`,`position ${p.position}`
     ].join(' ').toLowerCase();
-
     return hay.includes(q);
   });
 
+  const distinct=new Set(items.map(({r})=>[
+    r.id||'',r.vin||'',r.domaine||r.producteur||'',r.appellation||'',r.millesime||'',r.format||''
+  ].join('|'))).size;
+
   showResultPanel(
-    `${items.length} résultat${items.length>1?'s':''} dans les 3 casiers pour « ${raw} »`,
+    `${distinct} vin${distinct>1?'s':''} · ${items.length} bouteille${items.length>1?'s':''} dans les 3 casiers pour « ${raw} »`,
     items
   );
 }
@@ -395,7 +424,7 @@ $('#cancel').addEventListener('click',()=>requestClose($('#dialog')));
 $('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
 ['f_millesime','f_maturiteDebut','f_maturiteFin'].forEach(id=>$('#'+id).addEventListener('input',updateMaturityPreview));
 
-$('#search').addEventListener('input',()=>{showSearchResults();});
+$('#search').addEventListener('input',showSearchResults);
 $$('.tab').forEach(b=>b.addEventListener('click',async()=>{activeCasier=Number(b.dataset.c);render();await refreshPhotoButtons()}));
 
 $('#export').addEventListener('click',()=>{
