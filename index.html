@@ -756,6 +756,39 @@ dialog,
   color:#241b08!important;
 }
 
+
+/* V5.4.24 — les cartes des résultats ne se compressent plus */
+.result-list{
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+
+.result-item{
+  flex:0 0 auto!important;
+  flex-shrink:0!important;
+  height:auto!important;
+  min-height:88px!important;
+}
+
+.result-main{
+  height:auto!important;
+  min-height:88px!important;
+}
+
+.result-gauge{
+  display:block!important;
+  width:100%!important;
+  margin-top:7px!important;
+  flex:0 0 auto!important;
+}
+
+.result-gauge .maturity-gauge{
+  display:grid!important;
+  width:100%!important;
+  margin-top:0!important;
+  margin-bottom:2px!important;
+}
+
 </style>
 </head>
 <body>
@@ -884,6 +917,6 @@ dialog,
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.23"></script>
+<script src="app.js?v=5.4.24"></script>
 </body>
 </html>
