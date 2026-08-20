@@ -519,7 +519,8 @@ $('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
 $('#search').addEventListener('input',showSearchResults);
 $$('.tab').forEach(b=>b.addEventListener('click',async()=>{
   activeCasier=Number(b.dataset.c);
-  if(!$('#search').value.trim()) hideResultPanel();
+  $('#search').value='';
+  hideResultPanel();
   render();
   await refreshPhotoButtons();
 }));
