@@ -61,10 +61,17 @@ function euro(v){
   return Number(v||0).toLocaleString('fr-FR',{style:'currency',currency:'EUR'});
 }
 function wineClass(c){
-  c=(c||'').toLowerCase();
+  c=normalizeSearchText ? normalizeSearchText(c||'') : String(c||'').toLowerCase();
   if(c.includes('blanc')) return 'white';
-  if(c.includes('ros')) return 'rose';
-  if(c.includes('eff')) return 'spark';
+  if(c.includes('rose')) return 'rose';
+  if(
+    c.includes('efferv') ||
+    c.includes('petill') ||
+    c.includes('mousseux') ||
+    c.includes('champagne') ||
+    c.includes('cremant') ||
+    c.includes('spark')
+  ) return 'spark';
   return 'red';
 }
 function currentDecimalYear(){

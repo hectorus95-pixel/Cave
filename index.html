@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
 <link rel="manifest" href="manifest.webmanifest?v=5.4">
 <style>
-:root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:#0d0b0b;color:#fff}
 header{background:#4b0d1b;padding:17px 16px 15px;position:static;z-index:auto}
@@ -437,6 +438,26 @@ button.result-item{
   touch-action:pan-y;
 }
 
+
+/* V5.4.20 — Samsung Internet : la page gère déjà son thème sombre.
+   Empêche autant que possible l'Auto/Force Dark de retraiter nos aplats. */
+html,
+body,
+header,
+main,
+button,
+input,
+select,
+dialog,
+.year-chip,
+.slot,
+.slot .vintage-strip,
+.result-item,
+.result-year-zone,
+.result-main{
+  color-scheme:dark !important;
+}
+
 </style>
 </head>
 <body>
@@ -565,6 +586,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.19"></script>
+<script src="app.js?v=5.4.20"></script>
 </body>
 </html>
