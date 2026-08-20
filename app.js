@@ -81,18 +81,18 @@ function currentDecimalYear(){
 }
 
 const AGE_COLORS = [
-  '#285f38', // 0 an : vert foncé
-  '#3f8b49', // 1 an : vert
-  '#79a642', // 2 ans : vert-jaune
-  '#c1b53b', // 3 ans : jaune
-  '#d88a32', // 4 ans : orange
-  '#c85d34', // 5 ans : orange-rouge
-  '#aa3e3d', // 6 ans : rouge
-  '#7d2b3d', // 7 ans : bordeaux
-  '#642438', // 8 ans : bordeaux foncé
-  '#511d30', // 9 ans
-  '#421827', // 10 ans
-  '#351420'  // 11 ans
+  '#174F2A',
+  '#2F7D32',
+  '#78A52C',
+  '#C6B51F',
+  '#E08A1E',
+  '#D95A20',
+  '#C62828',
+  '#9B1C31',
+  '#7B1730',
+  '#64132A',
+  '#521023',
+  '#430D1D'
 ];
 
 function wineAge(y){
