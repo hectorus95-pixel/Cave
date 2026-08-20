@@ -181,6 +181,19 @@ function renderStats(){
     const el=$('#casierCount'+c);
     if(el) el.textContent=`${s.byCasier[c]} bt`;
   });
+
+  const maturityCounts={1:0,2:0,3:0,4:0};
+  s.occ.forEach(x=>{
+    const r=ref(x.refId);
+    const mi=maturityInfo(r);
+    if(mi.known && maturityCounts[mi.zone]!==undefined){
+      maturityCounts[mi.zone]++;
+    }
+  });
+  [1,2,3,4].forEach(z=>{
+    const el=$('#matCount'+z);
+    if(el) el.textContent=`${maturityCounts[z]} bt`;
+  });
   const years=Object.entries(s.byYear).sort((a,b)=>{
     if(a[0]==='Sans année') return 1;
     if(b[0]==='Sans année') return -1;
@@ -264,7 +277,87 @@ function normalizeSearchText(value){
     .replace(/[\u0300-\u036f]/g,'')
     .toLowerCase();
 }
+function groupedResultItems(matches){
+  const grouped=new Map();
+
+  matches.forEach(({r,p})=>{
+    const key=r.id || [
+      r.vin||'',
+      r.domaine||r.producteur||'',
+      r.appellation||'',
+      r.millesime||'',
+      r.format||''
+    ].join('|');
+
+    if(!grouped.has(key)){
+      grouped.set(key,{r,positions:[]});
+    }
+    grouped.get(key).positions.push(p);
+  });
+
+  const items=[];
+
+  grouped.forEach(({r,positions})=>{
+    positions.sort((a,b)=>
+      a.casier-b.casier ||
+      a.ligne-b.ligne ||
+      a.position-b.position
+    );
+
+    const first=positions[0];
+    const locations=positions
+      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
+      .join(' · ');
+
+    items.push({
+      r:{
+        ...r,
+        vin:`${r.vin} ×${positions.length}`,
+        _searchLocations:locations
+      },
+      p:first
+    });
+  });
+
+  return items;
+}
+
+function clearMaturityFilter(){
+  $$('.maturity-filter').forEach(b=>b.classList.remove('active'));
+}
+
+function showMaturityResults(zone){
+  zone=Number(zone);
+  $('#search').value='';
+  clearMaturityFilter();
+
+  const active=$$('.maturity-filter').find(b=>Number(b.dataset.zone)===zone);
+  if(active) active.classList.add('active');
+
+  const labels={
+    1:'Jeune',
+    2:'À boire',
+    3:'Fin maturité',
+    4:'Surmaturité'
+  };
+
+  const matches=refsWithLocations(r=>{
+    const mi=maturityInfo(r);
+    return mi.known && mi.zone===zone;
+  });
+
+  const items=groupedResultItems(matches);
+
+  showResultPanel(
+    `${labels[zone]} · ${items.length} vin${items.length>1?'s':''} · ${matches.length} bouteille${matches.length>1?'s':''}`,
+    items
+  );
+
+  $('#resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
 function showSearchResults(){
+  clearMaturityFilter();
   const raw=$('#search').value.trim();
   const q=normalizeSearchText(raw);
   if(!q){hideResultPanel();return;}
@@ -278,49 +371,7 @@ function showSearchResults(){
     return normalizeSearchText(hay).includes(q);
   });
 
-  // Regrouper les bouteilles qui ont la même référence.
-  const grouped=new Map();
-
-  matches.forEach(({r,p})=>{
-    const key=r.id || [
-      r.vin||'',
-      r.domaine||r.producteur||'',
-      r.appellation||'',
-      r.millesime||'',
-      r.format||''
-    ].join('|');
-
-    if(!grouped.has(key)){
-      grouped.set(key,{r,positions:[]});
-    }
-    grouped.get(key).positions.push(p);
-  });
-
-  const items=[];
-
-  grouped.forEach(({r,positions})=>{
-    positions.sort((a,b)=>
-      a.casier-b.casier ||
-      a.ligne-b.ligne ||
-      a.position-b.position
-    );
-
-    const first=positions[0];
-    const locations=positions
-      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
-      .join(' · ');
-
-    // On fournit à showResultPanel() un objet de même forme qu'avant,
-    // avec seulement deux informations d'affichage supplémentaires.
-    items.push({
-      r:{
-        ...r,
-        vin:`${r.vin} ×${positions.length}`,
-        _searchLocations:locations
-      },
-      p:first
-    });
-  });
+  const items=groupedResultItems(matches);
 
   showResultPanel(
     `${items.length} vin${items.length>1?'s':''} · ${matches.length} bouteille${matches.length>1?'s':''} dans les 3 casiers pour « ${raw} »`,
@@ -328,49 +379,12 @@ function showSearchResults(){
   );
 }
 function showVintageResults(year){
+  clearMaturityFilter();
+  $('#search').value='';
   const y=String(year);
   const matches=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
 
-  const grouped=new Map();
-
-  matches.forEach(({r,p})=>{
-    const key=r.id || [
-      r.vin||'',
-      r.domaine||r.producteur||'',
-      r.appellation||'',
-      r.millesime||'',
-      r.format||''
-    ].join('|');
-
-    if(!grouped.has(key)){
-      grouped.set(key,{r,positions:[]});
-    }
-    grouped.get(key).positions.push(p);
-  });
-
-  const items=[];
-
-  grouped.forEach(({r,positions})=>{
-    positions.sort((a,b)=>
-      a.casier-b.casier ||
-      a.ligne-b.ligne ||
-      a.position-b.position
-    );
-
-    const first=positions[0];
-    const locations=positions
-      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
-      .join(' · ');
-
-    items.push({
-      r:{
-        ...r,
-        vin:`${r.vin} ×${positions.length}`,
-        _searchLocations:locations
-      },
-      p:first
-    });
-  });
+  const items=groupedResultItems(matches);
 
   showResultPanel(
     `${y} · ${items.length} vin${items.length>1?'s':''} · ${matches.length} bouteille${matches.length>1?'s':''}`,
@@ -535,9 +549,22 @@ $('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
 ['f_millesime','f_maturiteDebut','f_maturiteFin'].forEach(id=>$('#'+id).addEventListener('input',updateMaturityPreview));
 
 $('#search').addEventListener('input',showSearchResults);
+$$('.maturity-filter').forEach(b=>b.addEventListener('click',()=>{
+  const zone=Number(b.dataset.zone);
+
+  if(b.classList.contains('active')){
+    clearMaturityFilter();
+    hideResultPanel();
+    return;
+  }
+
+  showMaturityResults(zone);
+}));
+
 $$('.tab').forEach(b=>b.addEventListener('click',async()=>{
   activeCasier=Number(b.dataset.c);
   $('#search').value='';
+  clearMaturityFilter();
   hideResultPanel();
   render();
   await refreshPhotoButtons();

@@ -635,6 +635,53 @@ button.result-item{
 .result-main.spark,.result-main.spark b,.result-main.spark small,.result-main.spark .result-domain{
   color:#211800!important;
 }
+
+/* =========================================================
+   V6.0 — RECHERCHE PAR MATURITÉ
+   ========================================================= */
+.maturity-filters{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+  margin:10px 0 10px;
+}
+.maturity-filter{
+  -webkit-appearance:none;
+  appearance:none;
+  min-width:0;
+  min-height:45px;
+  padding:6px 3px;
+  border:1px solid #4b4545;
+  border-radius:9px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#1b1717;
+  font-size:9px;
+  line-height:1.05;
+  font-weight:850;
+  text-align:center;
+  opacity:.86;
+}
+.maturity-filter small{
+  display:block;
+  margin-top:3px;
+  font-size:8px;
+  font-weight:700;
+  opacity:.72;
+}
+.maturity-filter.z1{background:#5fc478}
+.maturity-filter.z2{background:#a99e12}
+.maturity-filter.z3{background:#df7a24}
+.maturity-filter.z4{background:#ff7777}
+.maturity-filter.active{
+  opacity:1;
+  outline:2px solid #fff;
+  outline-offset:2px;
+  box-shadow:0 0 0 2px #111;
+}
+
 </style>
 </head>
 <body>
@@ -654,15 +701,25 @@ button.result-item{
 
 <main>
   <input id="search" class="search" placeholder="Rechercher un vin, domaine, millésime…">
+
+  <div id="maturityFilters" class="maturity-filters" aria-label="Rechercher par maturité">
+    <button type="button" class="maturity-filter z1" data-zone="1">
+      <span>Jeune</span><small id="matCount1">0 bt</small>
+    </button>
+    <button type="button" class="maturity-filter z2" data-zone="2">
+      <span>À boire</span><small id="matCount2">0 bt</small>
+    </button>
+    <button type="button" class="maturity-filter z3" data-zone="3">
+      <span>Fin maturité</span><small id="matCount3">0 bt</small>
+    </button>
+    <button type="button" class="maturity-filter z4" data-zone="4">
+      <span>Surmaturité</span><small id="matCount4">0 bt</small>
+    </button>
+  </div>
+
   <div id="resultPanel" class="result-panel" hidden>
     <div id="resultTitle" class="result-title"></div>
     <div id="resultList" class="result-list"></div>
-  </div>
-  <div class="maturity-legend" aria-label="Légende maturité">
-    <span><i class="z1"></i>Jeune</span>
-    <span><i class="z2"></i>À boire</span>
-    <span><i class="z3"></i>Fin maturité</span>
-    <span><i class="z4"></i>Surmaturité</span>
   </div>
 
 
@@ -763,6 +820,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.29"></script>
+<script src="app.js?v=6.0"></script>
 </body>
 </html>
