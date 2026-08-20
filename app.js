@@ -187,70 +187,19 @@ function refsWithLocations(filterFn){
 }
 function showResultPanel(title,items){
   const panel=$('#resultPanel'),list=$('#resultList');
-  $('#resultTitle').textContent=title;
-  list.innerHTML='';
-
-  if(!items.length){
-    list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
-    panel.hidden=false;
-    return;
-  }
-
-  const groups=new Map();
-
+  $('#resultTitle').textContent=title; list.innerHTML='';
+  if(!items.length) list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
   items.forEach(({r,p})=>{
-    const key=r.id || [
-      r.vin||'',
-      r.domaine||r.producteur||'',
-      r.appellation||'',
-      r.millesime||'',
-      r.format||''
-    ].join('|');
-
-    if(!groups.has(key)){
-      groups.set(key,{r,positions:[]});
-    }
-    groups.get(key).positions.push(p);
-  });
-
-  groups.forEach(({r,positions})=>{
-    positions.sort((a,b)=>
-      a.casier-b.casier ||
-      a.ligne-b.ligne ||
-      a.position-b.position
-    );
-
     const btn=document.createElement('button');
-    btn.type='button';
-    btn.className='result-item';
-
-    const qty=positions.length;
-    const locations=positions
-      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
-      .join(' · ');
-
-    btn.innerHTML=`
-      <b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')} · ×${qty}</b>
-      <small>${esc(locations)}</small>
-    `;
-
+    btn.type='button'; btn.className='result-item';
+    btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}</b><small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>`;
     btn.addEventListener('click',()=>{
-      const p=positions[0];
-      activeCasier=p.casier;
-      render();
-      refreshPhotoButtons();
-
-      const target=[...document.querySelectorAll('#grid .slot')]
-        .find(el=>Number(el.dataset.line)===p.ligne && Number(el.dataset.pos)===p.position);
-
-      if(target){
-        target.scrollIntoView({behavior:'smooth',block:'center'});
-      }
+      activeCasier=p.casier; render(); refreshPhotoButtons();
+      const target=[...document.querySelectorAll('#grid .slot')].find(el=>el.dataset.line==p.ligne&&el.dataset.pos==p.position);
+      if(target){ target.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>target.click(),250); }
     });
-
     list.appendChild(btn);
   });
-
   panel.hidden=false;
 }
 function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
@@ -259,7 +208,7 @@ function showSearchResults(){
   const q=raw.toLowerCase();
   if(!q){hideResultPanel();return;}
 
-  const items=refsWithLocations((r,p)=>{
+  const matches=refsWithLocations((r,p)=>{
     const hay=[
       r.vin,r.domaine,r.producteur,r.appellation,r.millesime,
       r.couleur,r.format,p.emplacement,
@@ -268,12 +217,52 @@ function showSearchResults(){
     return hay.includes(q);
   });
 
-  const distinct=new Set(items.map(({r})=>r.id || [
-    r.vin||'',r.domaine||r.producteur||'',r.appellation||'',r.millesime||'',r.format||''
-  ].join('|'))).size;
+  // Regrouper les bouteilles qui ont la même référence.
+  const grouped=new Map();
+
+  matches.forEach(({r,p})=>{
+    const key=r.id || [
+      r.vin||'',
+      r.domaine||r.producteur||'',
+      r.appellation||'',
+      r.millesime||'',
+      r.format||''
+    ].join('|');
+
+    if(!grouped.has(key)){
+      grouped.set(key,{r,positions:[]});
+    }
+    grouped.get(key).positions.push(p);
+  });
+
+  const items=[];
+
+  grouped.forEach(({r,positions})=>{
+    positions.sort((a,b)=>
+      a.casier-b.casier ||
+      a.ligne-b.ligne ||
+      a.position-b.position
+    );
+
+    const first=positions[0];
+    const locations=positions
+      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
+      .join(' · ');
+
+    // On fournit à showResultPanel() un objet de même forme qu'avant,
+    // avec seulement deux informations d'affichage supplémentaires.
+    items.push({
+      r:{
+        ...r,
+        vin:`${r.vin} ×${positions.length}`,
+        _searchLocations:locations
+      },
+      p:first
+    });
+  });
 
   showResultPanel(
-    `${distinct} vin${distinct>1?'s':''} · ${items.length} bouteille${items.length>1?'s':''} dans les 3 casiers pour « ${raw} »`,
+    `${items.length} vin${items.length>1?'s':''} · ${matches.length} bouteille${matches.length>1?'s':''} dans les 3 casiers pour « ${raw} »`,
     items
   );
 }
