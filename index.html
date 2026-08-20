@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=4.3">
+<link rel="manifest" href="manifest.webmanifest?v=4.4">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -227,6 +227,58 @@ dialog::backdrop{background:#000b}
 .slot.age5 .vintage-strip{background:#7e2c3e!important;color:#fff!important}
 .slot.age0 .vintage-strip{background:#777!important;color:#fff!important}
 
+
+/* V4.4 */
+
+/* Les deux grands compteurs sont centrés comme les statistiques dessous. */
+.topstats .metric{
+  text-align:center!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.topstats .metric b,
+.topstats .metric span{
+  width:100%!important;
+  text-align:center!important;
+}
+
+/* Le header reste toujours devant les curseurs quand on fait défiler la cave. */
+header{
+  z-index:100!important;
+  isolation:isolate!important;
+}
+.slot{
+  isolation:isolate!important;
+  z-index:0!important;
+}
+.maturity-gauge{
+  z-index:0!important;
+  isolation:isolate!important;
+}
+.maturity-cursor{
+  z-index:1!important;
+}
+
+/* Progression chronologique :
+   jeune = vert, puis olive, or, orange, rouge, rouge foncé, bordeaux très foncé. */
+.slot.age0 .vintage-strip{background:#69b96d!important;color:#102010!important}
+.slot.age1 .vintage-strip{background:#58a85b!important;color:#102010!important}
+.slot.age2 .vintage-strip{background:#9da83b!important;color:#181808!important}
+.slot.age3 .vintage-strip{background:#d4a63c!important;color:#251a05!important}
+.slot.age4 .vintage-strip{background:#c96c35!important;color:#fff!important}
+.slot.age5 .vintage-strip{background:#a9433f!important;color:#fff!important}
+.slot.age6 .vintage-strip{background:#762d3c!important;color:#fff!important}
+.slot.age7 .vintage-strip{background:#481725!important;color:#fff!important}
+.slot.ageUnknown .vintage-strip{background:#777!important;color:#fff!important}
+
+/* Les photos sont maintenant une section basse après la valeur de la cave. */
+.photos-panel{
+  margin-top:4px!important;
+  margin-bottom:18px!important;
+}
+
 </style>
 </head>
 <body>
@@ -255,6 +307,16 @@ dialog::backdrop{background:#000b}
     <span><i class="z4"></i>Surmaturité</span>
   </div>
 
+
+  <div id="grid"></div>
+
+
+  <section class="valuebox">
+    <h2>Valeur estimée de la cave</h2>
+    <div id="valueByCasier"></div>
+    <div class="totalvalue"><span>Total</span><b id="valueTotal">—</b></div>
+  </section>
+
   <section class="photos-panel">
     <div class="photos-head">
       <div>
@@ -278,18 +340,11 @@ dialog::backdrop{background:#000b}
     </div>
   </section>
 
-  <div id="grid"></div>
-
   <div class="actions">
     <button id="export">Sauvegarder</button>
     <label class="filelabel">Restaurer<input id="import" type="file" accept="application/json"></label>
   </div>
 
-  <section class="valuebox">
-    <h2>Valeur estimée de la cave</h2>
-    <div id="valueByCasier"></div>
-    <div class="totalvalue"><span>Total</span><b id="valueTotal">—</b></div>
-  </section>
 </main>
 
 <dialog id="addDialog">
@@ -350,6 +405,6 @@ dialog::backdrop{background:#000b}
   </div>
 </dialog>
 
-<script src="app.js?v=4.3"></script>
+<script src="app.js?v=4.4"></script>
 </body>
 </html>

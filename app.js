@@ -58,8 +58,15 @@ function currentDecimalYear(){
 }
 function ageClass(y){
   const a=new Date().getFullYear()-Number(y);
-  if(!y || !Number.isFinite(a)) return 'age0';
-  return a<=1?'age1':a<=3?'age2':a<=5?'age3':a<=8?'age4':'age5';
+  if(!y || !Number.isFinite(a)) return 'ageUnknown';
+  if(a<=0) return 'age0';
+  if(a===1) return 'age1';
+  if(a===2) return 'age2';
+  if(a===3) return 'age3';
+  if(a===4) return 'age4';
+  if(a===5) return 'age5';
+  if(a===6) return 'age6';
+  return 'age7';
 }
 function maturityInfo(r){
   const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
