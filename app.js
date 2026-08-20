@@ -158,7 +158,7 @@ function renderStats(){
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
     const color = y==='Sans année' ? '#777777' : ageColor(Number(y));
-    return `<span class="year-chip" style="--age-color:${color}"><b>${esc(y)}</b><small>${n} bt</small></span>`;
+    return `<span class="year-chip" style="background-color:${color};border-top-color:${color}"><b>${esc(y)}</b><small>${n} bt</small></span>`;
   }).join('');
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
     `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
@@ -180,7 +180,7 @@ function render(){
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
     if(r) b.style.setProperty('--age-color',ageColor(r.millesime));
     b.innerHTML=`
-      ${r?`<span class="vintage-strip">${esc(r.millesime||'—')}</span>`:''}
+      ${r?`<span class="vintage-strip" style="background-color:${ageColor(r.millesime)}">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`

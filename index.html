@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=4.11">
+<link rel="manifest" href="manifest.webmanifest?v=4.12">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -233,6 +233,23 @@ header{
   .pos{font-size:10px}
 }
 
+
+/* V4.12 — couleur millésime injectée directement dans le HTML */
+.year-chip{
+  background-image:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  color:#fff!important;
+}
+.slot .vintage-strip{
+  background-image:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  color:#fff!important;
+}
+
 </style>
 </head>
 <body>
@@ -359,6 +376,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=4.11"></script>
+<script src="app.js?v=4.12"></script>
 </body>
 </html>
