@@ -174,9 +174,9 @@ function renderStats(){
 
 function refsWithLocations(filterFn){
   const out=[];
-  positions.forEach(p=>{
+  inv.forEach(p=>{
     if(!p.refId) return;
-    const r=refs.find(x=>x.id===p.refId);
+    const r=ref(p.refId);
     if(r && filterFn(r,p)) out.push({r,p});
   });
   return out.sort((a,b)=>a.p.casier-b.p.casier||a.p.ligne-b.p.ligne||a.p.position-b.p.position);
