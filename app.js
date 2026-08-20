@@ -226,7 +226,7 @@ function render(){
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
     b.innerHTML=`
-      ${r?`<span class="vintage-strip" style="background-color:${couleurPourAge(r.millesime)} !important;background:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
+      ${r?`<span class="vintage-strip" style="background:${couleurPourAge(r.millesime)} !important;background-color:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
@@ -238,15 +238,6 @@ function render(){
           <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>
         </span>`:''}
     `;
-    if(r){
-      const color=couleurPourAge(r.millesime);
-      const strip=b.querySelector('.vintage-strip');
-      if(strip){
-        strip.style.setProperty('background',color,'important');
-        strip.style.setProperty('background-color',color,'important');
-      }
-    }
-    }
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
     g.appendChild(b);
   });
