@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Test couleurs — Ma Cave</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#0d0b0b;color:#fff;font-family:system-ui,-apple-system,sans-serif}
+body{padding:18px 14px 40px}
+h1{font-size:22px;margin:0 0 8px}
+h2{font-size:17px;margin:28px 0 10px}
+p{color:#cfc7c7;font-size:14px;line-height:1.35}
+.note{padding:10px 12px;border:1px solid #3c3636;border-radius:10px;background:#171414}
+
+/* ====== UNE SEULE PALETTE AGE ====== */
+.age-2025{background:#168A2F!important}
+.age-2024{background:#7FB800!important;color:#171300!important}
+.age-2023{background:#FFD000!important;color:#171300!important}
+.age-2022{background:#FF9800!important;color:#171300!important}
+.age-2021{background:#FF5A1F!important}
+.age-2020{background:#E42323!important}
+.age-2019{background:#A11233!important}
+.age-none{background:#777777!important}
+
+/* ====== UNE SEULE PALETTE VIN ====== */
+.wine-red{background:#A71930!important;color:#fff!important}
+.wine-rose{background:#F06A94!important;color:#241018!important}
+.wine-white{background:#E6B92E!important;color:#211800!important}
+.wine-spark{background:#FFF2A6!important;color:#211800!important}
+
+.age-strip,.wine-fill{
+  background-image:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+
+.year-row{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:4px;
+}
+.year-chip{
+  -webkit-appearance:none;
+  appearance:none;
+  border:1px solid #555;
+  padding:0;
+  border-radius:10px;
+  overflow:hidden;
+  min-width:88px;
+  background:transparent;
+}
+.year-chip .age-strip{
+  display:block;
+  padding:10px 8px;
+  font-weight:800;
+  font-size:17px;
+  text-align:center;
+}
+.year-chip small{
+  display:block;
+  font-size:12px;
+  opacity:.75;
+  margin-top:3px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.sample{
+  border:1px solid #443d3d;
+  border-radius:12px;
+  overflow:hidden;
+  background:#151212;
+}
+.sample-title{
+  padding:8px 10px;
+  font-size:13px;
+  color:#cfc7c7;
+  border-bottom:1px solid #322d2d;
+}
+
+.slot{
+  position:relative;
+  height:126px;
+  margin:10px;
+  overflow:hidden;
+  border-radius:11px;
+}
+.slot .age-strip{
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:15px;
+}
+.slot .wine-fill{
+  position:absolute;
+  left:0;right:0;top:32px;bottom:0;
+  padding:10px;
+}
+.slot .pos{font-size:12px;opacity:.72}
+.slot .name{display:block;font-size:17px;font-weight:800;margin-top:4px}
+.slot .domain{display:block;font-size:11px;font-weight:650;margin-top:2px;opacity:.8}
+.gauge{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;position:absolute;left:8px;right:8px;bottom:8px}
+.gauge i{height:8px;border-radius:3px}
+.gauge i:nth-child(1){background:#5fc478}
+.gauge i:nth-child(2){background:#a99e12}
+.gauge i:nth-child(3){background:#df7a24}
+.gauge i:nth-child(4){background:#ff7777}
+
+.result{
+  display:grid;
+  grid-template-columns:80px 1fr;
+  min-height:105px;
+  margin:10px;
+  border:1px solid #494141;
+  border-radius:11px;
+  overflow:hidden;
+}
+.result .age-strip{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:900;
+  font-size:16px;
+  padding:8px;
+}
+.result .wine-fill{padding:12px}
+.result b{display:block;font-size:17px}
+.result .domain{display:block;font-size:12px;font-weight:650;margin-top:3px;opacity:.82}
+.result small{display:block;font-size:11px;margin-top:5px;opacity:.75}
+
+.type-row{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.type-card{
+  min-height:100px;
+  border-radius:12px;
+  padding:14px;
+  border:1px solid #504848;
+}
+.type-card b{font-size:18px}
+.type-card code{display:block;margin-top:7px;font-size:12px}
+
+@media(min-width:700px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .type-row{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<h1>Test couleurs — Ma Cave</h1>
+<p class="note">Cette page est indépendante de l'application. Si une couleur paraît différente entre le bouton du haut, la case et le résultat, le problème vient du rendu du navigateur. Si elles sont identiques ici, le problème vient du CSS de l'application.</p>
+
+<h2>1. Palette des années</h2>
+<div class="year-row">
+  <button class="year-chip"><span class="age-strip age-2025">2025<small>vert</small></span></button>
+  <button class="year-chip"><span class="age-strip age-2024">2024<small>vert-jaune</small></span></button>
+  <button class="year-chip"><span class="age-strip age-2023">2023<small>jaune</small></span></button>
+  <button class="year-chip"><span class="age-strip age-2022">2022<small>orange</small></span></button>
+  <button class="year-chip"><span class="age-strip age-2021">2021<small>orange-rouge</small></span></button>
+  <button class="year-chip"><span class="age-strip age-2020">2020<small>rouge</small></span></button>
+  <button class="year-chip"><span class="age-strip age-2019">2019<small>bordeaux</small></span></button>
+  <button class="year-chip"><span class="age-strip age-none">Sans année<small>gris</small></span></button>
+</div>
+
+<h2>2. Même année aux 3 endroits</h2>
+<div class="grid">
+  <div class="sample">
+    <div class="sample-title">2023 — casier</div>
+    <div class="slot">
+      <div class="age-strip age-2023">2023</div>
+      <div class="wine-fill wine-red">
+        <span class="pos">L1·P1</span>
+        <span class="name">Vin test</span>
+        <span class="domain">Domaine test</span>
+        <span class="gauge"><i></i><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <div class="sample-title">2023 — résultat</div>
+    <div class="result">
+      <div class="age-strip age-2023">2023</div>
+      <div class="wine-fill wine-red">
+        <b>Vin test ×4</b>
+        <span class="domain">Domaine test</span>
+        <small>C1-L1-P1 · C1-L1-P2</small>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <div class="sample-title">Sans année — casier</div>
+    <div class="slot">
+      <div class="age-strip age-none">Sans année</div>
+      <div class="wine-fill wine-rose">
+        <span class="pos">L1·P5</span>
+        <span class="name">Test rosé</span>
+        <span class="domain">Domaine test</span>
+        <span class="gauge"><i></i><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <div class="sample-title">Sans année — résultat</div>
+    <div class="result">
+      <div class="age-strip age-none">Sans année</div>
+      <div class="wine-fill wine-rose">
+        <b>Test rosé ×1</b>
+        <span class="domain">Domaine test</span>
+        <small>C3-L1-P5</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>3. Les 4 couleurs du vin</h2>
+<div class="type-row">
+  <div class="type-card wine-fill wine-red"><b>Rouge</b><code>#A71930</code></div>
+  <div class="type-card wine-fill wine-rose"><b>Rosé</b><code>#F06A94</code></div>
+  <div class="type-card wine-fill wine-white"><b>Blanc</b><code>#E6B92E</code></div>
+  <div class="type-card wine-fill wine-spark"><b>Effervescent</b><code>#FFF2A6</code></div>
+</div>
+
+<h2>4. Rosé et effervescent dans les cases</h2>
+<div class="grid">
+  <div class="sample">
+    <div class="sample-title">Rosé</div>
+    <div class="slot">
+      <div class="age-strip age-none">Sans année</div>
+      <div class="wine-fill wine-rose">
+        <span class="pos">L1·P5</span>
+        <span class="name">Test rosé</span>
+        <span class="domain">Domaine test</span>
+        <span class="gauge"><i></i><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="sample">
+    <div class="sample-title">Effervescent</div>
+    <div class="slot">
+      <div class="age-strip age-none">Sans année</div>
+      <div class="wine-fill wine-spark">
+        <span class="pos">L2·P5</span>
+        <span class="name">Test effervescent</span>
+        <span class="domain">Domaine test</span>
+        <span class="gauge"><i></i><i></i><i></i><i></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
