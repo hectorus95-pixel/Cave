@@ -3,25 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
 <link rel="manifest" href="manifest.webmanifest?v=5.4">
-<style>
-:root{color-scheme:light dark;font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
+<style>:root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:#0d0b0b;color:#fff}
 header{background:#4b0d1b;padding:17px 16px 15px;position:static;z-index:auto}
 h1{margin:0 0 12px;font-size:23px}
 .topstats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .metric{background:#ffffff10;border-radius:11px;padding:8px 10px}
-.metric b{font-size:22px;display:block}.metric span{font-size:12px;opacity:.8}
+.metric b{font-size:22px;display:block}
+.metric span{font-size:12px;opacity:.8}
 .statline{margin-top:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.stat-chip,.year-chip{padding:7px 6px;border-radius:9px;background:#ffffff13;text-align:center;white-space:nowrap}
-.stat-chip b,.year-chip b{display:block;font-size:12px;line-height:1.15}
-.stat-chip small,.year-chip small{display:block;font-size:10px;opacity:.72;margin-top:3px}
 .yearbox{margin-top:8px;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.yearbox .year-chip{min-width:58px;flex:0 0 auto}
 .yearbox::-webkit-scrollbar{display:none}
 main{padding:14px;max-width:760px;margin:auto}
 .search{width:100%;padding:13px;border-radius:12px;border:1px solid #686363;background:#242121;color:white;font-size:16px}
@@ -30,9 +25,7 @@ main{padding:14px;max-width:760px;margin:auto}
 .tab.active{background:#7a1837}
 #grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;width:100%}
 .slot{width:100%;min-width:0;min-height:96px;border:0;border-radius:11px;padding:0 6px 7px;text-align:left;color:white;overflow:hidden;position:relative}
-.slot.red{background:#8E1B2B}.slot.white{background:#E0B52F;color:#171108}.slot.rose{background:#E36A8D}.slot.spark{background:#F3DF8A}.slot.empty{background:#373434;color:#aaa;padding-top:7px}
-.vintage-strip{display:block;margin:0 -6px 5px;padding:3px 4px;text-align:center;font-size:10px;font-weight:800;line-height:1.05;color:#111}
-
+.slot.empty{background:#373434;color:#aaa;padding-top:7px}
 .pos{font-size:10px;opacity:.72;display:block;white-space:nowrap}
 .name{font-size:11px;font-weight:700;display:block;margin:4px 0;line-height:1.14;overflow:hidden}
 .dim{opacity:.15}
@@ -53,48 +46,51 @@ main{padding:14px;max-width:760px;margin:auto}
 #valueByCasier span{display:block;font-size:11px;opacity:.7}
 #valueByCasier b{font-size:14px}
 .totalvalue{margin-top:10px;display:flex;align-items:end;justify-content:space-between;padding:2px}
-.totalvalue span{opacity:.75}.totalvalue b{font-size:22px}
+.totalvalue span{opacity:.75}
+.totalvalue b{font-size:22px}
 dialog{width:min(92vw,520px);border:0;border-radius:16px;background:#171414;color:white;padding:0;max-height:90vh;overflow:auto}
 dialog::backdrop{background:#000b}
 .dlg{padding:18px}
-.dlg h2{margin:0 0 4px}.where{opacity:.67;margin:0 0 14px}
+.dlg h2{margin:0 0 4px}
+.where{opacity:.67;margin:0 0 14px}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form label{font-size:13px}.wide{grid-column:1/-1}
+.form label{font-size:13px}
+.wide{grid-column:1/-1}
 .form input,.form select,#pick{width:100%;padding:10px;margin-top:4px;border-radius:8px;border:1px solid #686363;background:#292626;color:white;font:inherit}
 .maturity-panel{grid-column:1/-1;background:#211e1e;border-radius:10px;padding:10px}
 .maturity-panel small{opacity:.72}
 .maturity-bar.four-zone{height:10px;background:transparent;border-radius:0;overflow:visible}
 .dlgactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .dlgactions button{padding:11px 13px;border:0;border-radius:9px;font:inherit}
-.primary{background:#841b3d;color:white}.danger{background:#752323;color:white}.secondary{background:#484444;color:white}
-
+.primary{background:#841b3d;color:white}
+.danger{background:#752323;color:white}
+.secondary{background:#484444;color:white}
 .maturity-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0 10px;font-size:9px;text-align:center;color:#cfc8c8}
-.maturity-legend span{white-space:nowrap}.maturity-legend i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:3px}
-.maturity-legend .z1{background:#59ad62}.maturity-legend .z2{background:#d2c83e}.maturity-legend .z3{background:#df8b34}.maturity-legend .z4{background:#d64a4a}
+.maturity-legend span{white-space:nowrap}
+.maturity-legend i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:3px}
+.maturity-legend .z1{background:#59ad62}
+.maturity-legend .z2{background:#d2c83e}
+.maturity-legend .z3{background:#df8b34}
+.maturity-legend .z4{background:#d64a4a}
 .photos-panel{margin:0 0 12px;padding:11px;background:#181515;border:1px solid #373232;border-radius:12px}
 .photos-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
-.photos-head b{display:block;font-size:14px}.photos-head small{display:block;font-size:11px;opacity:.65;margin-top:2px}
+.photos-head b{display:block;font-size:14px}
+.photos-head small{display:block;font-size:11px;opacity:.65;margin-top:2px}
 .photo-upload{background:#7a1837;color:#fff;border-radius:9px;padding:9px 11px;font-size:12px;white-space:nowrap}
 .photo-upload input{display:none}
 .photo-slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .photo-slot{min-width:0;min-height:54px;padding:9px;border:1px solid #4c4646;border-radius:10px;background:#272323;color:#fff;text-align:left}
 .photo-slot.has-photo{background:#3b222b;border-color:#713148}
-.photo-label{display:block;font-size:11px;opacity:.65}.photo-state{display:block;font-size:12px;font-weight:700;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.photo-label{display:block;font-size:11px;opacity:.65}
+.photo-state{display:block;font-size:12px;font-weight:700;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .photo-dialog{width:min(96vw,720px);background:#0e0c0c;padding:0}
-.photo-viewer{padding:12px}.photo-viewer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.photo-viewer{padding:12px}
+.photo-viewer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .photo-viewer-head small{display:block;opacity:.65;margin-top:2px}
 #photoViewerImg{display:block;width:100%;max-height:75vh;object-fit:contain;border-radius:10px;background:#000}
-
 @media(max-width:380px){
   #grid{gap:5px}.slot{padding:6px 4px;min-height:88px}.name{font-size:11px}.pos,.year{font-size:10px}
 }
-
-
-/* =========================
-   V4.11 — STYLE FINAL UNIQUE
-   ========================= */
-
-/* Compteurs supérieurs centrés */
 .topstats .metric{
   text-align:center;
   display:flex;
@@ -102,23 +98,11 @@ dialog::backdrop{background:#000b}
   align-items:center;
   justify-content:center;
 }
-
-/* Header normal : il défile avec la page */
 header{
   position:static;
   top:auto;
   z-index:auto;
 }
-
-/* Récapitulatif des années : même variable de couleur que les bouteilles */
-.year-chip{
-  border-top:5px solid var(--age-color,#777777);
-  opacity:1;
-  filter:none;
-  mix-blend-mode:normal;
-}
-
-/* Carte bouteille */
 .slot{
   padding-top:28px;
   overflow:hidden;
@@ -127,58 +111,11 @@ header{
 .slot.empty{
   padding-top:7px;
 }
-
-/*
-  Bandeau millésime :
-  - un seul fond ;
-  - aucune transparence ;
-  - aucun arrondi propre.
-  C'est le overflow:hidden + border-radius de .slot qui crée les coins.
-  Ainsi aucune couleur du fond de carte ne peut apparaître au-dessus.
-*/
-.slot .vintage-strip{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  width:100%;
-  height:28px;
-  margin:0;
-  padding:6px 4px 5px;
-
-  border:0;
-  border-radius:0;
-  outline:0;
-  box-shadow:none;
-
-  background:transparent;
-  background-color:transparent;
-  background-image:none;
-
-  opacity:1;
-  filter:none;
-  mix-blend-mode:normal;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:11px;
-  font-weight:800;
-  line-height:1;
-  color:#fff;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-  z-index:2;
-}
-
-/* Pas de pseudo-élément décoratif sur les cartes */
 .slot::before,
 .slot::after{
   content:none;
   display:none;
 }
-
-/* Jauge maturité : 4 zones fixes et curseur */
 .maturity-gauge,
 .maturity-bar.four-zone{
   position:relative;
@@ -202,7 +139,6 @@ header{
 .maturity-gauge .z2,.maturity-bar .z2{background:#e1ce31}
 .maturity-gauge .z3,.maturity-bar .z3{background:#e58a2f}
 .maturity-gauge .z4,.maturity-bar .z4{background:#df4545}
-
 .maturity-cursor{
   position:absolute;
   top:50%;
@@ -219,29 +155,16 @@ header{
 .maturity-cursor.unknown-cursor{
   border-color:#777;
 }
-
-/* Photos placées en bas, après la valeur de la cave */
 .photos-panel{
   margin-top:4px;
   margin-bottom:18px;
 }
-
-/* Petit écran : on garde 5 colonnes identiques */
 @media(max-width:380px){
   #grid{gap:5px}
   .slot{min-height:88px}
   .name{font-size:11px}
   .pos{font-size:10px}
 }
-
-
-
-/* =========================
-   V5.4.19 — STYLE FINAL
-   Un seul système de couleurs
-   ========================= */
-
-/* Boutons casiers en haut */
 .top-casier-tabs{
   margin:10px 0 0;
 }
@@ -265,110 +188,17 @@ header{
   font-size:10px;
   opacity:.72;
 }
-
-/* Neutraliser le rendu natif Android */
-button.year-chip,
-button.slot,
-button.result-item{
-  -webkit-appearance:none !important;
-  appearance:none !important;
-  -webkit-tap-highlight-color:transparent;
-}
-
-/* ----- Millésimes : même couleur exacte partout ----- */
-.year-chip{
-  cursor:pointer;
-  color:#fff !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.30);
-  border:1px solid transparent;
-  border-top:0 !important;
-  box-shadow:none !important;
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-  background-image:none !important;
-}
-
-.slot .vintage-strip,
-.result-year-zone{
-  background-image:none !important;
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-  box-shadow:none !important;
-}
-
-/* Bandeau année dans le casier */
 .slot{
   padding-top:28px;
 }
 .slot.empty{
   padding-top:7px;
 }
-.slot .vintage-strip{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  width:100%;
-  height:28px;
-  margin:0;
-  padding:6px 4px 5px;
-  border:0;
-  border-radius:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff !important;
-  font-size:11px;
-  font-weight:800;
-  line-height:1;
-  text-align:center;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-  z-index:2;
-}
-
-/* ----- Couleur du vin : même fond dans casier et résultat ----- */
-.slot.red,
-.result-item.red .result-main{
-  background:#8E1B2B !important;
-  background-color:#8E1B2B !important;
-  color:#fff !important;
-}
-.slot.white,
-.result-item.white .result-main{
-  background:#E0B52F !important;
-  background-color:#E0B52F !important;
-  color:#241b08 !important;
-}
-.slot.rose,
-.result-item.rose .result-main{
-  background:#E36A8D !important;
-  background-color:#E36A8D !important;
-  color:#fff !important;
-}
-.slot.spark,
-.result-item.spark .result-main{
-  background:#F3DF8A !important;
-  background-color:#F3DF8A !important;
-  color:#fff !important;
-}
 .slot.empty{
   background:#373434 !important;
   background-color:#373434 !important;
   color:#aaa !important;
 }
-
-/* Texte sur fond blanc */
-.slot.white .name,
-.slot.white .pos,
-.result-item.white .result-main,
-.result-item.white .result-main b,
-.result-item.white .result-main small{
-  color:#241b08 !important;
-}
-
-/* ----- Résultats recherche / année ----- */
 .result-panel{
   margin:8px 0 10px;
   padding:9px;
@@ -402,18 +232,6 @@ button.result-item{
   color:#fff;
   text-align:left;
 }
-.result-year-zone{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 5px;
-  color:#fff !important;
-  font-size:12px;
-  font-weight:900;
-  line-height:1.05;
-  text-align:center;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-}
 .result-main{
   display:flex;
   flex-direction:column;
@@ -437,29 +255,6 @@ button.result-item{
 #grid{
   touch-action:pan-y;
 }
-
-
-/* V5.4.20 — Samsung Internet : la page gère déjà son thème sombre.
-   Empêche autant que possible l'Auto/Force Dark de retraiter nos aplats. */
-html,
-body,
-header,
-main,
-button,
-input,
-select,
-dialog,
-.year-chip,
-.slot,
-.slot .vintage-strip,
-.result-item,
-.result-year-zone,
-.result-main{
-  color-scheme:light dark !important;
-}
-
-
-/* V5.4.21 — domaine et jauge visibles dans les casiers et les résultats */
 .slot .domain{
   display:block;
   margin:-1px 0 2px;
@@ -471,10 +266,6 @@ dialog,
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.slot.white .domain{
-  color:#241b08 !important;
-}
-
 .result-domain{
   display:block;
   margin-top:2px;
@@ -494,28 +285,19 @@ dialog,
   width:100%;
   margin-top:6px;
 }
-.result-item.white .result-domain{
-  color:#241b08 !important;
-}
-
-
-/* V5.4.22 — cases plus hautes pour afficher nom + domaine + jauge */
 .slot{
   min-height:118px !important;
   height:118px !important;
   padding-bottom:25px !important;
 }
-
 .slot .pos{
   margin-top:4px;
 }
-
 .slot .name{
   display:block;
   margin-top:3px;
   line-height:1.08;
 }
-
 .slot .domain{
   display:block;
   margin-top:2px;
@@ -525,7 +307,6 @@ dialog,
   overflow:hidden;
   white-space:normal;
 }
-
 .slot .maturity-gauge{
   position:absolute !important;
   left:6px !important;
@@ -534,75 +315,9 @@ dialog,
   width:auto !important;
   margin:0 !important;
 }
-
 .slot .maturity-gauge .maturity-cursor{
   z-index:3;
 }
-
-
-/* =========================================================
-   V5.4.23 — méthode V4.2 : classes fixes + !important
-   Aucune couleur de millésime ou de vin n'est portée par un
-   <button>. Les aplats sont tous des <span>, identiques.
-   ========================================================= */
-
-/* Les boutons deviennent de simples conteneurs transparents. */
-.year-chip,
-.slot,
-.result-item{
-  -webkit-appearance:none!important;
-  appearance:none!important;
-}
-
-/* ---------- MILLÉSIMES : UNE classe, UNE couleur ---------- */
-.age-color{
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-  background-image:none!important;
-  box-shadow:none!important;
-}
-
-/* Bouton supérieur : le SPAN remplit exactement le bouton. */
-.year-chip{
-  padding:0!important;
-  overflow:hidden!important;
-  background:transparent!important;
-  background-color:transparent!important;
-  border:1px solid #444!important;
-}
-.year-chip-fill{
-  min-width:58px;
-  min-height:100%;
-  padding:7px 6px;
-  display:flex!important;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  border-radius:8px;
-  color:#fff!important;
-}
-.year-chip-fill b{
-  display:block;
-  font-size:12px;
-  line-height:1.15;
-}
-.year-chip-fill small{
-  display:block;
-  margin-top:3px;
-  font-size:10px;
-  opacity:.82;
-}
-
-/* ---------- 4 COULEURS DE VIN FIXES ---------- */
-.wine-color{
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-  background-image:none!important;
-}
-
-/* ---------- CASIER ---------- */
 .slot{
   position:relative!important;
   overflow:hidden!important;
@@ -611,25 +326,6 @@ dialog,
   height:118px!important;
   background:transparent!important;
   background-color:transparent!important;
-}
-.slot.occupied .vintage-strip{
-  position:absolute!important;
-  top:0!important;
-  left:0!important;
-  right:0!important;
-  height:28px!important;
-  margin:0!important;
-  padding:6px 4px 5px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  border:0!important;
-  border-radius:0!important;
-  color:#fff!important;
-  font-size:11px!important;
-  font-weight:800!important;
-  line-height:1!important;
-  z-index:2!important;
 }
 .slot-main{
   position:absolute!important;
@@ -661,8 +357,6 @@ dialog,
   background-color:#373434!important;
   color:#aaa!important;
 }
-
-/* ---------- RÉSULTATS ---------- */
 .result-item{
   display:grid!important;
   grid-template-columns:72px minmax(0,1fr)!important;
@@ -670,17 +364,6 @@ dialog,
   overflow:hidden!important;
   background:transparent!important;
   background-color:transparent!important;
-}
-.result-year-zone{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  padding:8px 5px!important;
-  color:#fff!important;
-  font-size:12px!important;
-  font-weight:900!important;
-  line-height:1.05!important;
-  text-align:center!important;
 }
 .result-main{
   display:flex!important;
@@ -690,44 +373,26 @@ dialog,
   padding:9px 10px!important;
   text-align:left!important;
 }
-
-/* Textes foncés seulement sur le blanc */
-.slot-main.white .pos,
-.slot-main.white .name,
-.slot-main.white .domain,
-.result-main.white,
-.result-main.white b,
-.result-main.white small,
-.result-main.white .result-domain{
-  color:#241b08!important;
-}
-
-
-/* V5.4.24 — les cartes des résultats ne se compressent plus */
 .result-list{
   overflow-y:auto!important;
   overflow-x:hidden!important;
 }
-
 .result-item{
   flex:0 0 auto!important;
   flex-shrink:0!important;
   height:auto!important;
   min-height:88px!important;
 }
-
 .result-main{
   height:auto!important;
   min-height:88px!important;
 }
-
 .result-gauge{
   display:block!important;
   width:100%!important;
   margin-top:7px!important;
   flex:0 0 auto!important;
 }
-
 .result-gauge .maturity-gauge{
   display:grid!important;
   width:100%!important;
@@ -735,176 +400,241 @@ dialog,
   margin-bottom:2px!important;
 }
 
+/* ==========================================================
+   COULEURS — SYSTÈME UNIQUE V5.4.28
+   Aucun ancien système de couleur ne subsiste au-dessus.
+   ========================================================== */
 
+/* Tous les boutons sont seulement des conteneurs. */
+button.year-chip,
+button.slot,
+button.result-item{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+}
 
-/* =========================================================
-   V5.4.26 — PALETTE UNIQUE, VIVE ET NETTOYEE
-   Une seule définition pour chaque couleur.
-   ========================================================= */
-
-/* Années : vert -> vert-jaune -> jaune -> orange -> rouge -> bordeaux */
-.age-color.ageUnknown{background:#777777!important;background-color:#777777!important;color:#fff!important;}
-.age-color.age0{background:#0B5D1E!important;background-color:#0B5D1E!important;color:#fff!important;}
-.age-color.age1{background:#168A2F!important;background-color:#168A2F!important;color:#fff!important;}
-.age-color.age2{background:#7FB800!important;background-color:#7FB800!important;color:#211A08!important;}
-.age-color.age3{background:#FFD000!important;background-color:#FFD000!important;color:#211A08!important;}
-.age-color.age4{background:#FF9800!important;background-color:#FF9800!important;color:#211A08!important;}
-.age-color.age5{background:#FF5A1F!important;background-color:#FF5A1F!important;color:#fff!important;}
-.age-color.age6{background:#E42323!important;background-color:#E42323!important;color:#fff!important;}
-.age-color.age7{background:#A11233!important;background-color:#A11233!important;color:#fff!important;}
-.age-color.age8{background:#7A1430!important;background-color:#7A1430!important;color:#fff!important;}
-.age-color.age9{background:#5A1025!important;background-color:#5A1025!important;color:#fff!important;}
-.age-color.age10{background:#400C1B!important;background-color:#400C1B!important;color:#fff!important;}
-.age-color.age11{background:#2E0914!important;background-color:#2E0914!important;color:#fff!important;}
-.age-color.age12{background:hsl(345 68% 13.75%)!important;background-color:hsl(345 68% 13.75%)!important;color:#fff!important;}
-.age-color.age13{background:hsl(345 68% 13.5%)!important;background-color:hsl(345 68% 13.5%)!important;color:#fff!important;}
-.age-color.age14{background:hsl(345 68% 13.25%)!important;background-color:hsl(345 68% 13.25%)!important;color:#fff!important;}
-.age-color.age15{background:hsl(345 68% 13%)!important;background-color:hsl(345 68% 13%)!important;color:#fff!important;}
-.age-color.age16{background:hsl(345 68% 12.75%)!important;background-color:hsl(345 68% 12.75%)!important;color:#fff!important;}
-.age-color.age17{background:hsl(345 68% 12.5%)!important;background-color:hsl(345 68% 12.5%)!important;color:#fff!important;}
-.age-color.age18{background:hsl(345 68% 12.25%)!important;background-color:hsl(345 68% 12.25%)!important;color:#fff!important;}
-.age-color.age19{background:hsl(345 68% 12%)!important;background-color:hsl(345 68% 12%)!important;color:#fff!important;}
-.age-color.age20{background:hsl(345 68% 11.75%)!important;background-color:hsl(345 68% 11.75%)!important;color:#fff!important;}
-.age-color.age21{background:hsl(345 68% 11.5%)!important;background-color:hsl(345 68% 11.5%)!important;color:#fff!important;}
-.age-color.age22{background:hsl(345 68% 11.25%)!important;background-color:hsl(345 68% 11.25%)!important;color:#fff!important;}
-.age-color.age23{background:hsl(345 68% 11%)!important;background-color:hsl(345 68% 11%)!important;color:#fff!important;}
-.age-color.age24{background:hsl(345 68% 10.75%)!important;background-color:hsl(345 68% 10.75%)!important;color:#fff!important;}
-.age-color.age25{background:hsl(345 68% 10.5%)!important;background-color:hsl(345 68% 10.5%)!important;color:#fff!important;}
-.age-color.age26{background:hsl(345 68% 10.25%)!important;background-color:hsl(345 68% 10.25%)!important;color:#fff!important;}
-.age-color.age27{background:hsl(345 68% 10%)!important;background-color:hsl(345 68% 10%)!important;color:#fff!important;}
-.age-color.age28{background:hsl(345 68% 9.75%)!important;background-color:hsl(345 68% 9.75%)!important;color:#fff!important;}
-.age-color.age29{background:hsl(345 68% 9.5%)!important;background-color:hsl(345 68% 9.5%)!important;color:#fff!important;}
-.age-color.age30{background:hsl(345 68% 9.25%)!important;background-color:hsl(345 68% 9.25%)!important;color:#fff!important;}
-.age-color.age31{background:hsl(345 68% 9%)!important;background-color:hsl(345 68% 9%)!important;color:#fff!important;}
+/* ---------------- MILLÉSIMES ---------------- */
+.age-color.ageUnknown{background-color:#777777!important;color:#fff!important;}
+.age-color.age0{background-color:#0B5D1E!important;color:#fff!important;}
+.age-color.age1{background-color:#168A2F!important;color:#fff!important;}
+.age-color.age2{background-color:#7FB800!important;color:#201700!important;}
+.age-color.age3{background-color:#FFD000!important;color:#201700!important;}
+.age-color.age4{background-color:#FF9800!important;color:#201700!important;}
+.age-color.age5{background-color:#FF5A1F!important;color:#fff!important;}
+.age-color.age6{background-color:#E42323!important;color:#fff!important;}
+.age-color.age7{background-color:#A11233!important;color:#fff!important;}
+.age-color.age8{background-color:#7A1430!important;color:#fff!important;}
+.age-color.age9{background-color:#5A1025!important;color:#fff!important;}
+.age-color.age10{background-color:#400C1B!important;color:#fff!important;}
+.age-color.age11{background-color:#2E0914!important;color:#fff!important;}
+.age-color.age12{background-color:hsl(345 68% 13.75%)!important;color:#fff!important;}
+.age-color.age13{background-color:hsl(345 68% 13.5%)!important;color:#fff!important;}
+.age-color.age14{background-color:hsl(345 68% 13.25%)!important;color:#fff!important;}
+.age-color.age15{background-color:hsl(345 68% 13%)!important;color:#fff!important;}
+.age-color.age16{background-color:hsl(345 68% 12.75%)!important;color:#fff!important;}
+.age-color.age17{background-color:hsl(345 68% 12.5%)!important;color:#fff!important;}
+.age-color.age18{background-color:hsl(345 68% 12.25%)!important;color:#fff!important;}
+.age-color.age19{background-color:hsl(345 68% 12%)!important;color:#fff!important;}
+.age-color.age20{background-color:hsl(345 68% 11.75%)!important;color:#fff!important;}
+.age-color.age21{background-color:hsl(345 68% 11.5%)!important;color:#fff!important;}
+.age-color.age22{background-color:hsl(345 68% 11.25%)!important;color:#fff!important;}
+.age-color.age23{background-color:hsl(345 68% 11%)!important;color:#fff!important;}
+.age-color.age24{background-color:hsl(345 68% 10.75%)!important;color:#fff!important;}
+.age-color.age25{background-color:hsl(345 68% 10.5%)!important;color:#fff!important;}
+.age-color.age26{background-color:hsl(345 68% 10.25%)!important;color:#fff!important;}
+.age-color.age27{background-color:hsl(345 68% 10%)!important;color:#fff!important;}
+.age-color.age28{background-color:hsl(345 68% 9.75%)!important;color:#fff!important;}
+.age-color.age29{background-color:hsl(345 68% 9.5%)!important;color:#fff!important;}
+.age-color.age30{background-color:hsl(345 68% 9.25%)!important;color:#fff!important;}
+.age-color.age31{background-color:hsl(345 68% 9%)!important;color:#fff!important;}
 
 .age-color{
+  background-image:none!important;
   opacity:1!important;
   filter:none!important;
   mix-blend-mode:normal!important;
-  background-image:none!important;
   box-shadow:none!important;
 }
 
-/* Le bouton du haut ne colore plus rien : seul son span .age-color le fait */
+/* Boutons d'année du haut */
 .year-chip{
-  background:transparent!important;
-  background-color:transparent!important;
-  border:1px solid #555!important;
+  min-width:58px;
+  flex:0 0 auto;
   padding:0!important;
+  border:1px solid #555!important;
+  border-radius:9px;
   overflow:hidden!important;
+  background:transparent!important;
+  color:#fff;
+  text-align:center;
+  white-space:nowrap;
 }
 .year-chip-fill{
-  width:100%!important;
-  height:100%!important;
-  min-width:58px!important;
-  box-sizing:border-box!important;
-  border-radius:8px!important;
+  width:100%;
+  min-height:54px;
+  padding:7px 6px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+}
+.year-chip-fill b{
+  display:block;
+  font-size:12px;
+  line-height:1.15;
+}
+.year-chip-fill small{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  opacity:.80;
 }
 
-/* 4 types de vin : couleurs franches et très différentes */
+/* Millésime dans les cases */
+.slot.occupied .vintage-strip{
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  height:28px!important;
+  padding:6px 4px 5px!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  color:inherit;
+  border:0!important;
+  border-radius:0!important;
+  z-index:2!important;
+}
+
+/* Millésime dans recherche / tri année */
+.result-year-zone{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:8px 5px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.05!important;
+  text-align:center!important;
+}
+
+/* ---------------- 4 TYPES DE VIN ---------------- */
 .wine-color.red{
-  background:#A71930!important;
   background-color:#A71930!important;
   color:#fff!important;
 }
 .wine-color.rose{
-  background:#F06A94!important;
   background-color:#F06A94!important;
-  color:#281019!important;
+  color:#241018!important;
 }
 .wine-color.white{
-  background:#E6B92E!important;
   background-color:#E6B92E!important;
-  color:#211A08!important;
+  color:#211800!important;
 }
 .wine-color.spark{
-  background:#FFF2A6!important;
   background-color:#FFF2A6!important;
-  color:#211A08!important;
+  color:#211800!important;
 }
 .wine-color{
+  background-image:none!important;
   opacity:1!important;
   filter:none!important;
   mix-blend-mode:normal!important;
-  background-image:none!important;
 }
 
-/* Couleur des textes cohérente avec le fond du vin */
+/* ---------------- CASES DU CASIER ---------------- */
+.slot{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  height:118px!important;
+  min-height:118px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:11px!important;
+  background:transparent!important;
+  text-align:left!important;
+}
+.slot-main{
+  position:absolute!important;
+  top:28px!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  padding:7px 6px 25px!important;
+  display:block!important;
+}
+.slot.empty{
+  padding:7px 6px!important;
+  background:#373434!important;
+  color:#aaa!important;
+}
+.slot-main .maturity-gauge{
+  position:absolute!important;
+  left:6px!important;
+  right:6px!important;
+  bottom:7px!important;
+  width:auto!important;
+  margin:0!important;
+}
+
+/* ---------------- RÉSULTATS ---------------- */
+.result-item{
+  display:grid!important;
+  grid-template-columns:72px minmax(0,1fr)!important;
+  width:100%!important;
+  min-height:88px!important;
+  height:auto!important;
+  flex:0 0 auto!important;
+  flex-shrink:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid #403939!important;
+  border-radius:9px!important;
+  background:transparent!important;
+  text-align:left!important;
+}
+.result-main{
+  min-width:0!important;
+  min-height:88px!important;
+  padding:9px 10px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+.result-gauge{
+  display:block!important;
+  width:100%!important;
+  margin-top:7px!important;
+}
+.result-gauge .maturity-gauge{
+  display:grid!important;
+  width:100%!important;
+  margin:0 0 2px!important;
+}
+
+/* Texte lisible sur chaque famille */
 .slot-main.red .pos,.slot-main.red .name,.slot-main.red .domain,
 .result-main.red,.result-main.red b,.result-main.red small,.result-main.red .result-domain{
   color:#fff!important;
 }
 .slot-main.rose .pos,.slot-main.rose .name,.slot-main.rose .domain,
 .result-main.rose,.result-main.rose b,.result-main.rose small,.result-main.rose .result-domain{
-  color:#281019!important;
+  color:#241018!important;
 }
 .slot-main.white .pos,.slot-main.white .name,.slot-main.white .domain,
 .result-main.white,.result-main.white b,.result-main.white small,.result-main.white .result-domain,
 .slot-main.spark .pos,.slot-main.spark .name,.slot-main.spark .domain,
 .result-main.spark,.result-main.spark b,.result-main.spark small,.result-main.spark .result-domain{
-  color:#211A08!important;
+  color:#211800!important;
 }
-
-
-/* V5.4.27 — thème sombre explicite pour Samsung Internet */
-@media (prefers-color-scheme: dark) {
-  html,body{
-    color-scheme:light dark!important;
-    background:#0d0b0b!important;
-    color:#fff!important;
-  }
-
-  /* Types de vin */
-  .wine-color.red{
-    background:#A71930!important;
-    background-color:#A71930!important;
-    color:#fff!important;
-  }
-  .wine-color.rose{
-    background:#F06A94!important;
-    background-color:#F06A94!important;
-    color:#281019!important;
-  }
-  .wine-color.white{
-    background:#E6B92E!important;
-    background-color:#E6B92E!important;
-    color:#211A08!important;
-  }
-  .wine-color.spark{
-    background:#FFF2A6!important;
-    background-color:#FFF2A6!important;
-    color:#211A08!important;
-  }
-
-  /* Sans année */
-  .age-color.ageUnknown{
-    background:#777777!important;
-    background-color:#777777!important;
-    color:#fff!important;
-  }
-
-  /* Âges 0 à 11 */
-  .age-color.age0{background:#0B5D1E!important;background-color:#0B5D1E!important;color:#fff!important;}
-  .age-color.age1{background:#168A2F!important;background-color:#168A2F!important;color:#fff!important;}
-  .age-color.age2{background:#7FB800!important;background-color:#7FB800!important;color:#211A08!important;}
-  .age-color.age3{background:#FFD000!important;background-color:#FFD000!important;color:#211A08!important;}
-  .age-color.age4{background:#FF9800!important;background-color:#FF9800!important;color:#211A08!important;}
-  .age-color.age5{background:#FF5A1F!important;background-color:#FF5A1F!important;color:#fff!important;}
-  .age-color.age6{background:#E42323!important;background-color:#E42323!important;color:#fff!important;}
-  .age-color.age7{background:#A11233!important;background-color:#A11233!important;color:#fff!important;}
-  .age-color.age8{background:#7A1430!important;background-color:#7A1430!important;color:#fff!important;}
-  .age-color.age9{background:#5A1025!important;background-color:#5A1025!important;color:#fff!important;}
-  .age-color.age10{background:#400C1B!important;background-color:#400C1B!important;color:#fff!important;}
-  .age-color.age11{background:#2E0914!important;background-color:#2E0914!important;color:#fff!important;}
-
-  .age-color,.wine-color{
-    opacity:1!important;
-    filter:none!important;
-    mix-blend-mode:normal!important;
-    background-image:none!important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -1033,6 +763,6 @@ dialog,
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.27"></script>
+<script src="app.js?v=5.4.28"></script>
 </body>
 </html>
