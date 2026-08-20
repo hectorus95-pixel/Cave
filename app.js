@@ -269,8 +269,53 @@ function showSearchResults(){
 }
 function showVintageResults(year){
   const y=String(year);
-  const items=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
-  showResultPanel(`${y} · ${items.length} bouteille${items.length>1?'s':''}`,items);
+  const matches=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
+
+  const grouped=new Map();
+
+  matches.forEach(({r,p})=>{
+    const key=r.id || [
+      r.vin||'',
+      r.domaine||r.producteur||'',
+      r.appellation||'',
+      r.millesime||'',
+      r.format||''
+    ].join('|');
+
+    if(!grouped.has(key)){
+      grouped.set(key,{r,positions:[]});
+    }
+    grouped.get(key).positions.push(p);
+  });
+
+  const items=[];
+
+  grouped.forEach(({r,positions})=>{
+    positions.sort((a,b)=>
+      a.casier-b.casier ||
+      a.ligne-b.ligne ||
+      a.position-b.position
+    );
+
+    const first=positions[0];
+    const locations=positions
+      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
+      .join(' · ');
+
+    items.push({
+      r:{
+        ...r,
+        vin:`${r.vin} ×${positions.length}`,
+        _searchLocations:locations
+      },
+      p:first
+    });
+  });
+
+  showResultPanel(
+    `${y} · ${items.length} vin${items.length>1?'s':''} · ${matches.length} bouteille${matches.length>1?'s':''}`,
+    items
+  );
   $('#resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
