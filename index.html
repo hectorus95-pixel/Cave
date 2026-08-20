@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=4.8">
+<link rel="manifest" href="manifest.webmanifest?v=4.9">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -31,7 +31,7 @@ main{padding:14px;max-width:760px;margin:auto}
 .slot{width:100%;min-width:0;min-height:96px;border:0;border-radius:11px;padding:0 6px 7px;text-align:left;color:white;overflow:hidden;position:relative}
 .slot.red{background:#741a35}.slot.white{background:#b69032;color:#171108}.slot.rose{background:#b95b72}.slot.spark{background:#8b762c}.slot.empty{background:#373434;color:#aaa;padding-top:7px}
 .vintage-strip{display:block;margin:0 -6px 5px;padding:3px 4px;text-align:center;font-size:10px;font-weight:800;line-height:1.05;color:#111}
-.slot.age1 .vintage-strip{background:#58a85b}.slot.age2 .vintage-strip{background:#91a932}.slot.age3 .vintage-strip{background:#d4a63c}.slot.age4 .vintage-strip{background:#c96c35}.slot.age5 .vintage-strip{background:#7e2c3e;color:white}.slot.age0 .vintage-strip{background:#777;color:white}
+
 .pos{font-size:10px;opacity:.72;display:block;white-space:nowrap}
 .name{font-size:11px;font-weight:700;display:block;margin:4px 0;line-height:1.14;overflow:hidden}
 .dim{opacity:.15}
@@ -128,12 +128,12 @@ dialog::backdrop{background:#000b}
 
 
 /* V4.2 — bandeau millésime = couleurs d'âge historiques */
-.slot.age1 .vintage-strip{background:#58a85b!important;color:#111!important}
-.slot.age2 .vintage-strip{background:#91a932!important;color:#111!important}
-.slot.age3 .vintage-strip{background:#d4a63c!important;color:#111!important}
-.slot.age4 .vintage-strip{background:#c96c35!important;color:#111!important}
-.slot.age5 .vintage-strip{background:#7e2c3e!important;color:#fff!important}
-.slot.age0 .vintage-strip{background:#777!important;color:#fff!important}
+
+
+
+
+
+
 
 /* Jauge : 4 aplats fixes + curseur continu */
 .maturity-gauge,
@@ -220,12 +220,12 @@ dialog::backdrop{background:#000b}
 }
 
 /* Couleurs d'âge du bandeau millésime */
-.slot.age1 .vintage-strip{background:#58a85b!important;color:#111!important}
-.slot.age2 .vintage-strip{background:#91a932!important;color:#111!important}
-.slot.age3 .vintage-strip{background:#d4a63c!important;color:#111!important}
-.slot.age4 .vintage-strip{background:#c96c35!important;color:#111!important}
-.slot.age5 .vintage-strip{background:#7e2c3e!important;color:#fff!important}
-.slot.age0 .vintage-strip{background:#777!important;color:#fff!important}
+
+
+
+
+
+
 
 
 /* V4.4 */
@@ -265,15 +265,15 @@ header{
 
 /* Progression chronologique :
    jeune = vert, puis olive, or, orange, rouge, rouge foncé, bordeaux très foncé. */
-.slot.age0 .vintage-strip{background:#69b96d!important;color:#102010!important}
-.slot.age1 .vintage-strip{background:#58a85b!important;color:#102010!important}
-.slot.age2 .vintage-strip{background:#9da83b!important;color:#181808!important}
-.slot.age3 .vintage-strip{background:#d4a63c!important;color:#251a05!important}
-.slot.age4 .vintage-strip{background:#c96c35!important;color:#fff!important}
-.slot.age5 .vintage-strip{background:#a9433f!important;color:#fff!important}
-.slot.age6 .vintage-strip{background:#762d3c!important;color:#fff!important}
-.slot.age7 .vintage-strip{background:#481725!important;color:#fff!important}
-.slot.ageUnknown .vintage-strip{background:#777!important;color:#fff!important}
+
+
+
+
+
+
+
+
+
 
 /* Les photos sont maintenant une section basse après la valeur de la cave. */
 .photos-panel{
@@ -286,51 +286,45 @@ header{
 .year-chip{
   border-top:5px solid transparent!important;
 }
-.year-chip.age0{border-top-color:#69b96d!important}
-.year-chip.age1{border-top-color:#58a85b!important}
-.year-chip.age2{border-top-color:#9da83b!important}
-.year-chip.age3{border-top-color:#d4a63c!important}
-.year-chip.age4{border-top-color:#c96c35!important}
-.year-chip.age5{border-top-color:#a9433f!important}
-.year-chip.age6{border-top-color:#762d3c!important}
-.year-chip.age7{border-top-color:#481725!important}
-.year-chip.ageUnknown{border-top-color:#777!important}
+
+
+
+
+
+
+
+
+
 
 
 /* V4.6 — palette d'âge unique pour récapitulatif + bouteilles */
-.year-chip.age0{border-top-color:#69b96d!important}
-.year-chip.age1{border-top-color:#58a85b!important}
-.year-chip.age2{border-top-color:#9da83b!important}
-.year-chip.age3{border-top-color:#d4a63c!important}
-.year-chip.age4{border-top-color:#c96c35!important}
-.year-chip.age5{border-top-color:#a9433f!important}
-.year-chip.age6{border-top-color:#762d3c!important}
-.year-chip.age7{border-top-color:#481725!important}
-.year-chip.ageUnknown{border-top-color:#777!important}
 
-.slot.age0 .vintage-strip{background:#69b96d!important;color:#102010!important}
-.slot.age1 .vintage-strip{background:#58a85b!important;color:#102010!important}
-.slot.age2 .vintage-strip{background:#9da83b!important;color:#181808!important}
-.slot.age3 .vintage-strip{background:#d4a63c!important;color:#251a05!important}
-.slot.age4 .vintage-strip{background:#c96c35!important;color:#fff!important}
-.slot.age5 .vintage-strip{background:#a9433f!important;color:#fff!important}
-.slot.age6 .vintage-strip{background:#762d3c!important;color:#fff!important}
-.slot.age7 .vintage-strip{background:#481725!important;color:#fff!important}
-.slot.ageUnknown .vintage-strip{background:#777!important;color:#fff!important}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* V4.7 — couleur d'âge unique et automatiquement évolutive */
 .year-chip{
   border-top:5px solid var(--age-color,#777)!important;
 }
-.slot.ageDynamic .vintage-strip{
-  background:var(--age-color,#777)!important;
-  color:#fff!important;
-}
-.slot.ageUnknown .vintage-strip{
-  background:#777!important;
-  color:#fff!important;
-}
+
+
 
 
 /* V4.8 — couleurs millésime strictement opaques et identiques */
@@ -342,18 +336,36 @@ header{
   border-top:5px solid var(--age-color,#777)!important;
 }
 .slot.ageDynamic .vintage-strip,
-.slot.ageUnknown .vintage-strip{
+
+
+
+
+
+/* V4.9 — SOURCE UNIQUE DE COULEUR POUR LES MILLÉSIMES */
+
+/* Récapitulatif du haut : le liseré prend exactement --age-color. */
+.year-chip{
+  border-top:5px solid var(--age-color,#777777)!important;
   opacity:1!important;
   filter:none!important;
   mix-blend-mode:normal!important;
+}
+
+/* Bandeau de chaque bouteille : exactement la même variable, sans aucun effet. */
+.slot .vintage-strip{
+  background:var(--age-color,#777777)!important;
+  background-color:var(--age-color,#777777)!important;
   background-image:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
   box-shadow:none!important;
 }
-.slot.ageDynamic .vintage-strip{
-  background-color:var(--age-color,#777)!important;
-}
-.slot.ageUnknown .vintage-strip{
-  background-color:#777!important;
+
+/* Texte lisible sur toutes les teintes. */
+.slot .vintage-strip{
+  color:#ffffff!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.35)!important;
 }
 
 </style>
@@ -482,6 +494,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=4.8"></script>
+<script src="app.js?v=4.9"></script>
 </body>
 </html>
