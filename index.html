@@ -15,9 +15,12 @@ h1{margin:0 0 12px;font-size:23px}
 .topstats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .metric{background:#ffffff10;border-radius:11px;padding:8px 10px}
 .metric b{font-size:22px;display:block}.metric span{font-size:12px;opacity:.8}
-.statline{margin-top:9px;display:flex;gap:6px;flex-wrap:wrap}
-.stat-chip,.year-chip{font-size:11px;padding:5px 7px;border-radius:999px;background:#ffffff13;white-space:nowrap}
-.yearbox{margin-top:8px;display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.statline{margin-top:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.stat-chip,.year-chip{padding:7px 6px;border-radius:9px;background:#ffffff13;text-align:center;white-space:nowrap}
+.stat-chip b,.year-chip b{display:block;font-size:12px;line-height:1.15}
+.stat-chip small,.year-chip small{display:block;font-size:10px;opacity:.72;margin-top:3px}
+.yearbox{margin-top:8px;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.yearbox .year-chip{min-width:58px;flex:0 0 auto}
 .yearbox::-webkit-scrollbar{display:none}
 main{padding:14px;max-width:760px;margin:auto}
 .search{width:100%;padding:13px;border-radius:12px;border:1px solid #686363;background:#242121;color:white;font-size:16px}
@@ -25,15 +28,20 @@ main{padding:14px;max-width:760px;margin:auto}
 .tab{flex:1;min-width:0;padding:11px 4px;border:0;border-radius:11px;background:#494646;color:white}
 .tab.active{background:#7a1837}
 #grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;width:100%}
-.slot{width:100%;min-width:0;min-height:91px;border:0;border-top:6px solid #777;border-radius:11px;padding:7px 6px;text-align:left;color:white;overflow:hidden}
-.slot.red{background:#741a35}.slot.white{background:#b69032;color:#171108}.slot.rose{background:#b95b72}.slot.spark{background:#8b762c}.slot.empty{background:#373434;color:#aaa}
-.slot.age1{border-top-color:#58a85b}.slot.age2{border-top-color:#91a932}.slot.age3{border-top-color:#d4a63c}.slot.age4{border-top-color:#c96c35}.slot.age5{border-top-color:#7e2c3e}
-.pos,.year{font-size:11px;opacity:.76;display:block;white-space:nowrap}
-.name{font-size:12px;font-weight:700;display:block;margin:5px 0;line-height:1.14;overflow:hidden}
+.slot{width:100%;min-width:0;min-height:96px;border:0;border-radius:11px;padding:0 6px 7px;text-align:left;color:white;overflow:hidden;position:relative}
+.slot.red{background:#741a35}.slot.white{background:#b69032;color:#171108}.slot.rose{background:#b95b72}.slot.spark{background:#8b762c}.slot.empty{background:#373434;color:#aaa;padding-top:7px}
+.vintage-strip{display:block;margin:0 -6px 5px;padding:3px 4px;text-align:center;font-size:10px;font-weight:800;line-height:1.05;color:#111}
+.slot.age1 .vintage-strip{background:#58a85b}.slot.age2 .vintage-strip{background:#91a932}.slot.age3 .vintage-strip{background:#d4a63c}.slot.age4 .vintage-strip{background:#c96c35}.slot.age5 .vintage-strip{background:#7e2c3e;color:white}.slot.age0 .vintage-strip{background:#777;color:white}
+.pos{font-size:10px;opacity:.72;display:block;white-space:nowrap}
+.name{font-size:11px;font-weight:700;display:block;margin:4px 0;line-height:1.14;overflow:hidden}
 .dim{opacity:.15}
-.maturity-mini{display:block;height:5px;border-radius:999px;background:#0004;margin-top:7px;overflow:hidden;border:1px solid #ffffff22}
-.maturity-mini span{display:block;height:100%;background:currentColor}
-.maturity-mini.m-early{color:#74a9e8}.maturity-mini.m-good{color:#61bc69}.maturity-mini.m-soon{color:#e0a740}.maturity-mini.m-late{color:#e05a5a}
+.maturity-gauge,.maturity-bar.four-zone{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;height:7px;margin-top:7px}
+.maturity-gauge i,.maturity-bar.four-zone i{display:block;border-radius:2px;opacity:.28}
+.maturity-gauge .z1,.maturity-bar .z1{background:#59ad62}
+.maturity-gauge .z2,.maturity-bar .z2{background:#d2c83e}
+.maturity-gauge .z3,.maturity-bar .z3{background:#df8b34}
+.maturity-gauge .z4,.maturity-bar .z4{background:#d64a4a}
+.maturity-gauge i.active,.maturity-bar.four-zone i.active{opacity:1;outline:1px solid #fff9;outline-offset:1px}
 .actions{display:flex;gap:8px;margin:18px 0}
 .actions button,.filelabel{background:#302d2d;color:white;border:1px solid #625d5d;border-radius:10px;padding:11px;flex:1;text-align:center;font-size:14px}
 .filelabel input{display:none}
@@ -54,13 +62,14 @@ dialog::backdrop{background:#000b}
 .form input,.form select,#pick{width:100%;padding:10px;margin-top:4px;border-radius:8px;border:1px solid #686363;background:#292626;color:white;font:inherit}
 .maturity-panel{grid-column:1/-1;background:#211e1e;border-radius:10px;padding:10px}
 .maturity-panel small{opacity:.72}
-.maturity-bar{height:9px;background:#3a3636;border-radius:999px;overflow:hidden;margin-top:7px}
-.maturity-bar span{height:100%;display:block;background:currentColor}
-.maturity-bar.m-none{color:#777}.maturity-bar.m-early{color:#74a9e8}.maturity-bar.m-good{color:#61bc69}.maturity-bar.m-soon{color:#e0a740}.maturity-bar.m-late{color:#e05a5a}
+.maturity-bar.four-zone{height:10px;background:transparent;border-radius:0;overflow:visible}
 .dlgactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .dlgactions button{padding:11px 13px;border:0;border-radius:9px;font:inherit}
 .primary{background:#841b3d;color:white}.danger{background:#752323;color:white}.secondary{background:#484444;color:white}
 
+.maturity-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:-2px 0 10px;font-size:9px;text-align:center;color:#cfc8c8}
+.maturity-legend span{white-space:nowrap}.maturity-legend i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:3px}
+.maturity-legend .z1{background:#59ad62}.maturity-legend .z2{background:#d2c83e}.maturity-legend .z3{background:#df8b34}.maturity-legend .z4{background:#d64a4a}
 .photos-panel{margin:0 0 12px;padding:11px;background:#181515;border:1px solid #373232;border-radius:12px}
 .photos-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
 .photos-head b{display:block;font-size:14px}.photos-head small{display:block;font-size:11px;opacity:.65;margin-top:2px}
@@ -97,6 +106,13 @@ dialog::backdrop{background:#000b}
     <button class="tab active" data-c="1">Casier 1</button>
     <button class="tab" data-c="2">Casier 2</button>
     <button class="tab" data-c="3">Casier 3</button>
+  </div>
+
+  <div class="maturity-legend" aria-label="Légende maturité">
+    <span><i class="z1"></i>Jeune</span>
+    <span><i class="z2"></i>À boire</span>
+    <span><i class="z3"></i>Fin maturité</span>
+    <span><i class="z4"></i>Surmaturité</span>
   </div>
 
   <section class="photos-panel">
@@ -168,7 +184,7 @@ dialog::backdrop{background:#000b}
       <label>À boire avant / jusqu'à<input id="f_maturiteFin" inputmode="numeric" placeholder="2031"></label>
       <div class="maturity-panel">
         <b id="maturityStatus">Maturité non renseignée</b>
-        <div id="maturityBar" class="maturity-bar m-none"><span id="maturityBarFill" style="width:0%"></span></div>
+        <div id="maturityBar" class="maturity-bar four-zone"></div>
         <small>La jauge évolue automatiquement avec la date du téléphone.</small>
       </div>
     </div>
