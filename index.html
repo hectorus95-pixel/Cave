@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=5.4.1">
+<link rel="manifest" href="manifest.webmanifest?v=5.4">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -279,7 +279,19 @@ header{
 }
 
 
-/* V5.4 — le fond du millésime est fourni directement par app.js?v=5.4.1"topstats">
+/* V5.4 — le fond du millésime est fourni directement par app.js?v=5.4 */
+.slot .vintage-strip{
+  background-image:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍷 Ma Cave à Vin</h1>
+  <div class="topstats">
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
     <div class="metric"><b id="free">—</b><span>places libres</span></div>
   </div>
@@ -404,6 +416,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.1"></script>
+<script src="app.js?v=5.4"></script>
 </body>
 </html>

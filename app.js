@@ -174,16 +174,12 @@ function renderStats(){
 
 function refsWithLocations(filterFn){
   const out=[];
-  inv.forEach(p=>{
+  positions.forEach(p=>{
     if(!p.refId) return;
-    const r=ref(p.refId);
+    const r=refs.find(x=>x.id===p.refId);
     if(r && filterFn(r,p)) out.push({r,p});
   });
-  return out.sort((a,b)=>
-    a.p.casier-b.p.casier ||
-    a.p.ligne-b.p.ligne ||
-    a.p.position-b.p.position
-  );
+  return out.sort((a,b)=>a.p.casier-b.p.casier||a.p.ligne-b.p.ligne||a.p.position-b.p.position);
 }
 function showResultPanel(title,items){
   const panel=$('#resultPanel'),list=$('#resultList');
@@ -206,10 +202,7 @@ function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').inne
 function showSearchResults(){
   const raw=$('#search').value.trim(),q=raw.toLowerCase();
   if(!q){hideResultPanel();return;}
-  const items=refsWithLocations((r,p)=>[
-    r.vin,r.domaine,r.producteur,r.appellation,r.millesime,r.couleur,r.format,
-    p.emplacement,`casier ${p.casier}`,`ligne ${p.ligne}`,`position ${p.position}`
-  ].join(' ').toLowerCase().includes(q));
+  const items=refsWithLocations((r,p)=>`${r.vin} ${r.producteur||''} ${r.appellation||''} ${r.millesime||''}`.toLowerCase().includes(q));
   showResultPanel(`${items.length} résultat${items.length>1?'s':''} pour « ${raw} »`,items);
 }
 function showVintageResults(year){
