@@ -539,6 +539,223 @@ dialog,
   z-index:3;
 }
 
+
+/* =========================================================
+   V5.4.23 — méthode V4.2 : classes fixes + !important
+   Aucune couleur de millésime ou de vin n'est portée par un
+   <button>. Les aplats sont tous des <span>, identiques.
+   ========================================================= */
+
+/* Les boutons deviennent de simples conteneurs transparents. */
+.year-chip,
+.slot,
+.result-item{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+}
+
+/* ---------- MILLÉSIMES : UNE classe, UNE couleur ---------- */
+.age-color.ageUnknown{background:#777777!important;background-color:#777777!important;}
+.age-color.age0{background:#285f38!important;background-color:#285f38!important;}
+.age-color.age1{background:#3f8b49!important;background-color:#3f8b49!important;}
+.age-color.age2{background:#79a642!important;background-color:#79a642!important;}
+.age-color.age3{background:#c1b53b!important;background-color:#c1b53b!important;}
+.age-color.age4{background:#d88a32!important;background-color:#d88a32!important;}
+.age-color.age5{background:#c85d34!important;background-color:#c85d34!important;}
+.age-color.age6{background:#aa3e3d!important;background-color:#aa3e3d!important;}
+.age-color.age7{background:#7d2b3d!important;background-color:#7d2b3d!important;}
+.age-color.age8{background:#642438!important;background-color:#642438!important;}
+.age-color.age9{background:#511d30!important;background-color:#511d30!important;}
+.age-color.age10{background:#421827!important;background-color:#421827!important;}
+.age-color.age11{background:#351420!important;background-color:#351420!important;}
+.age-color.age12{background:hsl(340 43% 15.55%)!important;background-color:hsl(340 43% 15.55%)!important;}
+.age-color.age13{background:hsl(340 43% 15.1%)!important;background-color:hsl(340 43% 15.1%)!important;}
+.age-color.age14{background:hsl(340 43% 14.65%)!important;background-color:hsl(340 43% 14.65%)!important;}
+.age-color.age15{background:hsl(340 43% 14.2%)!important;background-color:hsl(340 43% 14.2%)!important;}
+.age-color.age16{background:hsl(340 43% 13.75%)!important;background-color:hsl(340 43% 13.75%)!important;}
+.age-color.age17{background:hsl(340 43% 13.3%)!important;background-color:hsl(340 43% 13.3%)!important;}
+.age-color.age18{background:hsl(340 43% 12.85%)!important;background-color:hsl(340 43% 12.85%)!important;}
+.age-color.age19{background:hsl(340 43% 12.4%)!important;background-color:hsl(340 43% 12.4%)!important;}
+.age-color.age20{background:hsl(340 43% 11.95%)!important;background-color:hsl(340 43% 11.95%)!important;}
+.age-color.age21{background:hsl(340 43% 11.5%)!important;background-color:hsl(340 43% 11.5%)!important;}
+.age-color.age22{background:hsl(340 43% 11.05%)!important;background-color:hsl(340 43% 11.05%)!important;}
+.age-color.age23{background:hsl(340 43% 10.6%)!important;background-color:hsl(340 43% 10.6%)!important;}
+.age-color.age24{background:hsl(340 43% 10.15%)!important;background-color:hsl(340 43% 10.15%)!important;}
+.age-color.age25{background:hsl(340 43% 9.7%)!important;background-color:hsl(340 43% 9.7%)!important;}
+.age-color.age26{background:hsl(340 43% 9.25%)!important;background-color:hsl(340 43% 9.25%)!important;}
+.age-color.age27{background:hsl(340 43% 8.8%)!important;background-color:hsl(340 43% 8.8%)!important;}
+.age-color.age28{background:hsl(340 43% 8.35%)!important;background-color:hsl(340 43% 8.35%)!important;}
+.age-color.age29{background:hsl(340 43% 7.9%)!important;background-color:hsl(340 43% 7.9%)!important;}
+.age-color.age30{background:hsl(340 43% 7.45%)!important;background-color:hsl(340 43% 7.45%)!important;}
+.age-color.age31{background:hsl(340 43% 7%)!important;background-color:hsl(340 43% 7%)!important;}
+
+.age-color{
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  background-image:none!important;
+  box-shadow:none!important;
+}
+
+/* Bouton supérieur : le SPAN remplit exactement le bouton. */
+.year-chip{
+  padding:0!important;
+  overflow:hidden!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  border:1px solid #444!important;
+}
+.year-chip-fill{
+  min-width:58px;
+  min-height:100%;
+  padding:7px 6px;
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  color:#fff!important;
+}
+.year-chip-fill b{
+  display:block;
+  font-size:12px;
+  line-height:1.15;
+}
+.year-chip-fill small{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  opacity:.82;
+}
+
+/* ---------- 4 COULEURS DE VIN FIXES ---------- */
+.wine-color.red{
+  background:#741a35!important;
+  background-color:#741a35!important;
+  color:#fff!important;
+}
+.wine-color.white{
+  background:#d8c56a!important;
+  background-color:#d8c56a!important;
+  color:#241b08!important;
+}
+.wine-color.rose{
+  background:#b95b72!important;
+  background-color:#b95b72!important;
+  color:#fff!important;
+}
+.wine-color.spark{
+  background:#8b762c!important;
+  background-color:#8b762c!important;
+  color:#fff!important;
+}
+.wine-color{
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  background-image:none!important;
+}
+
+/* ---------- CASIER ---------- */
+.slot{
+  position:relative!important;
+  overflow:hidden!important;
+  padding:0!important;
+  min-height:118px!important;
+  height:118px!important;
+  background:transparent!important;
+  background-color:transparent!important;
+}
+.slot.occupied .vintage-strip{
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  height:28px!important;
+  margin:0!important;
+  padding:6px 4px 5px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:0!important;
+  border-radius:0!important;
+  color:#fff!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  z-index:2!important;
+}
+.slot-main{
+  position:absolute!important;
+  top:28px!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  display:block!important;
+  padding:7px 6px 25px!important;
+  text-align:left!important;
+}
+.slot-main .pos,
+.slot-main .name,
+.slot-main .domain{
+  position:relative!important;
+  z-index:1!important;
+}
+.slot-main .maturity-gauge{
+  position:absolute!important;
+  left:6px!important;
+  right:6px!important;
+  bottom:7px!important;
+  width:auto!important;
+  margin:0!important;
+}
+.slot.empty{
+  padding:7px 6px!important;
+  background:#373434!important;
+  background-color:#373434!important;
+  color:#aaa!important;
+}
+
+/* ---------- RÉSULTATS ---------- */
+.result-item{
+  display:grid!important;
+  grid-template-columns:72px minmax(0,1fr)!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background:transparent!important;
+  background-color:transparent!important;
+}
+.result-year-zone{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:8px 5px!important;
+  color:#fff!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.05!important;
+  text-align:center!important;
+}
+.result-main{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+  padding:9px 10px!important;
+  text-align:left!important;
+}
+
+/* Textes foncés seulement sur le blanc */
+.slot-main.white .pos,
+.slot-main.white .name,
+.slot-main.white .domain,
+.result-main.white,
+.result-main.white b,
+.result-main.white small,
+.result-main.white .result-domain{
+  color:#241b08!important;
+}
+
 </style>
 </head>
 <body>
@@ -667,6 +884,6 @@ dialog,
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.22"></script>
+<script src="app.js?v=5.4.23"></script>
 </body>
 </html>

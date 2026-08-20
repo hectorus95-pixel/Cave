@@ -113,7 +113,9 @@ function couleurPourAge(y){
 }
 
 function ageClass(y){
-  return wineAge(y)===null ? 'ageUnknown' : 'ageDynamic';
+  const age=wineAge(y);
+  if(age===null) return 'ageUnknown';
+  return `age${Math.min(31,age)}`;
 }
 
 
@@ -185,10 +187,11 @@ function renderStats(){
     return Number(b[0])-Number(a[0]);
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
-    const color=y==='Sans année' ? '#777777' : couleurPourAge(y);
-    return `<button type="button" class="year-chip" data-year="${esc(y)}"
-      style="--age-color:${color};background-color:${color} !important;border-color:${color} !important;">
-      <b>${esc(y)}</b><small>${n} bt</small>
+    const ac=ageClass(y==='Sans année'?'':y);
+    return `<button type="button" class="year-chip" data-year="${esc(y)}">
+      <span class="year-chip-fill age-color ${ac}">
+        <b>${esc(y)}</b><small>${n} bt</small>
+      </span>
     </button>`;
   }).join('');
   $$('#yearStats .year-chip').forEach(btn=>btn.addEventListener('click',()=>showVintageResults(btn.dataset.year)));
@@ -232,13 +235,13 @@ function showResultPanel(title,items){
   items.forEach(({r,p})=>{
     const btn=document.createElement('button');
     btn.type='button';
-    btn.className=`result-item ${wineClass(r.couleur)}`;
-    const ageColor=r.millesime ? couleurPourAge(r.millesime) : '#777777';
-    btn.style.setProperty('--age-color',ageColor);
+    btn.className='result-item';
+    const wc=wineClass(r.couleur);
+    const ac=ageClass(r.millesime);
     const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(r.format||''));
     btn.innerHTML=`
-      <span class="result-year-zone" style="--age-color:${ageColor};background-color:${ageColor} !important;">${esc(r.millesime||'Sans année')}</span>
-      <span class="result-main">
+      <span class="result-year-zone age-color ${ac}">${esc(r.millesime||'Sans année')}</span>
+      <span class="result-main wine-color ${wc}">
         <b>${esc(r.vin)}${isMagnum?' · Magnum':''}</b>
         ${r.domaine?`<span class="result-domain">${esc(r.domaine)}</span>`:''}
         <small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>
@@ -387,16 +390,25 @@ function render(){
     const b=document.createElement('button');
     b.type='button';
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
-    b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'}`;
-    const ageColor=r?(r.millesime ? couleurPourAge(r.millesime) : '#777777'):'';
-    if(r) b.style.setProperty('--age-color',ageColor);
-    b.innerHTML=`
-      ${r?`<span class="vintage-strip" style="--age-color:${ageColor};background-color:${ageColor} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
-      <span class="pos">L${x.ligne}·P${x.position}</span>
-      <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
-      ${r&&r.domaine?`<span class="domain">${esc(r.domaine)}</span>`:''}
-      ${r?maturityGaugeHtml(r):''}
-    `;
+    b.className=`slot ${r?'occupied':'empty'}`;
+    if(r){
+      const wc=wineClass(r.couleur);
+      const ac=ageClass(r.millesime);
+      b.innerHTML=`
+        <span class="vintage-strip age-color ${ac}">${esc(r.millesime||'Sans année')}</span>
+        <span class="slot-main wine-color ${wc}">
+          <span class="pos">L${x.ligne}·P${x.position}</span>
+          <span class="name">${esc(r.vin)}</span>
+          ${r.domaine?`<span class="domain">${esc(r.domaine)}</span>`:''}
+          ${maturityGaugeHtml(r)}
+        </span>
+      `;
+    }else{
+      b.innerHTML=`
+        <span class="pos">L${x.ligne}·P${x.position}</span>
+        <span class="name">＋ Vide</span>
+      `;
+    }
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
     g.appendChild(b);
   });
