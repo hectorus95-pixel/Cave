@@ -191,7 +191,7 @@ function showResultPanel(title,items){
   if(!items.length) list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
   items.forEach(({r,p})=>{
     const btn=document.createElement('button');
-    btn.type='button'; btn.className='result-item';
+    btn.type='button'; btn.className=`result-item ${wineClass(r.couleur)}`;
     const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(r.format||''));
     btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}${isMagnum?' · Magnum':''}</b><small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>`;
     btn.addEventListener('click',()=>{
@@ -204,9 +204,15 @@ function showResultPanel(title,items){
   panel.hidden=false;
 }
 function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
+function normalizeSearchText(value){
+  return String(value||'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase();
+}
 function showSearchResults(){
   const raw=$('#search').value.trim();
-  const q=raw.toLowerCase();
+  const q=normalizeSearchText(raw);
   if(!q){hideResultPanel();return;}
 
   const matches=refsWithLocations((r,p)=>{
@@ -214,8 +220,8 @@ function showSearchResults(){
       r.vin,r.domaine,r.producteur,r.appellation,r.millesime,
       r.couleur,r.format,p.emplacement,
       `casier ${p.casier}`,`ligne ${p.ligne}`,`position ${p.position}`
-    ].join(' ').toLowerCase();
-    return hay.includes(q);
+    ].join(' ');
+    return normalizeSearchText(hay).includes(q);
   });
 
   // Regrouper les bouteilles qui ont la même référence.
