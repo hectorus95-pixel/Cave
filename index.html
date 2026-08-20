@@ -724,6 +724,37 @@ button.result-item{
   font-size:7.5px!important;
 }
 
+
+/* =========================================================
+   V6.5 — même indication de sélection partout
+   Cadre blanc identique pour Casier / Année / Maturité
+   ========================================================= */
+
+/* Le fond du casier actif ne change plus : seul le cadre indique la sélection */
+.top-casier-tabs .tab.active{
+  background:#ffffff13!important;
+  border-color:transparent!important;
+}
+
+/* Cadre commun */
+.top-casier-tabs .tab.active,
+.year-chip.active,
+.maturity-filter.active{
+  outline:2px solid rgba(255,255,255,.96)!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 2px rgba(0,0,0,.72)!important;
+}
+
+/* Ne pas modifier la couleur du millésime sélectionné */
+.year-chip.active{
+  background:transparent!important;
+}
+
+/* La maturité conserve exactement sa couleur */
+.maturity-filter.active{
+  opacity:1!important;
+}
+
 </style>
 </head>
 <body>
@@ -865,6 +896,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.4"></script>
+<script src="app.js?v=6.5"></script>
 </body>
 </html>

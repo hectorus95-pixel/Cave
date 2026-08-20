@@ -361,6 +361,10 @@ function groupedResultItems(matches){
   return items;
 }
 
+function clearYearFilter(){
+  $$('#yearStats .year-chip').forEach(b=>b.classList.remove('active'));
+}
+
 function clearMaturityFilter(){
   $$('.maturity-filter').forEach(b=>b.classList.remove('active'));
 }
@@ -368,6 +372,7 @@ function clearMaturityFilter(){
 function showMaturityResults(zone){
   zone=Number(zone);
   $('#search').value='';
+  clearYearFilter();
   clearMaturityFilter();
 
   const active=$$('.maturity-filter').find(b=>Number(b.dataset.zone)===zone);
@@ -399,6 +404,7 @@ function showMaturityResults(zone){
 
 function showSearchResults(){
   clearMaturityFilter();
+  clearYearFilter();
   const raw=$('#search').value.trim();
   const q=normalizeSearchText(raw);
   if(!q){hideResultPanel();return;}
@@ -421,8 +427,12 @@ function showSearchResults(){
 }
 function showVintageResults(year){
   clearMaturityFilter();
+  clearYearFilter();
   $('#search').value='';
   const y=String(year);
+
+  const activeYear=$$('#yearStats .year-chip').find(b=>String(b.dataset.year)===y);
+  if(activeYear) activeYear.classList.add('active');
   const matches=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
 
   const items=groupedResultItems(matches);
@@ -595,6 +605,7 @@ $$('.maturity-filter').forEach(b=>b.addEventListener('click',()=>{
 
   if(b.classList.contains('active')){
     clearMaturityFilter();
+    clearYearFilter();
     hideResultPanel();
     return;
   }
@@ -606,6 +617,7 @@ $$('.tab').forEach(b=>b.addEventListener('click',async()=>{
   activeCasier=Number(b.dataset.c);
   $('#search').value='';
   clearMaturityFilter();
+  clearYearFilter();
   hideResultPanel();
   render();
   await refreshPhotoButtons();
