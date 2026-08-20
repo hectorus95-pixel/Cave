@@ -192,7 +192,8 @@ function showResultPanel(title,items){
   items.forEach(({r,p})=>{
     const btn=document.createElement('button');
     btn.type='button'; btn.className='result-item';
-    btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}</b><small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>`;
+    const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(r.format||''));
+    btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}${isMagnum?' · Magnum':''}</b><small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>`;
     btn.addEventListener('click',()=>{
       activeCasier=p.casier; render(); refreshPhotoButtons();
       const target=[...document.querySelectorAll('#grid .slot')].find(el=>el.dataset.line==p.ligne&&el.dataset.pos==p.position);
