@@ -224,7 +224,7 @@ function render(){
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
     b.innerHTML=`
-      ${r?`<span class="vintage-strip" style="background:${ageColor(r.millesime)} !important;background-color:${ageColor(r.millesime)} !important;opacity:1 !important;filter:none !important;mix-blend-mode:normal !important;">${esc(r.millesime||'Sans année')}</span>`:''}
+      ${r?`<span class="vintage-strip">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
@@ -236,6 +236,16 @@ function render(){
           <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>
         </span>`:''}
     `;
+    if(r){
+      const strip=b.querySelector('.vintage-strip');
+      const c=ageColor(r.millesime);
+      strip.style.setProperty('background', c, 'important');
+      strip.style.setProperty('background-color', c, 'important');
+      strip.style.setProperty('background-image', 'none', 'important');
+      strip.style.setProperty('opacity', '1', 'important');
+      strip.style.setProperty('filter', 'none', 'important');
+      strip.style.setProperty('mix-blend-mode', 'normal', 'important');
+    }
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
     g.appendChild(b);
   });
