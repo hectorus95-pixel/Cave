@@ -56,17 +56,41 @@ function currentDecimalYear(){
   const start=new Date(y,0,1), end=new Date(y+1,0,1);
   return y + (d-start)/(end-start);
 }
+function wineAge(y){
+  const year=Number(y);
+  if(!year || !Number.isFinite(year)) return null;
+  return Math.max(0,new Date().getFullYear()-year);
+}
+
 function ageClass(y){
-  const a=new Date().getFullYear()-Number(y);
-  if(!y || !Number.isFinite(a)) return 'ageUnknown';
-  if(a<=0) return 'age0';
-  if(a===1) return 'age1';
-  if(a===2) return 'age2';
-  if(a===3) return 'age3';
-  if(a===4) return 'age4';
-  if(a===5) return 'age5';
-  if(a===6) return 'age6';
-  return 'age7';
+  return wineAge(y)===null ? 'ageUnknown' : 'ageDynamic';
+}
+
+// Couleur unique utilisée partout selon l'âge réel du millésime.
+function ageColor(y){
+  const a=wineAge(y);
+  if(a===null) return '#777777';
+
+  const palette=[
+    '#69b96d', // 0 an
+    '#58a85b', // 1 an
+    '#8fa43f', // 2 ans
+    '#c7a23a', // 3 ans
+    '#cf7b35', // 4 ans
+    '#b5533f', // 5 ans
+    '#913641', // 6 ans
+    '#74283a', // 7 ans
+    '#5e2033', // 8 ans
+    '#4d1a2b', // 9 ans
+    '#401624', // 10 ans
+    '#35121e'  // 11 ans
+  ];
+
+  if(a < palette.length) return palette[a];
+
+  const extra=Math.min(18,a-palette.length+1);
+  const light=Math.max(7,18-extra*0.6);
+  return `hsl(340 48% ${light}%)`;
 }
 function maturityInfo(r){
   const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
@@ -133,8 +157,8 @@ function renderStats(){
     return Number(b[0])-Number(a[0]);
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
-    const cls = y==='Sans année' ? 'ageUnknown' : ageClass(Number(y));
-    return `<span class="year-chip ${cls}"><b>${esc(y)}</b><small>${n} bt</small></span>`;
+    const color = y==='Sans année' ? '#777777' : ageColor(Number(y));
+    return `<span class="year-chip" style="--age-color:${color}"><b>${esc(y)}</b><small>${n} bt</small></span>`;
   }).join('');
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
     `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
@@ -153,7 +177,8 @@ function render(){
     const mi=maturityInfo(r);
     const b=document.createElement('button');
     b.type='button';
-    b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'age0'} ${q&&!hay.includes(q)?'dim':''}`;
+    b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
+    if(r) b.style.setProperty('--age-color',ageColor(r.millesime));
     b.innerHTML=`
       ${r?`<span class="vintage-strip">${esc(r.millesime||'—')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>

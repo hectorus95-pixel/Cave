@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=4.6">
+<link rel="manifest" href="manifest.webmanifest?v=4.7">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -318,6 +318,20 @@ header{
 .slot.age7 .vintage-strip{background:#481725!important;color:#fff!important}
 .slot.ageUnknown .vintage-strip{background:#777!important;color:#fff!important}
 
+
+/* V4.7 — couleur d'âge unique et automatiquement évolutive */
+.year-chip{
+  border-top:5px solid var(--age-color,#777)!important;
+}
+.slot.ageDynamic .vintage-strip{
+  background:var(--age-color,#777)!important;
+  color:#fff!important;
+}
+.slot.ageUnknown .vintage-strip{
+  background:#777!important;
+  color:#fff!important;
+}
+
 </style>
 </head>
 <body>
@@ -444,6 +458,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=4.6"></script>
+<script src="app.js?v=4.7"></script>
 </body>
 </html>
