@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=4.2">
+<link rel="manifest" href="manifest.webmanifest?v=4.3">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -177,6 +177,56 @@ dialog::backdrop{background:#000b}
   z-index:2!important;
 }
 
+
+/* V4.3 — jauge toujours colorée et curseur toujours visible */
+.maturity-gauge,
+.maturity-bar.four-zone{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:2px!important;
+  height:8px!important;
+  margin-top:9px!important;
+  overflow:visible!important;
+}
+.maturity-gauge i,
+.maturity-bar.four-zone i{
+  display:block!important;
+  height:8px!important;
+  border-radius:2px!important;
+  opacity:1!important;
+  outline:none!important;
+}
+.maturity-gauge .z1,.maturity-bar .z1{background:#59ad62!important}
+.maturity-gauge .z2,.maturity-bar .z2{background:#e1ce31!important}
+.maturity-gauge .z3,.maturity-bar .z3{background:#e58a2f!important}
+.maturity-gauge .z4,.maturity-bar .z4{background:#df4545!important}
+.maturity-cursor{
+  position:absolute!important;
+  top:50%!important;
+  width:13px!important;
+  height:13px!important;
+  border-radius:50%!important;
+  background:#fff!important;
+  border:2px solid #333!important;
+  transform:translate(-50%,-50%)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.85)!important;
+  pointer-events:none!important;
+  z-index:4!important;
+}
+.maturity-cursor.unknown-cursor{
+  background:#fff!important;
+  border-color:#777!important;
+}
+
+/* Couleurs d'âge du bandeau millésime */
+.slot.age1 .vintage-strip{background:#58a85b!important;color:#111!important}
+.slot.age2 .vintage-strip{background:#91a932!important;color:#111!important}
+.slot.age3 .vintage-strip{background:#d4a63c!important;color:#111!important}
+.slot.age4 .vintage-strip{background:#c96c35!important;color:#111!important}
+.slot.age5 .vintage-strip{background:#7e2c3e!important;color:#fff!important}
+.slot.age0 .vintage-strip{background:#777!important;color:#fff!important}
+
 </style>
 </head>
 <body>
@@ -300,6 +350,6 @@ dialog::backdrop{background:#000b}
   </div>
 </dialog>
 
-<script src="app.js?v=4.2"></script>
+<script src="app.js?v=4.3"></script>
 </body>
 </html>

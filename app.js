@@ -149,12 +149,12 @@ function render(){
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
-        <span class="maturity-gauge ${mi.known?'':'unknown'}" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
+        <span class="maturity-gauge" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
           <i class="z1"></i>
           <i class="z2"></i>
           <i class="z3"></i>
           <i class="z4"></i>
-          ${mi.known?`<b class="maturity-cursor" style="left:${Math.max(0,Math.min(100,mi.cursor))}%"></b>`:''}
+          <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>
         </span>`:''}
     `;
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
@@ -211,13 +211,13 @@ function updateMaturityPreview(){
   };
   const mi=maturityInfo(draft);
   $('#maturityStatus').textContent=mi.label;
-  $('#maturityBar').className='maturity-bar four-zone'+(mi.known?'':' unknown');
+  $('#maturityBar').className='maturity-bar four-zone';
   $('#maturityBar').innerHTML=`
     <i class="z1"></i>
     <i class="z2"></i>
     <i class="z3"></i>
     <i class="z4"></i>
-    ${mi.known?`<b class="maturity-cursor" style="left:${Math.max(0,Math.min(100,mi.cursor))}%"></b>`:''}`;
+    <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>`;
 }
 
 function editRef(x,r){
