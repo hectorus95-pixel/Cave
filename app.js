@@ -78,13 +78,12 @@ function wineAge(y){
   return Math.max(0,new Date().getFullYear()-year);
 }
 
-function ageColor(y){
+function couleurPourAge(y){
   const age=wineAge(y);
   if(age===null) return '#777777';
 
   if(age < AGE_COLORS.length) return AGE_COLORS[age];
 
-  // Au-delà de 11 ans : même teinte bordeaux, de plus en plus sombre.
   const extra=Math.min(20,age-(AGE_COLORS.length-1));
   const light=Math.max(6,16-extra*0.45);
   return `hsl(340 43% ${light}%)`;
@@ -159,8 +158,11 @@ function renderStats(){
     return Number(b[0])-Number(a[0]);
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
-    const color=y==='Sans année'?'#777777':ageColor(Number(y));
-    return `<button type="button" class="year-chip" data-year="${esc(y)}" style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;"><b>${esc(y)}</b><small>${n} bt</small></button>`;
+    const color=y==='Sans année' ? '#777777' : couleurPourAge(Number(y));
+    return `<button type="button" class="year-chip" data-year="${esc(y)}"
+      style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;">
+      <b>${esc(y)}</b><small>${n} bt</small>
+    </button>`;
   }).join('');
   $$('#yearStats .year-chip').forEach(btn=>btn.addEventListener('click',()=>showVintageResults(btn.dataset.year)));
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
@@ -237,14 +239,13 @@ function render(){
         </span>`:''}
     `;
     if(r){
+      const color=couleurPourAge(r.millesime);
       const strip=b.querySelector('.vintage-strip');
-      const c=ageColor(r.millesime);
-      strip.style.setProperty('background', c, 'important');
-      strip.style.setProperty('background-color', c, 'important');
-      strip.style.setProperty('background-image', 'none', 'important');
-      strip.style.setProperty('opacity', '1', 'important');
-      strip.style.setProperty('filter', 'none', 'important');
-      strip.style.setProperty('mix-blend-mode', 'normal', 'important');
+      if(strip){
+        strip.style.setProperty('background',color,'important');
+        strip.style.setProperty('background-color',color,'important');
+        strip.style.setProperty('background-image','none','important');
+      }
     }
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
     g.appendChild(b);

@@ -1,10 +1,10 @@
-Ma Cave à Vin — V5.1
+Ma Cave à Vin — V5.2
 
-Correction du premier bug V5 :
-- la palette d'âge V5 est maintenant imposée directement sur chaque bandeau bouteille par JavaScript ;
-- le bandeau bouteille utilise exactement la même fonction ageColor() que le récapitulatif du haut ;
-- aucune ancienne règle CSS ne doit pouvoir remplacer cette couleur ;
-- les fonctions V5 (swipe, recherche avec positions, clic sur millésime) sont conservées.
+Correction ciblée :
+- une seule fonction couleurPourAge() calcule la couleur ;
+- âge = année actuelle - millésime ;
+- le récapitulatif et les bandeaux bouteilles appellent exactement cette même fonction ;
+- aucune autre modification volontaire de la V5.1.
 
-Pour GitHub Pages :
-remplacer app.js, index.html, manifest.webmanifest et sw.js.
+À remplacer sur GitHub :
+app.js, index.html, manifest.webmanifest et sw.js.
