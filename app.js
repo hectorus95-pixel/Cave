@@ -120,40 +120,77 @@ function ageClass(y){
 
 
 function maturityInfo(r){
-  const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
+  const s=Number(r?.maturiteDebut);
+  const e=Number(r?.maturiteFin);
+  const now=currentDecimalYear();
+
   if(!s && !e){
     return {known:false,zone:0,label:'Maturité non renseignée',cursor:0};
   }
 
-  const start=s||Number(r?.millesime)||Math.floor(now);
-  const end=e||start;
+  // Les données de la cave sont saisies à l'année près.
+  // Une année de fin est donc INCLUSIVE :
+  // ex. fin 2027 = surmaturité seulement à partir du 01/01/2028.
+  const start=s || Number(r?.millesime) || Math.floor(now);
+  const end=e || start;
+  const endExclusive=end+1;
 
-  // Position continue du curseur, de 0 à 100 %.
-  let cursor=0;
-  if(now <= start){
-    cursor=0;
-  }else if(now >= end){
-    cursor=100;
-  }else{
-    cursor=((now-start)/Math.max(1,end-start))*100;
-  }
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
+  // 1. JEUNE : avant l'année de début de maturité.
+  // Le curseur reste exclusivement dans le quart vert (0–25 %).
   if(now < start){
-    return {known:true,zone:1,label:`Jeune · à partir de ${start}`,cursor};
-  }
-  if(now > end){
-    return {known:true,zone:4,label:`Surmaturité · fin prévue ${end}`,cursor};
+    const vintage=Number(r?.millesime);
+    const youngStart=(vintage && vintage<start) ? vintage : start-1;
+    const progress=clamp((now-youngStart)/Math.max(1,start-youngStart),0,1);
+    const cursor=2 + progress*21; // 2–23 %
+    return {
+      known:true,
+      zone:1,
+      label:`Jeune · maturité à partir de ${start}`,
+      cursor
+    };
   }
 
-  // Les 4 zones restent fixes et sans dégradé.
-  const ratio=(now-start)/Math.max(1,end-start);
-  if(ratio < 0.34){
-    return {known:true,zone:2,label:`À boire · ${start}–${end}`,cursor};
+  // 2. À BOIRE : de l'année de début jusqu'à l'année PRÉCÉDANT
+  // la dernière année de maturité.
+  // Le curseur reste exclusivement dans le quart jaune (25–50 %).
+  if(now < end){
+    const progress=clamp((now-start)/Math.max(1,end-start),0,1);
+    const cursor=27 + progress*21; // 27–48 %
+    return {
+      known:true,
+      zone:2,
+      label:`À boire · ${start}–${end}`,
+      cursor
+    };
   }
-  if(ratio < 0.80){
-    return {known:true,zone:3,label:`Fin de maturité · avant ${end}`,cursor};
+
+  // 3. FIN DE MATURITÉ : toute la dernière année indiquée.
+  // Ex. maturiteFin=2027 => du 01/01/2027 au 31/12/2027.
+  // Le curseur reste exclusivement dans le quart orange (50–75 %).
+  if(now < endExclusive){
+    const progress=clamp(now-end,0,1);
+    const cursor=52 + progress*21; // 52–73 %
+    return {
+      known:true,
+      zone:3,
+      label:`Fin de maturité · dernière année ${end}`,
+      cursor
+    };
   }
-  return {known:true,zone:4,label:`Surmaturité proche · avant ${end}`,cursor};
+
+  // 4. SURMATURITÉ : uniquement APRÈS la fin complète de l'année limite.
+  // Le curseur reste exclusivement dans le quart rouge (75–100 %).
+  const yearsOver=now-endExclusive;
+  const progress=clamp(yearsOver/3,0,1);
+  const cursor=77 + progress*21; // 77–98 %
+  return {
+    known:true,
+    zone:4,
+    label:`Surmaturité · depuis ${end+1}`,
+    cursor
+  };
 }
 function allOccupied(){
   return inv.filter(x=>x.refId && ref(x.refId));
