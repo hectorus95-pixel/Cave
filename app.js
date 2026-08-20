@@ -63,15 +63,15 @@ function ageClass(y){
 }
 function maturityInfo(r){
   const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
-  if(!s && !e) return {known:false,zone:0,label:'Maturité non renseignée',cls:'m-none'};
+  if(!s && !e) return {known:false,zone:0,label:'Maturité non renseignée'};
   const start=s||Number(r?.millesime)||Math.floor(now);
   const end=e||start;
-  if(now < start) return {known:true,zone:1,label:`Jeune · à partir de ${start}`,cls:'m-young'};
-  if(now > end) return {known:true,zone:4,label:`Surmaturité · fin prévue ${end}`,cls:'m-over'};
+  if(now < start) return {known:true,zone:1,label:`Jeune · à partir de ${start}`};
+  if(now > end) return {known:true,zone:4,label:`Surmaturité · fin prévue ${end}`};
   const span=Math.max(1,end-start);
   const pct=Math.max(0,Math.min(1,(now-start)/span));
-  if(pct < 0.55) return {known:true,zone:2,label:`À boire · ${start}–${end}`,cls:'m-drink'};
-  return {known:true,zone:3,label:`Fin de maturité · avant ${end}`,cls:'m-end'};
+  if(pct < 0.55) return {known:true,zone:2,label:`À boire · ${start}–${end}`};
+  return {known:true,zone:3,label:`Fin de maturité · avant ${end}`};
 }
 function allOccupied(){
   return inv.filter(x=>x.refId && ref(x.refId));
@@ -95,17 +95,13 @@ function renderStats(){
   const s=statsData();
   $('#count').textContent=s.occ.length;
   $('#free').textContent=inv.length-s.occ.length;
-  $('#casierStats').innerHTML=[1,2,3].map(c=>
-    `<span class="stat-chip"><b>Casier ${c}</b><small>${s.byCasier[c]} bt</small></span>`
-  ).join('');
+  $('#casierStats').innerHTML=[1,2,3].map(c=>`<span class="stat-chip"><b>Casier ${c}</b><small>${s.byCasier[c]} bt</small></span>`).join('');
   const years=Object.entries(s.byYear).sort((a,b)=>{
     if(a[0]==='Sans année') return 1;
     if(b[0]==='Sans année') return -1;
     return Number(b[0])-Number(a[0]);
   });
-  $('#yearStats').innerHTML=years.map(([y,n])=>
-    `<span class="year-chip"><b>${esc(y)}</b><small>${n} bt</small></span>`
-  ).join('');
+  $('#yearStats').innerHTML=years.map(([y,n])=>`<span class="year-chip"><b>${esc(y)}</b><small>${n} bt</small></span>`).join('');
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
     `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
   ).join('');
@@ -128,12 +124,12 @@ function render(){
       ${r?`<span class="vintage-strip">${esc(r.millesime||'—')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
-      ${r&&mi.known?`
-        <span class="maturity-gauge" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
-          <i class="z1 ${mi.zone===1?'active':''}"></i>
-          <i class="z2 ${mi.zone===2?'active':''}"></i>
-          <i class="z3 ${mi.zone===3?'active':''}"></i>
-          <i class="z4 ${mi.zone===4?'active':''}"></i>
+      ${r?`
+        <span class="maturity-gauge ${mi.known?'':'unknown'}" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
+          <i class="z1 ${mi.known&&mi.zone===1?'active':''}"></i>
+          <i class="z2 ${mi.known&&mi.zone===2?'active':''}"></i>
+          <i class="z3 ${mi.known&&mi.zone===3?'active':''}"></i>
+          <i class="z4 ${mi.known&&mi.zone===4?'active':''}"></i>
         </span>`:''}
     `;
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
