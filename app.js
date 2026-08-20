@@ -199,6 +199,19 @@ function renderStats(){
 }
 
 
+function maturityGaugeHtml(r){
+  if(!r) return '';
+  const mi=maturityInfo(r);
+  return `
+    <span class="maturity-gauge" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
+      <i class="z1"></i>
+      <i class="z2"></i>
+      <i class="z3"></i>
+      <i class="z4"></i>
+      <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>
+    </span>`;
+}
+
 function refsWithLocations(filterFn){
   const out=[];
   inv.forEach(p=>{
@@ -227,7 +240,9 @@ function showResultPanel(title,items){
       <span class="result-year-zone" style="--age-color:${ageColor};background-color:${ageColor} !important;">${esc(r.millesime||'Sans année')}</span>
       <span class="result-main">
         <b>${esc(r.vin)}${isMagnum?' · Magnum':''}</b>
+        ${r.domaine?`<span class="result-domain">${esc(r.domaine)}</span>`:''}
         <small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>
+        <span class="result-gauge">${maturityGaugeHtml(r)}</span>
       </span>
     `;
     btn.addEventListener('click',()=>{
@@ -369,7 +384,6 @@ function render(){
   inv.filter(x=>x.casier===activeCasier).forEach(x=>{
     const r=ref(x.refId);
     const hay=r?[r.vin,r.domaine,r.millesime,r.couleur,r.format,x.emplacement].join(' ').toLowerCase():'';
-    const mi=maturityInfo(r);
     const b=document.createElement('button');
     b.type='button';
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
@@ -380,14 +394,8 @@ function render(){
       ${r?`<span class="vintage-strip" style="--age-color:${ageColor};background-color:${ageColor} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
-      ${r?`
-        <span class="maturity-gauge" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
-          <i class="z1"></i>
-          <i class="z2"></i>
-          <i class="z3"></i>
-          <i class="z4"></i>
-          <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>
-        </span>`:''}
+      ${r&&r.domaine?`<span class="domain">${esc(r.domaine)}</span>`:''}
+      ${r?maturityGaugeHtml(r):''}
     `;
     b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
     g.appendChild(b);

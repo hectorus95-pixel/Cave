@@ -458,6 +458,46 @@ dialog,
   color-scheme:dark !important;
 }
 
+
+/* V5.4.21 — domaine et jauge visibles dans les casiers et les résultats */
+.slot .domain{
+  display:block;
+  margin:-1px 0 2px;
+  font-size:8px;
+  line-height:1.08;
+  font-weight:600;
+  opacity:.76;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.slot.white .domain{
+  color:#241b08 !important;
+}
+
+.result-domain{
+  display:block;
+  margin-top:2px;
+  font-size:10px;
+  line-height:1.15;
+  font-weight:650;
+  opacity:.82;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.result-gauge{
+  display:block;
+  margin-top:2px;
+}
+.result-gauge .maturity-gauge{
+  width:100%;
+  margin-top:6px;
+}
+.result-item.white .result-domain{
+  color:#241b08 !important;
+}
+
 </style>
 </head>
 <body>
@@ -586,6 +626,6 @@ dialog,
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.20"></script>
+<script src="app.js?v=5.4.21"></script>
 </body>
 </html>
