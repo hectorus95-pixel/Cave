@@ -58,18 +58,18 @@ function currentDecimalYear(){
 }
 
 const AGE_COLORS = [
-  '#57b65f', // 0 an : vert vif
-  '#4eaa55', // 1 an : vert
-  '#7ea83f', // 2 ans : vert-jaune
-  '#b1a232', // 3 ans : jaune-olive
-  '#d28a2f', // 4 ans : orange
-  '#c96332', // 5 ans : orange-rouge
-  '#b2433a', // 6 ans : rouge
-  '#8f3040', // 7 ans : rouge-bordeaux
-  '#70263a', // 8 ans : bordeaux
-  '#581f33', // 9 ans : bordeaux foncé
-  '#47192a', // 10 ans : très foncé
-  '#381522'  // 11 ans : très vieux
+  '#285f38', // 0 an : vert foncé
+  '#3f8b49', // 1 an : vert
+  '#79a642', // 2 ans : vert-jaune
+  '#c1b53b', // 3 ans : jaune
+  '#d88a32', // 4 ans : orange
+  '#c85d34', // 5 ans : orange-rouge
+  '#aa3e3d', // 6 ans : rouge
+  '#7d2b3d', // 7 ans : bordeaux
+  '#642438', // 8 ans : bordeaux foncé
+  '#511d30', // 9 ans
+  '#421827', // 10 ans
+  '#351420'  // 11 ans
 ];
 
 function wineAge(y){
@@ -159,13 +159,55 @@ function renderStats(){
     return Number(b[0])-Number(a[0]);
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
-    const color = y==='Sans année' ? '#777777' : ageColor(Number(y));
-    return `<span class="year-chip" style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;opacity:1 !important;filter:none !important;mix-blend-mode:normal !important;"><b>${esc(y)}</b><small>${n} bt</small></span>`;
+    const color=y==='Sans année'?'#777777':ageColor(Number(y));
+    return `<button type="button" class="year-chip" data-year="${esc(y)}" style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;"><b>${esc(y)}</b><small>${n} bt</small></button>`;
   }).join('');
+  $$('#yearStats .year-chip').forEach(btn=>btn.addEventListener('click',()=>showVintageResults(btn.dataset.year)));
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
     `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
   ).join('');
   $('#valueTotal').textContent=euro(s.occ.reduce((sum,x)=>sum+(Number(ref(x.refId)?.prix)||0),0));
+}
+
+
+function refsWithLocations(filterFn){
+  const out=[];
+  positions.forEach(p=>{
+    if(!p.refId) return;
+    const r=refs.find(x=>x.id===p.refId);
+    if(r && filterFn(r,p)) out.push({r,p});
+  });
+  return out.sort((a,b)=>a.p.casier-b.p.casier||a.p.ligne-b.p.ligne||a.p.position-b.p.position);
+}
+function showResultPanel(title,items){
+  const panel=$('#resultPanel'),list=$('#resultList');
+  $('#resultTitle').textContent=title; list.innerHTML='';
+  if(!items.length) list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
+  items.forEach(({r,p})=>{
+    const btn=document.createElement('button');
+    btn.type='button'; btn.className='result-item';
+    btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}</b><small>Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}</small>`;
+    btn.addEventListener('click',()=>{
+      activeCasier=p.casier; render(); refreshPhotoButtons();
+      const target=[...document.querySelectorAll('#grid .slot')].find(el=>el.dataset.line==p.ligne&&el.dataset.pos==p.position);
+      if(target){ target.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>target.click(),250); }
+    });
+    list.appendChild(btn);
+  });
+  panel.hidden=false;
+}
+function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
+function showSearchResults(){
+  const raw=$('#search').value.trim(),q=raw.toLowerCase();
+  if(!q){hideResultPanel();return;}
+  const items=refsWithLocations((r,p)=>`${r.vin} ${r.producteur||''} ${r.appellation||''} ${r.millesime||''}`.toLowerCase().includes(q));
+  showResultPanel(`${items.length} résultat${items.length>1?'s':''} pour « ${raw} »`,items);
+}
+function showVintageResults(year){
+  const y=String(year);
+  const items=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
+  showResultPanel(`${y} · ${items.length} bouteille${items.length>1?'s':''}`,items);
+  $('#resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function render(){
@@ -179,6 +221,7 @@ function render(){
     const mi=maturityInfo(r);
     const b=document.createElement('button');
     b.type='button';
+    b.dataset.line=x.ligne; b.dataset.pos=x.position;
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
     b.innerHTML=`
       ${r?`<span class="vintage-strip" style="background:${ageColor(r.millesime)} !important;background-color:${ageColor(r.millesime)} !important;opacity:1 !important;filter:none !important;mix-blend-mode:normal !important;">${esc(r.millesime||'Sans année')}</span>`:''}
@@ -318,7 +361,7 @@ $('#cancel').addEventListener('click',()=>requestClose($('#dialog')));
 $('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
 ['f_millesime','f_maturiteDebut','f_maturiteFin'].forEach(id=>$('#'+id).addEventListener('input',updateMaturityPreview));
 
-$('#search').addEventListener('input',render);
+$('#search').addEventListener('input',()=>{render();showSearchResults();});
 $$('.tab').forEach(b=>b.addEventListener('click',async()=>{activeCasier=Number(b.dataset.c);render();await refreshPhotoButtons()}));
 
 $('#export').addEventListener('click',()=>{
@@ -450,6 +493,24 @@ $('#photoDialog').addEventListener('close',()=>{
   if(img.dataset.url){ URL.revokeObjectURL(img.dataset.url); delete img.dataset.url; }
   img.removeAttribute('src');
 });
+
+
+let swipeStartX=null,swipeStartY=null;
+$('#grid').addEventListener('touchstart',e=>{
+  if(e.touches.length!==1)return;
+  swipeStartX=e.touches[0].clientX; swipeStartY=e.touches[0].clientY;
+},{passive:true});
+$('#grid').addEventListener('touchend',e=>{
+  if(swipeStartX===null||!e.changedTouches.length)return;
+  const dx=e.changedTouches[0].clientX-swipeStartX,dy=e.changedTouches[0].clientY-swipeStartY;
+  swipeStartX=swipeStartY=null;
+  if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.35)return;
+  if(dx<0&&activeCasier<3) activeCasier++;
+  else if(dx>0&&activeCasier>1) activeCasier--;
+  else return;
+  render(); refreshPhotoButtons();
+  document.querySelector('.tabs').scrollIntoView({behavior:'smooth',block:'start'});
+},{passive:true});
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 persist();
