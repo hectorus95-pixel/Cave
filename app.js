@@ -151,7 +151,10 @@ function renderStats(){
   const s=statsData();
   $('#count').textContent=s.occ.length;
   $('#free').textContent=inv.length-s.occ.length;
-  $('#casierStats').innerHTML=[1,2,3].map(c=>`<span class="stat-chip"><b>Casier ${c}</b><small>${s.byCasier[c]} bt</small></span>`).join('');
+  [1,2,3].forEach(c=>{
+    const el=$('#casierCount'+c);
+    if(el) el.textContent=`${s.byCasier[c]} bt`;
+  });
   const years=Object.entries(s.byYear).sort((a,b)=>{
     if(a[0]==='Sans année') return 1;
     if(b[0]==='Sans année') return -1;

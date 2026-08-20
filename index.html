@@ -393,6 +393,32 @@ header{
   opacity:.78;
 }
 
+
+/* V5.4.12 — un seul affichage des casiers, directement cliquable dans l'en-tête */
+.top-casier-tabs{
+  margin:10px 0 0;
+}
+.top-casier-tabs .tab{
+  padding:8px 5px;
+  background:#ffffff13;
+  border:1px solid transparent;
+}
+.top-casier-tabs .tab.active{
+  background:#7a1837;
+  border-color:#a22b50;
+}
+.top-casier-tabs .tab b{
+  display:block;
+  font-size:12px;
+  line-height:1.15;
+}
+.top-casier-tabs .tab small{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  opacity:.72;
+}
+
 </style>
 </head>
 <body>
@@ -402,7 +428,11 @@ header{
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
     <div class="metric"><b id="free">—</b><span>places libres</span></div>
   </div>
-  <div id="casierStats" class="statline"></div>
+  <div class="tabs top-casier-tabs" aria-label="Choisir un casier">
+    <button class="tab active" data-c="1"><b>Casier 1</b><small id="casierCount1">— bt</small></button>
+    <button class="tab" data-c="2"><b>Casier 2</b><small id="casierCount2">— bt</small></button>
+    <button class="tab" data-c="3"><b>Casier 3</b><small id="casierCount3">— bt</small></button>
+  </div>
   <div id="yearStats" class="yearbox" aria-label="Répartition par millésime"></div>
 </header>
 
@@ -412,12 +442,6 @@ header{
     <div id="resultTitle" class="result-title"></div>
     <div id="resultList" class="result-list"></div>
   </div>
-  <div class="tabs">
-    <button class="tab active" data-c="1">Casier 1</button>
-    <button class="tab" data-c="2">Casier 2</button>
-    <button class="tab" data-c="3">Casier 3</button>
-  </div>
-
   <div class="maturity-legend" aria-label="Légende maturité">
     <span><i class="z1"></i>Jeune</span>
     <span><i class="z2"></i>À boire</span>
@@ -523,6 +547,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.11"></script>
+<script src="app.js?v=5.4.12"></script>
 </body>
 </html>
