@@ -120,7 +120,7 @@ header{
 .maturity-bar.four-zone{
   position:relative;
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(5,minmax(0,1fr));
   gap:2px;
   height:8px;
   margin-top:9px;
@@ -685,10 +685,20 @@ button.result-item{
 
 /* V6.1 — curseur de maturité plus fin uniquement dans les casiers */
 .slot-main .maturity-gauge .maturity-cursor{
-  width:8px!important;
+  width:6px!important;
   height:13px!important;
-  border-radius:5px!important;
+  border-radius:4px!important;
   border-width:2px!important;
+}
+
+
+/* V6.3 — 5e filtre maturité non renseignée */
+.maturity-filter.z0{
+  background:#777777;
+  color:#fff;
+}
+.maturity-filter.z0 span{
+  line-height:1.05;
 }
 
 </style>
@@ -723,6 +733,9 @@ button.result-item{
     </button>
     <button type="button" class="maturity-filter z4" data-zone="4">
       <span>Surmaturité</span><small id="matCount4">0 bt</small>
+    </button>
+    <button type="button" class="maturity-filter z0" data-zone="0">
+      <span>Non renseigné</span><small id="matCount0">0 bt</small>
     </button>
   </div>
 
@@ -829,6 +842,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.2"></script>
+<script src="app.js?v=6.3"></script>
 </body>
 </html>

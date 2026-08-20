@@ -219,15 +219,16 @@ function renderStats(){
     if(el) el.textContent=`${s.byCasier[c]} bt`;
   });
 
-  const maturityCounts={1:0,2:0,3:0,4:0};
+  const maturityCounts={0:0,1:0,2:0,3:0,4:0};
   s.occ.forEach(x=>{
     const r=ref(x.refId);
     const mi=maturityInfo(r);
-    if(mi.known && maturityCounts[mi.zone]!==undefined){
-      maturityCounts[mi.zone]++;
+    const z=mi.known ? mi.zone : 0;
+    if(maturityCounts[z]!==undefined){
+      maturityCounts[z]++;
     }
   });
-  [1,2,3,4].forEach(z=>{
+  [1,2,3,4,0].forEach(z=>{
     const el=$('#matCount'+z);
     if(el) el.textContent=`${maturityCounts[z]} bt`;
   });
@@ -255,6 +256,7 @@ function renderStats(){
 function maturityGaugeHtml(r){
   if(!r) return '';
   const mi=maturityInfo(r);
+  if(!mi.known) return '';
   return `
     <span class="maturity-gauge" title="${esc(mi.label)}" aria-label="${esc(mi.label)}">
       <i class="z1"></i>
@@ -372,6 +374,7 @@ function showMaturityResults(zone){
   if(active) active.classList.add('active');
 
   const labels={
+    0:'Non renseigné',
     1:'Jeune',
     2:'À boire',
     3:'Fin maturité',
@@ -380,6 +383,7 @@ function showMaturityResults(zone){
 
   const matches=refsWithLocations(r=>{
     const mi=maturityInfo(r);
+    if(zone===0) return !mi.known;
     return mi.known && mi.zone===zone;
   });
 
