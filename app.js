@@ -89,12 +89,6 @@ function couleurPourAge(y){
   return `hsl(340 43% ${light}%)`;
 }
 
-function styleCouleurAge(millesime){
-  const c=couleurPourAge(millesime);
-  return `background-color:${c};background:${c};opacity:1;filter:none;mix-blend-mode:normal;`;
-}
-
-
 function ageClass(y){
   return wineAge(y)===null ? 'ageUnknown' : 'ageDynamic';
 }
@@ -164,9 +158,9 @@ function renderStats(){
     return Number(b[0])-Number(a[0]);
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
-    const mill = y==='Sans année' ? null : Number(y);
+    const color=y==='Sans année' ? '#777777' : couleurPourAge(Number(y));
     return `<button type="button" class="year-chip" data-year="${esc(y)}"
-      style="${styleCouleurAge(mill)}">
+      style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;">
       <b>${esc(y)}</b><small>${n} bt</small>
     </button>`;
   }).join('');
@@ -210,72 +204,19 @@ function showResultPanel(title,items){
 }
 function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
 function showSearchResults(){
-  const raw=$('#search').value.trim(), q=raw.toLowerCase();
-  if(!q){ hideResultPanel(); return; }
-
-  const items=refsWithLocations((r,p)=>{
-    const hay=[
-      r.vin,r.domaine,r.millesime,r.couleur,r.format,
-      `casier ${p.casier}`,`ligne ${p.ligne}`,`position ${p.position}`,
-      p.emplacement
-    ].join(' ').toLowerCase();
-    return hay.includes(q);
-  });
-
+  const raw=$('#search').value.trim(),q=raw.toLowerCase();
+  if(!q){hideResultPanel();return;}
+  const items=refsWithLocations((r,p)=>[
+    r.vin,r.domaine,r.producteur,r.appellation,r.millesime,r.couleur,r.format,
+    p.emplacement,`casier ${p.casier}`,`ligne ${p.ligne}`,`position ${p.position}`
+  ].join(' ').toLowerCase().includes(q));
   showResultPanel(`${items.length} résultat${items.length>1?'s':''} pour « ${raw} »`,items);
 }
 function showVintageResults(year){
   const y=String(year);
-  const bottles=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
-
-  // Regrouper les exemplaires d'une même référence.
-  const groups=new Map();
-  bottles.forEach(({r,p})=>{
-    const key=r.id;
-    if(!groups.has(key)) groups.set(key,{r,locations:[]});
-    groups.get(key).locations.push(p);
-  });
-
-  $('#yearDialogTitle').textContent=`Millésime ${y}`;
-  $('#yearDialogCount').textContent=
-    `${bottles.length} bouteille${bottles.length>1?'s':''} · ${groups.size} vin${groups.size>1?'s':''} différent${groups.size>1?'s':''}`;
-
-  const list=$('#yearDialogList');
-  list.innerHTML='';
-
-  [...groups.values()].forEach(({r,locations})=>{
-    const box=document.createElement('div');
-    box.className='year-wine';
-
-    const locText=locations.map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`).join(' · ');
-    box.innerHTML=`
-      <div class="year-wine-head">
-        <div>
-          <div class="year-wine-name">${esc(r.vin)}</div>
-          <div class="year-wine-domain">${esc(r.domaine||'')}</div>
-        </div>
-        <div class="year-wine-count">${locations.length} bt</div>
-      </div>
-      <div class="year-wine-locations">Emplacement${locations.length>1?'s':''} : ${esc(locText)}</div>
-    `;
-
-    box.addEventListener('click',()=>{
-      const p=locations[0];
-      $('#yearDialog').close();
-      activeCasier=p.casier;
-      render();
-      refreshPhotoButtons();
-      setTimeout(()=>{
-        const target=[...document.querySelectorAll('#grid .slot')]
-          .find(el=>Number(el.dataset.line)===p.ligne && Number(el.dataset.pos)===p.position);
-        if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
-      },50);
-    });
-
-    list.appendChild(box);
-  });
-
-  showDialog($('#yearDialog'));
+  const items=refsWithLocations(r=>String(r.millesime||'Sans année')===y);
+  showResultPanel(`${y} · ${items.length} bouteille${items.length>1?'s':''}`,items);
+  $('#resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function render(){
@@ -292,7 +233,7 @@ function render(){
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
     b.innerHTML=`
-      ${r?`<span class="vintage-strip" style="${styleCouleurAge(r.millesime)}">${esc(r.millesime||'Sans année')}</span>`:''}
+      ${r?`<span class="vintage-strip" style="background:${couleurPourAge(r.millesime)} !important;background-color:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
@@ -320,7 +261,7 @@ function showDialog(d){
   d.showModal();
 }
 function closeDialogsFromPop(){
-  [$('#dialog'),$('#addDialog'),$('#photoDialog'),$('#yearDialog')].forEach(d=>{ if(d.open) d.close(); });
+  [$('#dialog'),$('#addDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
   dialogHistory=false;
   selected=null;
 }
@@ -579,10 +520,6 @@ $('#grid').addEventListener('touchend',e=>{
   render(); refreshPhotoButtons();
   document.querySelector('.tabs').scrollIntoView({behavior:'smooth',block:'start'});
 },{passive:true});
-
-
-$('#yearDialogClose').addEventListener('click',()=>requestClose($('#yearDialog')));
-$('#yearDialog').addEventListener('click',backdropClose);
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 persist();

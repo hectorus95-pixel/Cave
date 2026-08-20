@@ -1,13 +1,18 @@
-Ma Cave à Vin — V5.5
+Ma Cave à Vin — V5.4.1
 
-Corrections :
-- couleurs : retour à la méthode qui fonctionnait en V4.13 ;
-  le même styleCouleurAge() est injecté directement dans le récap et dans chaque bouteille.
-- recherche : correction du bug positions/inv ; les résultats apparaissent sous la recherche avec emplacement.
-- clic sur une année : ouverture d'une vraie fenêtre.
-- dans cette fenêtre : vins identiques regroupés, quantité et tous les emplacements.
-- toucher un vin de la fenêtre amène au casier correspondant.
-- swipe et autres fonctions V5 conservés.
+Base : V5.4.
+
+Une seule correction :
+- la liste de recherche fonctionne maintenant avec la vraie base de la cave (inv / ref).
+- les résultats restent affichés sous la barre avec nom, millésime et emplacement.
+
+Aucun changement :
+- swipe ;
+- couleurs ;
+- boutons année ;
+- photos ;
+- statistiques ;
+- données.
 
 Pour GitHub Pages :
 remplacer app.js, index.html, manifest.webmanifest et sw.js.
