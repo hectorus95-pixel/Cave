@@ -473,6 +473,49 @@ header{
   text-shadow:0 1px 1px rgba(0,0,0,.30) !important;
 }
 
+
+/* V5.4.15 — rendu couleur strictement identique partout.
+   Aplat via background-image pour éviter l'assombrissement différent
+   des background-color par certains navigateurs Android. */
+
+/* MILLÉSIMES : même --age-color pour bouton du haut, casier et résultat */
+.year-chip,
+.slot .vintage-strip,
+.result-year-zone{
+  background-image:
+    linear-gradient(
+      0deg,
+      var(--age-color,#777777),
+      var(--age-color,#777777)
+    ) !important;
+  background-color:var(--age-color,#777777) !important;
+  opacity:1 !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+}
+
+/* COULEUR DU VIN : même aplat exact dans casier et résultat */
+.slot.red,
+.result-item.red .result-main{
+  background-image:linear-gradient(0deg,#741a35,#741a35) !important;
+  background-color:#741a35 !important;
+}
+.slot.white,
+.result-item.white .result-main{
+  background-image:linear-gradient(0deg,#b69032,#b69032) !important;
+  background-color:#b69032 !important;
+}
+.slot.rose,
+.result-item.rose .result-main{
+  background-image:linear-gradient(0deg,#b95b72,#b95b72) !important;
+  background-color:#b95b72 !important;
+}
+.slot.spark,
+.result-item.spark .result-main{
+  background-image:linear-gradient(0deg,#8b762c,#8b762c) !important;
+  background-color:#8b762c !important;
+}
+
 </style>
 </head>
 <body>
@@ -601,6 +644,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.14"></script>
+<script src="app.js?v=5.4.15"></script>
 </body>
 </html>
