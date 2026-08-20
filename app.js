@@ -187,15 +187,19 @@ function refsWithLocations(filterFn){
 }
 function showResultPanel(title,items){
   const panel=$('#resultPanel'),list=$('#resultList');
-  panel.classList.remove('hidden');
   $('#resultTitle').textContent=title;
   list.innerHTML='';
+
+  if(!items.length){
+    list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
+    panel.hidden=false;
+    return;
+  }
 
   const groups=new Map();
 
   items.forEach(({r,p})=>{
-    const key=[
-      r.id||'',
+    const key=r.id || [
       r.vin||'',
       r.domaine||r.producteur||'',
       r.appellation||'',
@@ -203,30 +207,31 @@ function showResultPanel(title,items){
       r.format||''
     ].join('|');
 
-    if(!groups.has(key)) groups.set(key,{r,positions:[]});
+    if(!groups.has(key)){
+      groups.set(key,{r,positions:[]});
+    }
     groups.get(key).positions.push(p);
   });
 
   groups.forEach(({r,positions})=>{
+    positions.sort((a,b)=>
+      a.casier-b.casier ||
+      a.ligne-b.ligne ||
+      a.position-b.position
+    );
+
     const btn=document.createElement('button');
     btn.type='button';
-    btn.className='resultItem';
+    btn.className='result-item';
 
     const qty=positions.length;
-    const mill=r.millesime||'Sans année';
-    const producer=r.domaine||r.producteur||'';
-    const appellation=r.appellation||'';
-
     const locations=positions
-      .sort((a,b)=>a.casier-b.casier||a.ligne-b.ligne||a.position-b.position)
-      .map(p=>`Casier ${p.casier} · L${p.ligne}-P${p.position}`)
-      .join('  •  ');
+      .map(p=>`C${p.casier}-L${p.ligne}-P${p.position}`)
+      .join(' · ');
 
     btn.innerHTML=`
-      <strong>${escapeHtml(r.vin||'Vin')} · ${escapeHtml(mill)} <span>×${qty}</span></strong>
-      ${producer?`<div>${escapeHtml(producer)}</div>`:''}
-      ${appellation?`<div>${escapeHtml(appellation)}</div>`:''}
-      <small>${escapeHtml(locations)}</small>
+      <b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')} · ×${qty}</b>
+      <small>${esc(locations)}</small>
     `;
 
     btn.addEventListener('click',()=>{
@@ -234,13 +239,19 @@ function showResultPanel(title,items){
       activeCasier=p.casier;
       render();
       refreshPhotoButtons();
+
       const target=[...document.querySelectorAll('#grid .slot')]
         .find(el=>Number(el.dataset.line)===p.ligne && Number(el.dataset.pos)===p.position);
-      if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
+
+      if(target){
+        target.scrollIntoView({behavior:'smooth',block:'center'});
+      }
     });
 
     list.appendChild(btn);
   });
+
+  panel.hidden=false;
 }
 function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
 function showSearchResults(){
@@ -257,8 +268,8 @@ function showSearchResults(){
     return hay.includes(q);
   });
 
-  const distinct=new Set(items.map(({r})=>[
-    r.id||'',r.vin||'',r.domaine||r.producteur||'',r.appellation||'',r.millesime||'',r.format||''
+  const distinct=new Set(items.map(({r})=>r.id || [
+    r.vin||'',r.domaine||r.producteur||'',r.appellation||'',r.millesime||'',r.format||''
   ].join('|'))).size;
 
   showResultPanel(
