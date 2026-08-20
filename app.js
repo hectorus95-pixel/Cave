@@ -56,42 +56,43 @@ function currentDecimalYear(){
   const start=new Date(y,0,1), end=new Date(y+1,0,1);
   return y + (d-start)/(end-start);
 }
+
+const AGE_COLORS = [
+  '#73b86b', // 0 an
+  '#4f9d55', // 1 an
+  '#6f8f3d', // 2 ans
+  '#9a7b24', // 3 ans
+  '#b2661e', // 4 ans
+  '#a1422f', // 5 ans
+  '#832d38', // 6 ans
+  '#672337', // 7 ans
+  '#531d31', // 8 ans
+  '#45182a', // 9 ans
+  '#391423', // 10 ans
+  '#30111e'  // 11 ans
+];
+
 function wineAge(y){
   const year=Number(y);
   if(!year || !Number.isFinite(year)) return null;
   return Math.max(0,new Date().getFullYear()-year);
 }
 
+function ageColor(y){
+  const age=wineAge(y);
+  if(age===null) return '#777777';
+  if(age < AGE_COLORS.length) return AGE_COLORS[age];
+
+  // Au-delà de 11 ans : on continue à foncer progressivement.
+  const extra=Math.min(20,age-(AGE_COLORS.length-1));
+  const light=Math.max(7,18-extra*0.5);
+  return `hsl(340 45% ${light}%)`;
+}
+
 function ageClass(y){
   return wineAge(y)===null ? 'ageUnknown' : 'ageDynamic';
 }
 
-// Couleur unique utilisée partout selon l'âge réel du millésime.
-function ageColor(y){
-  const a=wineAge(y);
-  if(a===null) return '#777777';
-
-  const palette=[
-    '#69b96d', // 0 an
-    '#58a85b', // 1 an
-    '#8fa43f', // 2 ans
-    '#c7a23a', // 3 ans
-    '#cf7b35', // 4 ans
-    '#b5533f', // 5 ans
-    '#913641', // 6 ans
-    '#74283a', // 7 ans
-    '#5e2033', // 8 ans
-    '#4d1a2b', // 9 ans
-    '#401624', // 10 ans
-    '#35121e'  // 11 ans
-  ];
-
-  if(a < palette.length) return palette[a];
-
-  const extra=Math.min(18,a-palette.length+1);
-  const light=Math.max(7,18-extra*0.6);
-  return `hsl(340 48% ${light}%)`;
-}
 function maturityInfo(r){
   const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
   if(!s && !e){
@@ -158,7 +159,7 @@ function renderStats(){
   });
   $('#yearStats').innerHTML=years.map(([y,n])=>{
     const color = y==='Sans année' ? '#777777' : ageColor(Number(y));
-    return `<span class="year-chip" style="background-color:${color};border-top-color:${color}"><b>${esc(y)}</b><small>${n} bt</small></span>`;
+    return `<span class="year-chip" style="background:${color} !important;background-color:${color} !important;border-color:${color} !important;opacity:1 !important;filter:none !important;mix-blend-mode:normal !important;"><b>${esc(y)}</b><small>${n} bt</small></span>`;
   }).join('');
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
     `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
@@ -178,9 +179,8 @@ function render(){
     const b=document.createElement('button');
     b.type='button';
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
-    if(r) b.style.setProperty('--age-color',ageColor(r.millesime));
     b.innerHTML=`
-      ${r?`<span class="vintage-strip" style="background-color:${ageColor(r.millesime)}">${esc(r.millesime||'Sans année')}</span>`:''}
+      ${r?`<span class="vintage-strip" style="background:${ageColor(r.millesime)} !important;background-color:${ageColor(r.millesime)} !important;opacity:1 !important;filter:none !important;mix-blend-mode:normal !important;">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
