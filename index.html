@@ -254,7 +254,29 @@ header{
 .result-panel{margin:8px 0 10px;padding:9px;border:1px solid #393333;border-radius:11px;background:#171414}
 .result-title{font-size:12px;font-weight:800;margin-bottom:7px}
 .result-list{display:flex;flex-direction:column;gap:6px;max-height:310px;overflow:auto}
-.result-item{width:100%;border:1px solid #403939;border-radius:9px;background:#242020;color:#fff;padding:8px 9px;text-align:left}
+.result-item{position:relative;overflow:hidden;width:100%;border:1px solid #403939;border-radius:9px;background:#242020;color:#fff;padding:31px 9px 8px;text-align:left}
+.result-vintage-strip{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:24px;
+  padding:5px 4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:800;
+  line-height:1;
+  color:#fff;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+  border:0;
+  border-radius:0;
+  background-image:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
 .result-item.red{background:#741a35}
 .result-item.white{background:#b69032;color:#171108}
 .result-item.rose{background:#b95b72}
@@ -420,6 +442,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.9"></script>
+<script src="app.js?v=5.4.10"></script>
 </body>
 </html>

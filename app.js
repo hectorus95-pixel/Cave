@@ -193,7 +193,11 @@ function showResultPanel(title,items){
     const btn=document.createElement('button');
     btn.type='button'; btn.className=`result-item ${wineClass(r.couleur)}`;
     const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(r.format||''));
-    btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}${isMagnum?' · Magnum':''}</b><small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>`;
+    btn.innerHTML=`
+      <span class="result-vintage-strip" style="background:${couleurPourAge(r.millesime)} !important;background-color:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>
+      <b>${esc(r.vin)}${isMagnum?' · Magnum':''}</b>
+      <small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>
+    `;
     btn.addEventListener('click',()=>{
       activeCasier=p.casier; render(); refreshPhotoButtons();
       const target=[...document.querySelectorAll('#grid .slot')].find(el=>el.dataset.line==p.ligne&&el.dataset.pos==p.position);
