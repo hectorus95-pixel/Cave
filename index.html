@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=4.10">
+<link rel="manifest" href="manifest.webmanifest?v=4.11">
 <style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
@@ -88,334 +88,149 @@ dialog::backdrop{background:#000b}
   #grid{gap:5px}.slot{padding:6px 4px;min-height:88px}.name{font-size:11px}.pos,.year{font-size:10px}
 }
 
-/* V4.1 — éléments forcés pour éviter les ambiguïtés visuelles */
-.stat-chip b,.year-chip b{display:block}
-.stat-chip small,.year-chip small{display:block;margin-top:3px}
-.vintage-strip{
-  display:block!important;
-  margin:0 -6px 6px!important;
-  padding:4px 3px!important;
-  text-align:center!important;
-  font-size:11px!important;
-  font-weight:800!important;
-}
-.maturity-gauge{
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:2px!important;
-  height:7px!important;
-  margin-top:8px!important;
-}
-.maturity-gauge i{
-  display:block!important;
-  min-width:0!important;
-  height:7px!important;
-  border-radius:2px!important;
-  opacity:.32!important;
-}
-.maturity-gauge .z1{background:#59ad62!important}
-.maturity-gauge .z2{background:#d2c83e!important}
-.maturity-gauge .z3{background:#df8b34!important}
-.maturity-gauge .z4{background:#d64a4a!important}
-.maturity-gauge i.active{
-  opacity:1!important;
-  outline:1px solid rgba(255,255,255,.8)!important;
-}
-.maturity-gauge.unknown i{
-  background:#777!important;
-  opacity:.42!important;
-}
 
+/* =========================
+   V4.11 — STYLE FINAL UNIQUE
+   ========================= */
 
-/* V4.2 — bandeau millésime = couleurs d'âge historiques */
-
-
-
-
-
-
-
-/* Jauge : 4 aplats fixes + curseur continu */
-.maturity-gauge,
-.maturity-bar.four-zone{
-  position:relative!important;
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:2px!important;
-  height:8px!important;
-  margin-top:9px!important;
-  overflow:visible!important;
-}
-.maturity-gauge i,
-.maturity-bar.four-zone i{
-  display:block!important;
-  height:8px!important;
-  border-radius:2px!important;
-  opacity:1!important;
-  outline:none!important;
-}
-.maturity-gauge .z1,.maturity-bar .z1{background:#59ad62!important}
-.maturity-gauge .z2,.maturity-bar .z2{background:#e1ce31!important}
-.maturity-gauge .z3,.maturity-bar .z3{background:#e58a2f!important}
-.maturity-gauge .z4,.maturity-bar .z4{background:#df4545!important}
-.maturity-gauge.unknown i,
-.maturity-bar.unknown i{
-  background:#777!important;
-  opacity:.45!important;
-}
-.maturity-cursor{
-  position:absolute!important;
-  top:50%!important;
-  width:12px!important;
-  height:12px!important;
-  border-radius:50%!important;
-  background:#fff!important;
-  border:2px solid rgba(35,35,35,.65)!important;
-  transform:translate(-50%,-50%)!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.65)!important;
-  pointer-events:none!important;
-  z-index:2!important;
-}
-
-
-/* V4.3 — jauge toujours colorée et curseur toujours visible */
-.maturity-gauge,
-.maturity-bar.four-zone{
-  position:relative!important;
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:2px!important;
-  height:8px!important;
-  margin-top:9px!important;
-  overflow:visible!important;
-}
-.maturity-gauge i,
-.maturity-bar.four-zone i{
-  display:block!important;
-  height:8px!important;
-  border-radius:2px!important;
-  opacity:1!important;
-  outline:none!important;
-}
-.maturity-gauge .z1,.maturity-bar .z1{background:#59ad62!important}
-.maturity-gauge .z2,.maturity-bar .z2{background:#e1ce31!important}
-.maturity-gauge .z3,.maturity-bar .z3{background:#e58a2f!important}
-.maturity-gauge .z4,.maturity-bar .z4{background:#df4545!important}
-.maturity-cursor{
-  position:absolute!important;
-  top:50%!important;
-  width:13px!important;
-  height:13px!important;
-  border-radius:50%!important;
-  background:#fff!important;
-  border:2px solid #333!important;
-  transform:translate(-50%,-50%)!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.85)!important;
-  pointer-events:none!important;
-  z-index:4!important;
-}
-.maturity-cursor.unknown-cursor{
-  background:#fff!important;
-  border-color:#777!important;
-}
-
-/* Couleurs d'âge du bandeau millésime */
-
-
-
-
-
-
-
-
-/* V4.4 */
-
-/* Les deux grands compteurs sont centrés comme les statistiques dessous. */
+/* Compteurs supérieurs centrés */
 .topstats .metric{
-  text-align:center!important;
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
-.topstats .metric b,
-.topstats .metric span{
-  width:100%!important;
-  text-align:center!important;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
 
-/* Le header reste toujours devant les curseurs quand on fait défiler la cave. */
+/* Header normal : il défile avec la page */
 header{
-  position:static!important;
-  top:auto!important;
-  z-index:auto!important;
-  isolation:auto!important;
+  position:static;
+  top:auto;
+  z-index:auto;
 }
+
+/* Récapitulatif des années : même variable de couleur que les bouteilles */
+.year-chip{
+  border-top:5px solid var(--age-color,#777777);
+  opacity:1;
+  filter:none;
+  mix-blend-mode:normal;
+}
+
+/* Carte bouteille */
 .slot{
-  isolation:isolate!important;
-  z-index:0!important;
+  padding-top:28px;
+  overflow:hidden;
+  isolation:isolate;
 }
-.maturity-gauge{
-  z-index:0!important;
-  isolation:isolate!important;
-}
-.maturity-cursor{
-  z-index:1!important;
-}
-
-/* Progression chronologique :
-   jeune = vert, puis olive, or, orange, rouge, rouge foncé, bordeaux très foncé. */
-
-
-
-
-
-
-
-
-
-
-/* Les photos sont maintenant une section basse après la valeur de la cave. */
-.photos-panel{
-  margin-top:4px!important;
-  margin-bottom:18px!important;
-}
-
-
-/* V4.5 — couleur d'âge visible aussi dans le récapitulatif du haut */
-.year-chip{
-  border-top:5px solid transparent!important;
-}
-
-
-
-
-
-
-
-
-
-
-
-/* V4.6 — palette d'âge unique pour récapitulatif + bouteilles */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* V4.7 — couleur d'âge unique et automatiquement évolutive */
-.year-chip{
-  border-top:5px solid var(--age-color,#777)!important;
-}
-
-
-
-
-/* V4.8 — couleurs millésime strictement opaques et identiques */
-.year-chip{
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-  background:transparent!important;
-  border-top:5px solid var(--age-color,#777)!important;
-}
-.slot.ageDynamic .vintage-strip,
-
-
-
-
-
-/* V4.9 — SOURCE UNIQUE DE COULEUR POUR LES MILLÉSIMES */
-
-/* Récapitulatif du haut : le liseré prend exactement --age-color. */
-.year-chip{
-  border-top:5px solid var(--age-color,#777777)!important;
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-}
-
-/* Bandeau de chaque bouteille : exactement la même variable, sans aucun effet. */
-.slot .vintage-strip{
-  background:var(--age-color,#777777)!important;
-  background-color:var(--age-color,#777777)!important;
-  background-image:none!important;
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-  box-shadow:none!important;
-}
-
-/* Texte lisible sur toutes les teintes. */
-.slot .vintage-strip{
-  color:#ffffff!important;
-  text-shadow:0 1px 1px rgba(0,0,0,.35)!important;
-}
-
-
-/* V4.10 — suppression définitive du double bandeau millésime */
-.slot{
-  padding-top:28px!important;
-  overflow:hidden!important;
-}
-
 .slot.empty{
-  padding-top:7px!important;
+  padding-top:7px;
 }
 
+/*
+  Bandeau millésime :
+  - un seul fond ;
+  - aucune transparence ;
+  - aucun arrondi propre.
+  C'est le overflow:hidden + border-radius de .slot qui crée les coins.
+  Ainsi aucune couleur du fond de carte ne peut apparaître au-dessus.
+*/
 .slot .vintage-strip{
-  position:absolute!important;
-  top:0!important;
-  left:0!important;
-  right:0!important;
-  width:100%!important;
-  height:28px!important;
-  margin:0!important;
-  padding:6px 4px 5px!important;
-  border-radius:11px 11px 0 0!important;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  width:100%;
+  height:28px;
+  margin:0;
+  padding:6px 4px 5px;
 
-  background:var(--age-color,#777777)!important;
-  background-color:var(--age-color,#777777)!important;
-  background-image:none!important;
+  border:0;
+  border-radius:0;
+  outline:0;
+  box-shadow:none;
 
-  border:0!important;
-  outline:0!important;
-  box-shadow:none!important;
+  background:var(--age-color,#777777);
+  background-color:var(--age-color,#777777);
+  background-image:none;
 
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
+  opacity:1;
+  filter:none;
+  mix-blend-mode:normal;
 
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  line-height:1!important;
-  color:#fff!important;
-  text-shadow:0 1px 1px rgba(0,0,0,.35)!important;
-  z-index:2!important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:11px;
+  font-weight:800;
+  line-height:1;
+  color:#fff;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+  z-index:2;
 }
 
-/* Rien ne doit pouvoir dessiner une seconde couleur au-dessus du bandeau. */
+/* Pas de pseudo-élément décoratif sur les cartes */
 .slot::before,
 .slot::after{
-  content:none!important;
-  display:none!important;
+  content:none;
+  display:none;
+}
+
+/* Jauge maturité : 4 zones fixes et curseur */
+.maturity-gauge,
+.maturity-bar.four-zone{
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:2px;
+  height:8px;
+  margin-top:9px;
+  overflow:visible;
+  isolation:isolate;
+}
+.maturity-gauge i,
+.maturity-bar.four-zone i{
+  display:block;
+  height:8px;
+  border-radius:2px;
+  opacity:1;
+  outline:none;
+}
+.maturity-gauge .z1,.maturity-bar .z1{background:#59ad62}
+.maturity-gauge .z2,.maturity-bar .z2{background:#e1ce31}
+.maturity-gauge .z3,.maturity-bar .z3{background:#e58a2f}
+.maturity-gauge .z4,.maturity-bar .z4{background:#df4545}
+
+.maturity-cursor{
+  position:absolute;
+  top:50%;
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid #333;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.85);
+  pointer-events:none;
+  z-index:1;
+}
+.maturity-cursor.unknown-cursor{
+  border-color:#777;
+}
+
+/* Photos placées en bas, après la valeur de la cave */
+.photos-panel{
+  margin-top:4px;
+  margin-bottom:18px;
+}
+
+/* Petit écran : on garde 5 colonnes identiques */
+@media(max-width:380px){
+  #grid{gap:5px}
+  .slot{min-height:88px}
+  .name{font-size:11px}
+  .pos{font-size:10px}
 }
 
 </style>
@@ -544,6 +359,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=4.10"></script>
+<script src="app.js?v=4.11"></script>
 </body>
 </html>
