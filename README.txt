@@ -1,12 +1,13 @@
-Ma Cave à Vin — V5.4
+Ma Cave à Vin — V5.5
 
-Base : V5.2 fonctionnelle.
-
-Correction minimale et vérifiée :
-- le bandeau des bouteilles reçoit directement dans son HTML la couleur renvoyée par couleurPourAge() ;
-- le récapitulatif et les bouteilles utilisent donc exactement la même fonction ;
-- aucune modification du chargement de la cave, des statistiques, du swipe, de la recherche, des photos ou des données ;
-- JavaScript vérifié syntaxiquement avant création du fichier.
+Corrections :
+- couleurs : retour à la méthode qui fonctionnait en V4.13 ;
+  le même styleCouleurAge() est injecté directement dans le récap et dans chaque bouteille.
+- recherche : correction du bug positions/inv ; les résultats apparaissent sous la recherche avec emplacement.
+- clic sur une année : ouverture d'une vraie fenêtre.
+- dans cette fenêtre : vins identiques regroupés, quantité et tous les emplacements.
+- toucher un vin de la fenêtre amène au casier correspondant.
+- swipe et autres fonctions V5 conservés.
 
 Pour GitHub Pages :
 remplacer app.js, index.html, manifest.webmanifest et sw.js.
