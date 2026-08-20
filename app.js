@@ -179,7 +179,11 @@ function refsWithLocations(filterFn){
     const r=ref(p.refId);
     if(r && filterFn(r,p)) out.push({r,p});
   });
-  return out.sort((a,b)=>a.p.casier-b.p.casier||a.p.ligne-b.p.ligne||a.p.position-b.p.position);
+  return out.sort((a,b)=>
+    a.p.casier-b.p.casier ||
+    a.p.ligne-b.p.ligne ||
+    a.p.position-b.p.position
+  );
 }
 function showResultPanel(title,items){
   const panel=$('#resultPanel'),list=$('#resultList');
@@ -190,9 +194,12 @@ function showResultPanel(title,items){
     btn.type='button'; btn.className='result-item';
     btn.innerHTML=`<b>${esc(r.vin)} · ${esc(r.millesime||'Sans année')}</b><small>Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}</small>`;
     btn.addEventListener('click',()=>{
-      activeCasier=p.casier; render(); refreshPhotoButtons();
-      const target=[...document.querySelectorAll('#grid .slot')].find(el=>el.dataset.line==p.ligne&&el.dataset.pos==p.position);
-      if(target){ target.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>target.click(),250); }
+      activeCasier=p.casier;
+      render();
+      refreshPhotoButtons();
+      const target=[...document.querySelectorAll('#grid .slot')]
+        .find(el=>Number(el.dataset.line)===p.ligne && Number(el.dataset.pos)===p.position);
+      if(target) target.scrollIntoView({behavior:'smooth',block:'center'});
     });
     list.appendChild(btn);
   });
@@ -200,10 +207,35 @@ function showResultPanel(title,items){
 }
 function hideResultPanel(){ $('#resultPanel').hidden=true; $('#resultList').innerHTML=''; }
 function showSearchResults(){
-  const raw=$('#search').value.trim(),q=raw.toLowerCase();
-  if(!q){hideResultPanel();return;}
-  const items=refsWithLocations((r,p)=>`${r.vin} ${r.producteur||''} ${r.appellation||''} ${r.millesime||''}`.toLowerCase().includes(q));
-  showResultPanel(`${items.length} résultat${items.length>1?'s':''} pour « ${raw} »`,items);
+  const raw=$('#search').value.trim();
+  const q=raw.toLowerCase();
+  if(!q){
+    hideResultPanel();
+    return;
+  }
+
+  const items=refsWithLocations((r,p)=>{
+    const hay=[
+      r.vin,
+      r.domaine,
+      r.producteur,
+      r.appellation,
+      r.millesime,
+      r.couleur,
+      r.format,
+      p.emplacement,
+      `casier ${p.casier}`,
+      `ligne ${p.ligne}`,
+      `position ${p.position}`
+    ].join(' ').toLowerCase();
+
+    return hay.includes(q);
+  });
+
+  showResultPanel(
+    `${items.length} résultat${items.length>1?'s':''} dans les 3 casiers pour « ${raw} »`,
+    items
+  );
 }
 function showVintageResults(year){
   const y=String(year);
@@ -224,7 +256,7 @@ function render(){
     const b=document.createElement('button');
     b.type='button';
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
-    b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'} ${q&&!hay.includes(q)?'dim':''}`;
+    b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'}`;
     b.innerHTML=`
       ${r?`<span class="vintage-strip" style="background:${couleurPourAge(r.millesime)} !important;background-color:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
@@ -363,7 +395,7 @@ $('#cancel').addEventListener('click',()=>requestClose($('#dialog')));
 $('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
 ['f_millesime','f_maturiteDebut','f_maturiteFin'].forEach(id=>$('#'+id).addEventListener('input',updateMaturityPreview));
 
-$('#search').addEventListener('input',()=>{render();showSearchResults();});
+$('#search').addEventListener('input',()=>{showSearchResults();});
 $$('.tab').forEach(b=>b.addEventListener('click',async()=>{activeCasier=Number(b.dataset.c);render();await refreshPhotoButtons()}));
 
 $('#export').addEventListener('click',()=>{
