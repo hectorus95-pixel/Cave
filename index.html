@@ -701,6 +701,29 @@ button.result-item{
   line-height:1.05;
 }
 
+
+/* V6.4 — les 5 filtres maturité restent sur une seule ligne */
+.maturity-filters{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:5px!important;
+}
+.maturity-filter{
+  min-width:0!important;
+  padding:6px 2px!important;
+  font-size:8.5px!important;
+}
+.maturity-filter.z0{
+  grid-column:5!important;
+}
+.maturity-filter.z0 span{
+  font-size:8px!important;
+  line-height:1.0!important;
+}
+.maturity-filter small{
+  font-size:7.5px!important;
+}
+
 </style>
 </head>
 <body>
@@ -842,6 +865,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.3"></script>
+<script src="app.js?v=6.4"></script>
 </body>
 </html>
