@@ -93,6 +93,16 @@ function ageClass(y){
   return wineAge(y)===null ? 'ageUnknown' : 'ageDynamic';
 }
 
+function couleurMillésimeAffichée(y){
+  const key=String(y||'Sans année');
+  const chip=$$('#yearStats .year-chip').find(b=>String(b.dataset.year)===key);
+  if(chip){
+    const c=getComputedStyle(chip).backgroundColor;
+    if(c && c!=='transparent' && c!=='rgba(0, 0, 0, 0)') return c;
+  }
+  return key==='Sans année' ? '#777777' : couleurPourAge(y);
+}
+
 function maturityInfo(r){
   const s=Number(r?.maturiteDebut), e=Number(r?.maturiteFin), now=currentDecimalYear();
   if(!s && !e){
@@ -163,7 +173,7 @@ function renderStats(){
   $('#yearStats').innerHTML=years.map(([y,n])=>{
     const color=y==='Sans année' ? '#777777' : couleurPourAge(Number(y));
     return `<button type="button" class="year-chip" data-year="${esc(y)}"
-      style="--age-color:${color};border-color:${color} !important;">
+      style="--age-color:${color};background:${color} !important;background-color:${color} !important;border-color:${color} !important;">
       <b>${esc(y)}</b><small>${n} bt</small>
     </button>`;
   }).join('');
@@ -196,10 +206,11 @@ function showResultPanel(title,items){
     const btn=document.createElement('button');
     btn.type='button';
     btn.className=`result-item ${wineClass(r.couleur)}`;
-    btn.style.setProperty('--age-color',couleurPourAge(r.millesime));
+    const ageColor=couleurMillésimeAffichée(r.millesime);
+    btn.style.setProperty('--age-color',ageColor);
     const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(r.format||''));
     btn.innerHTML=`
-      <span class="result-year-zone">${esc(r.millesime||'Sans année')}</span>
+      <span class="result-year-zone" style="background:${ageColor} !important;background-color:${ageColor} !important;">${esc(r.millesime||'Sans année')}</span>
       <span class="result-main">
         <b>${esc(r.vin)}${isMagnum?' · Magnum':''}</b>
         <small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>
@@ -349,9 +360,10 @@ function render(){
     b.type='button';
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'}`;
-    if(r) b.style.setProperty('--age-color',couleurPourAge(r.millesime));
+    const ageColor=r?couleurMillésimeAffichée(r.millesime):'';
+    if(r) b.style.setProperty('--age-color',ageColor);
     b.innerHTML=`
-      ${r?`<span class="vintage-strip">${esc(r.millesime||'Sans année')}</span>`:''}
+      ${r?`<span class="vintage-strip" style="background:${ageColor} !important;background-color:${ageColor} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
@@ -489,7 +501,12 @@ $('#cancelAdd').addEventListener('click',()=>requestClose($('#addDialog')));
 ['f_millesime','f_maturiteDebut','f_maturiteFin'].forEach(id=>$('#'+id).addEventListener('input',updateMaturityPreview));
 
 $('#search').addEventListener('input',showSearchResults);
-$$('.tab').forEach(b=>b.addEventListener('click',async()=>{activeCasier=Number(b.dataset.c);render();await refreshPhotoButtons()}));
+$$('.tab').forEach(b=>b.addEventListener('click',async()=>{
+  activeCasier=Number(b.dataset.c);
+  if(!$('#search').value.trim()) hideResultPanel();
+  render();
+  await refreshPhotoButtons();
+}));
 
 $('#export').addEventListener('click',()=>{
   const payload={version:3,exportedAt:new Date().toISOString(),inv,refs};
