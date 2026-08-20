@@ -132,7 +132,10 @@ function renderStats(){
     if(b[0]==='Sans année') return -1;
     return Number(b[0])-Number(a[0]);
   });
-  $('#yearStats').innerHTML=years.map(([y,n])=>`<span class="year-chip"><b>${esc(y)}</b><small>${n} bt</small></span>`).join('');
+  $('#yearStats').innerHTML=years.map(([y,n])=>{
+    const cls = y==='Sans année' ? 'ageUnknown' : ageClass(Number(y));
+    return `<span class="year-chip ${cls}"><b>${esc(y)}</b><small>${n} bt</small></span>`;
+  }).join('');
   $('#valueByCasier').innerHTML=[1,2,3].map(c=>
     `<div><span>Casier ${c}</span><b>${euro(s.valueCasier[c])}</b></div>`
   ).join('');
