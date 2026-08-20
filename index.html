@@ -29,7 +29,7 @@ main{padding:14px;max-width:760px;margin:auto}
 .tab.active{background:#7a1837}
 #grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;width:100%}
 .slot{width:100%;min-width:0;min-height:96px;border:0;border-radius:11px;padding:0 6px 7px;text-align:left;color:white;overflow:hidden;position:relative}
-.slot.red{background:#741a35}.slot.white{background:#b69032;color:#171108}.slot.rose{background:#b95b72}.slot.spark{background:#8b762c}.slot.empty{background:#373434;color:#aaa;padding-top:7px}
+.slot.red{background:#741a35}.slot.white{background:#d8c56a;color:#171108}.slot.rose{background:#b95b72}.slot.spark{background:#8b762c}.slot.empty{background:#373434;color:#aaa;padding-top:7px}
 .vintage-strip{display:block;margin:0 -6px 5px;padding:3px 4px;text-align:center;font-size:10px;font-weight:800;line-height:1.05;color:#111}
 
 .pos{font-size:10px;opacity:.72;display:block;white-space:nowrap}
@@ -278,7 +278,7 @@ header{
   mix-blend-mode:normal!important;
 }
 .result-item.red{background:#741a35}
-.result-item.white{background:#b69032;color:#171108}
+.result-item.white{background:#d8c56a;color:#171108}
 .result-item.rose{background:#b95b72}
 .result-item.spark{background:#8b762c}
 .result-item b{display:block;font-size:12px;line-height:1.2}
@@ -351,8 +351,8 @@ header{
 }
 .slot.white,
 .result-item.white .result-main{
-  background:#b69032 !important;
-  background-color:#b69032 !important;
+  background:#d8c56a !important;
+  background-color:#d8c56a !important;
   color:#171108 !important;
 }
 .slot.rose,
@@ -502,8 +502,8 @@ header{
 }
 .slot.white,
 .result-item.white .result-main{
-  background-image:linear-gradient(0deg,#b69032,#b69032) !important;
-  background-color:#b69032 !important;
+  background-image:linear-gradient(0deg,#d8c56a,#d8c56a) !important;
+  background-color:#d8c56a !important;
 }
 .slot.rose,
 .result-item.rose .result-main{
@@ -514,6 +514,72 @@ header{
 .result-item.spark .result-main{
   background-image:linear-gradient(0deg,#8b762c,#8b762c) !important;
   background-color:#8b762c !important;
+}
+
+
+/* V5.4.17 — rendu couleur réellement identique sur Android
+   On neutralise l'apparence native des <button>, qui modifiait visuellement
+   les mêmes couleurs entre boutons et <span>. */
+button.year-chip,
+button.slot,
+button.result-item {
+  -webkit-appearance:none !important;
+  appearance:none !important;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* Millésime : exactement le même aplat, sans ombre ni filtre */
+.year-chip,
+.slot .vintage-strip,
+.result-year-zone {
+  opacity:1 !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  box-shadow:none !important;
+  background-image:none !important;
+  background-color:var(--age-color,#777777) !important;
+}
+
+/* Le bouton millésime lui-même ne doit ajouter aucun rendu natif */
+.year-chip {
+  border-style:solid !important;
+  box-shadow:none !important;
+  outline:none;
+}
+
+/* Couleur du vin : mêmes aplats partout */
+.slot.red,
+.result-item.red .result-main {
+  background-image:none !important;
+  background-color:#741a35 !important;
+  color:#fff !important;
+}
+.slot.white,
+.result-item.white .result-main {
+  background-image:none !important;
+  background-color:#d8c56a !important;
+  color:#241b08 !important;
+}
+.slot.rose,
+.result-item.rose .result-main {
+  background-image:none !important;
+  background-color:#b95b72 !important;
+  color:#fff !important;
+}
+.slot.spark,
+.result-item.spark .result-main {
+  background-image:none !important;
+  background-color:#8b762c !important;
+  color:#fff !important;
+}
+
+/* Le texte des vins blancs doit rester bien lisible */
+.slot.white .name,
+.slot.white .pos,
+.result-item.white .result-main,
+.result-item.white .result-main b,
+.result-item.white .result-main small {
+  color:#241b08 !important;
 }
 
 </style>
@@ -644,6 +710,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.16"></script>
+<script src="app.js?v=5.4.17"></script>
 </body>
 </html>
