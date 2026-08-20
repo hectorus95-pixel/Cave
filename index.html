@@ -234,86 +234,13 @@ header{
 }
 
 
-/* V4.13 — la couleur n'est plus décidée par CSS.
-   Elle est calculée UNE FOIS en JS à partir de l'âge et injectée directement. */
-.year-chip{
-  border-top-width:0 !important;
-  color:#fff !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.30) !important;
-}
-.slot .vintage-strip{
-  color:#fff !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.35) !important;
-  background-image:none !important;
-  box-shadow:none !important;
-}
 
+/* =========================
+   V5.4.19 — STYLE FINAL
+   Un seul système de couleurs
+   ========================= */
 
-/* V5 */
-.year-chip{cursor:pointer}
-.result-panel{margin:8px 0 10px;padding:9px;border:1px solid #393333;border-radius:11px;background:#171414}
-.result-title{font-size:12px;font-weight:800;margin-bottom:7px}
-.result-list{display:flex;flex-direction:column;gap:6px;max-height:310px;overflow:auto}
-.result-item{position:relative;overflow:hidden;width:100%;border:1px solid #403939;border-radius:9px;background:#242020;color:#fff;padding:31px 9px 8px;text-align:left}
-.result-vintage-strip{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:24px;
-  padding:5px 4px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:11px;
-  font-weight:800;
-  line-height:1;
-  color:#fff;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-  border:0;
-  border-radius:0;
-  background-image:none!important;
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-}
-.result-item.red{background:#741a35}
-.result-item.white{background:#d8c56a;color:#171108}
-.result-item.rose{background:#b95b72}
-.result-item.spark{background:#8b762c}
-.result-item b{display:block;font-size:12px;line-height:1.2}
-.result-item small{display:block;margin-top:3px;font-size:10px;opacity:.72}
-#grid{touch-action:pan-y}
-
-
-/* V5.1 — la couleur du bandeau bouteille est imposée uniquement par JS */
-.slot .vintage-strip{
-  background-image:none!important;
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-}
-
-
-/* V5.2 — couleur calculée uniquement par couleurPourAge() */
-.year-chip,
-.slot .vintage-strip{
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-  background-image:none!important;
-}
-
-
-/* V5.4 — le fond du millésime est fourni directement par app.js?v=5.4 */
-.slot .vintage-strip{
-  background-image:none!important;
-  opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
-}
-
-/* V5.4.12 — un seul affichage des casiers, directement cliquable dans l'en-tête */
+/* Boutons casiers en haut */
 .top-casier-tabs{
   margin:10px 0 0;
 }
@@ -338,11 +265,69 @@ header{
   opacity:.72;
 }
 
+/* Neutraliser le rendu natif Android */
+button.year-chip,
+button.slot,
+button.result-item{
+  -webkit-appearance:none !important;
+  appearance:none !important;
+  -webkit-tap-highlight-color:transparent;
+}
 
-/* V5.4.13 — COULEURS UNIFIEES
-   Une même valeur est utilisée sans dégradé, sans transparence et sans filtre. */
+/* ----- Millésimes : même couleur exacte partout ----- */
+.year-chip{
+  cursor:pointer;
+  color:#fff !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.30);
+  border:1px solid transparent;
+  border-top:0 !important;
+  box-shadow:none !important;
+  opacity:1 !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  background-image:none !important;
+}
 
-/* ---------- Couleur du vin : mêmes valeurs PARTOUT ---------- */
+.slot .vintage-strip,
+.result-year-zone{
+  background-image:none !important;
+  opacity:1 !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  box-shadow:none !important;
+}
+
+/* Bandeau année dans le casier */
+.slot{
+  padding-top:28px;
+}
+.slot.empty{
+  padding-top:7px;
+}
+.slot .vintage-strip{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  width:100%;
+  height:28px;
+  margin:0;
+  padding:6px 4px 5px;
+  border:0;
+  border-radius:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff !important;
+  font-size:11px;
+  font-weight:800;
+  line-height:1;
+  text-align:center;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+  z-index:2;
+}
+
+/* ----- Couleur du vin : même fond dans casier et résultat ----- */
 .slot.red,
 .result-item.red .result-main{
   background:#741a35 !important;
@@ -353,7 +338,7 @@ header{
 .result-item.white .result-main{
   background:#d8c56a !important;
   background-color:#d8c56a !important;
-  color:#171108 !important;
+  color:#241b08 !important;
 }
 .slot.rose,
 .result-item.rose .result-main{
@@ -367,58 +352,41 @@ header{
   background-color:#8b762c !important;
   color:#fff !important;
 }
-
-.slot.red,.slot.white,.slot.rose,.slot.spark,
-.result-item .result-main{
-  background-image:none !important;
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-}
-
-/* ---------- Couleur du millésime : même --age-color PARTOUT ---------- */
-.year-chip,
-.slot .vintage-strip,
-.result-year-zone{
-  background:var(--age-color,#777777) !important;
-  background-color:var(--age-color,#777777) !important;
-  background-image:none !important;
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-  box-shadow:none !important;
-}
-
-/* Le bandeau du casier reste une vraie zone indépendante */
-.slot:not(.empty){
-  padding-top:28px;
-}
-.slot .vintage-strip{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  width:100%;
-  height:28px;
-  margin:0;
-  padding:6px 4px 5px;
-  border:0;
-  border-radius:0;
-  color:#fff !important;
-  text-align:center;
-  font-size:10px;
-  font-weight:800;
-  line-height:1.05;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
-}
 .slot.empty{
   background:#373434 !important;
   background-color:#373434 !important;
-  padding-top:7px;
+  color:#aaa !important;
 }
 
-/* Résultats : année à gauche, couleur du vin à droite.
-   Les deux zones sont séparées, donc aucune couleur ne se mélange. */
+/* Texte sur fond blanc */
+.slot.white .name,
+.slot.white .pos,
+.result-item.white .result-main,
+.result-item.white .result-main b,
+.result-item.white .result-main small{
+  color:#241b08 !important;
+}
+
+/* ----- Résultats recherche / année ----- */
+.result-panel{
+  margin:8px 0 10px;
+  padding:9px;
+  border:1px solid #393333;
+  border-radius:11px;
+  background:#171414;
+}
+.result-title{
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+.result-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:310px;
+  overflow:auto;
+}
 .result-item{
   display:grid !important;
   grid-template-columns:72px minmax(0,1fr) !important;
@@ -430,8 +398,6 @@ header{
   border:1px solid #403939;
   border-radius:9px;
   background:transparent !important;
-  background-color:transparent !important;
-  background-image:none !important;
   color:#fff;
   text-align:left;
 }
@@ -443,7 +409,8 @@ header{
   color:#fff !important;
   font-size:12px;
   font-weight:900;
-  line-height:1;
+  line-height:1.05;
+  text-align:center;
   text-shadow:0 1px 1px rgba(0,0,0,.35);
 }
 .result-main{
@@ -466,120 +433,8 @@ header{
   line-height:1.25;
   opacity:.78;
 }
-
-/* Boutons millésimes du haut : aucun effet qui puisse modifier la couleur */
-.year-chip{
-  color:#fff !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.30) !important;
-}
-
-
-/* V5.4.15 — rendu couleur strictement identique partout.
-   Aplat via background-image pour éviter l'assombrissement différent
-   des background-color par certains navigateurs Android. */
-
-/* MILLÉSIMES : même --age-color pour bouton du haut, casier et résultat */
-.year-chip,
-.slot .vintage-strip,
-.result-year-zone{
-  background-image:
-    linear-gradient(
-      0deg,
-      var(--age-color,#777777),
-      var(--age-color,#777777)
-    ) !important;
-  background-color:var(--age-color,#777777) !important;
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-}
-
-/* COULEUR DU VIN : même aplat exact dans casier et résultat */
-.slot.red,
-.result-item.red .result-main{
-  background-image:linear-gradient(0deg,#741a35,#741a35) !important;
-  background-color:#741a35 !important;
-}
-.slot.white,
-.result-item.white .result-main{
-  background-image:linear-gradient(0deg,#d8c56a,#d8c56a) !important;
-  background-color:#d8c56a !important;
-}
-.slot.rose,
-.result-item.rose .result-main{
-  background-image:linear-gradient(0deg,#b95b72,#b95b72) !important;
-  background-color:#b95b72 !important;
-}
-.slot.spark,
-.result-item.spark .result-main{
-  background-image:linear-gradient(0deg,#8b762c,#8b762c) !important;
-  background-color:#8b762c !important;
-}
-
-
-/* V5.4.17 — rendu couleur réellement identique sur Android
-   On neutralise l'apparence native des <button>, qui modifiait visuellement
-   les mêmes couleurs entre boutons et <span>. */
-button.year-chip,
-button.slot,
-button.result-item {
-  -webkit-appearance:none !important;
-  appearance:none !important;
-  -webkit-tap-highlight-color:transparent;
-}
-
-/* Millésime : exactement le même aplat, sans ombre ni filtre */
-.year-chip,
-.slot .vintage-strip,
-.result-year-zone {
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-  box-shadow:none !important;
-  background-image:none !important;
-  background-color:var(--age-color,#777777) !important;
-}
-
-/* Le bouton millésime lui-même ne doit ajouter aucun rendu natif */
-.year-chip {
-  border-style:solid !important;
-  box-shadow:none !important;
-  outline:none;
-}
-
-/* Couleur du vin : mêmes aplats partout */
-.slot.red,
-.result-item.red .result-main {
-  background-image:none !important;
-  background-color:#741a35 !important;
-  color:#fff !important;
-}
-.slot.white,
-.result-item.white .result-main {
-  background-image:none !important;
-  background-color:#d8c56a !important;
-  color:#241b08 !important;
-}
-.slot.rose,
-.result-item.rose .result-main {
-  background-image:none !important;
-  background-color:#b95b72 !important;
-  color:#fff !important;
-}
-.slot.spark,
-.result-item.spark .result-main {
-  background-image:none !important;
-  background-color:#8b762c !important;
-  color:#fff !important;
-}
-
-/* Le texte des vins blancs doit rester bien lisible */
-.slot.white .name,
-.slot.white .pos,
-.result-item.white .result-main,
-.result-item.white .result-main b,
-.result-item.white .result-main small {
-  color:#241b08 !important;
+#grid{
+  touch-action:pan-y;
 }
 
 </style>
@@ -710,6 +565,6 @@ button.result-item {
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.18"></script>
+<script src="app.js?v=5.4.19"></script>
 </body>
 </html>
