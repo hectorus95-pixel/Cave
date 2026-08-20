@@ -58,18 +58,18 @@ function currentDecimalYear(){
 }
 
 const AGE_COLORS = [
-  '#73b86b', // 0 an
-  '#4f9d55', // 1 an
-  '#6f8f3d', // 2 ans
-  '#9a7b24', // 3 ans
-  '#b2661e', // 4 ans
-  '#a1422f', // 5 ans
-  '#832d38', // 6 ans
-  '#672337', // 7 ans
-  '#531d31', // 8 ans
-  '#45182a', // 9 ans
-  '#391423', // 10 ans
-  '#30111e'  // 11 ans
+  '#57b65f', // 0 an : vert vif
+  '#4eaa55', // 1 an : vert
+  '#7ea83f', // 2 ans : vert-jaune
+  '#b1a232', // 3 ans : jaune-olive
+  '#d28a2f', // 4 ans : orange
+  '#c96332', // 5 ans : orange-rouge
+  '#b2433a', // 6 ans : rouge
+  '#8f3040', // 7 ans : rouge-bordeaux
+  '#70263a', // 8 ans : bordeaux
+  '#581f33', // 9 ans : bordeaux foncé
+  '#47192a', // 10 ans : très foncé
+  '#381522'  // 11 ans : très vieux
 ];
 
 function wineAge(y){
@@ -81,12 +81,13 @@ function wineAge(y){
 function ageColor(y){
   const age=wineAge(y);
   if(age===null) return '#777777';
+
   if(age < AGE_COLORS.length) return AGE_COLORS[age];
 
-  // Au-delà de 11 ans : on continue à foncer progressivement.
+  // Au-delà de 11 ans : même teinte bordeaux, de plus en plus sombre.
   const extra=Math.min(20,age-(AGE_COLORS.length-1));
-  const light=Math.max(7,18-extra*0.5);
-  return `hsl(340 45% ${light}%)`;
+  const light=Math.max(6,16-extra*0.45);
+  return `hsl(340 43% ${light}%)`;
 }
 
 function ageClass(y){
