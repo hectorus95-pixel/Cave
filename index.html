@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#4b0d1b">
 <title>Ma Cave à Vin</title>
 <link rel="manifest" href="manifest.webmanifest?v=5.4">
 <style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:#0d0b0b;color:#fff}
 header{background:#4b0d1b;padding:17px 16px 15px;position:static;z-index:auto}
@@ -455,7 +455,7 @@ dialog,
 .result-item,
 .result-year-zone,
 .result-main{
-  color-scheme:dark !important;
+  color-scheme:light dark !important;
 }
 
 
@@ -845,6 +845,66 @@ dialog,
   color:#211A08!important;
 }
 
+
+/* V5.4.27 — thème sombre explicite pour Samsung Internet */
+@media (prefers-color-scheme: dark) {
+  html,body{
+    color-scheme:light dark!important;
+    background:#0d0b0b!important;
+    color:#fff!important;
+  }
+
+  /* Types de vin */
+  .wine-color.red{
+    background:#A71930!important;
+    background-color:#A71930!important;
+    color:#fff!important;
+  }
+  .wine-color.rose{
+    background:#F06A94!important;
+    background-color:#F06A94!important;
+    color:#281019!important;
+  }
+  .wine-color.white{
+    background:#E6B92E!important;
+    background-color:#E6B92E!important;
+    color:#211A08!important;
+  }
+  .wine-color.spark{
+    background:#FFF2A6!important;
+    background-color:#FFF2A6!important;
+    color:#211A08!important;
+  }
+
+  /* Sans année */
+  .age-color.ageUnknown{
+    background:#777777!important;
+    background-color:#777777!important;
+    color:#fff!important;
+  }
+
+  /* Âges 0 à 11 */
+  .age-color.age0{background:#0B5D1E!important;background-color:#0B5D1E!important;color:#fff!important;}
+  .age-color.age1{background:#168A2F!important;background-color:#168A2F!important;color:#fff!important;}
+  .age-color.age2{background:#7FB800!important;background-color:#7FB800!important;color:#211A08!important;}
+  .age-color.age3{background:#FFD000!important;background-color:#FFD000!important;color:#211A08!important;}
+  .age-color.age4{background:#FF9800!important;background-color:#FF9800!important;color:#211A08!important;}
+  .age-color.age5{background:#FF5A1F!important;background-color:#FF5A1F!important;color:#fff!important;}
+  .age-color.age6{background:#E42323!important;background-color:#E42323!important;color:#fff!important;}
+  .age-color.age7{background:#A11233!important;background-color:#A11233!important;color:#fff!important;}
+  .age-color.age8{background:#7A1430!important;background-color:#7A1430!important;color:#fff!important;}
+  .age-color.age9{background:#5A1025!important;background-color:#5A1025!important;color:#fff!important;}
+  .age-color.age10{background:#400C1B!important;background-color:#400C1B!important;color:#fff!important;}
+  .age-color.age11{background:#2E0914!important;background-color:#2E0914!important;color:#fff!important;}
+
+  .age-color,.wine-color{
+    opacity:1!important;
+    filter:none!important;
+    mix-blend-mode:normal!important;
+    background-image:none!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -973,6 +1033,6 @@ dialog,
   </div>
 </dialog>
 
-<script src="app.js?v=5.4.26"></script>
+<script src="app.js?v=5.4.27"></script>
 </body>
 </html>
