@@ -191,12 +191,16 @@ function showResultPanel(title,items){
   if(!items.length) list.innerHTML='<div class="muted">Aucune bouteille trouvée.</div>';
   items.forEach(({r,p})=>{
     const btn=document.createElement('button');
-    btn.type='button'; btn.className=`result-item ${wineClass(r.couleur)}`;
+    btn.type='button';
+    btn.className=`result-item ${wineClass(r.couleur)}`;
+    btn.style.setProperty('--age-color',couleurPourAge(r.millesime));
     const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(r.format||''));
     btn.innerHTML=`
-      <span class="result-vintage-strip" style="background:${couleurPourAge(r.millesime)} !important;background-color:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>
-      <b>${esc(r.vin)}${isMagnum?' · Magnum':''}</b>
-      <small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>
+      <span class="result-year-zone">${esc(r.millesime||'Sans année')}</span>
+      <span class="result-main">
+        <b>${esc(r.vin)}${isMagnum?' · Magnum':''}</b>
+        <small>${r._searchLocations?esc(r._searchLocations):`Casier ${p.casier} · Ligne ${p.ligne} · Position ${p.position}`}</small>
+      </span>
     `;
     btn.addEventListener('click',()=>{
       activeCasier=p.casier; render(); refreshPhotoButtons();
@@ -342,8 +346,9 @@ function render(){
     b.type='button';
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
     b.className=`slot ${r?wineClass(r.couleur):'empty'} ${r?ageClass(r.millesime):'ageUnknown'}`;
+    if(r) b.style.setProperty('--age-color',couleurPourAge(r.millesime));
     b.innerHTML=`
-      ${r?`<span class="vintage-strip" style="background:${couleurPourAge(r.millesime)} !important;background-color:${couleurPourAge(r.millesime)} !important;">${esc(r.millesime||'Sans année')}</span>`:''}
+      ${r?`<span class="vintage-strip">${esc(r.millesime||'Sans année')}</span>`:''}
       <span class="pos">L${x.ligne}·P${x.position}</span>
       <span class="name">${r?esc(r.vin):'＋ Vide'}</span>
       ${r?`
