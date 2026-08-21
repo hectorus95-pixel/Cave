@@ -1093,14 +1093,27 @@ function renderPickResults(){
     return;
   }
 
-  list.innerHTML=matches.map(r=>`
-    <button type="button"
-            class="pick-result wine-color ${wineClass(r.couleur)} ${r.id===pendingAddRefId?'active':''}"
-            data-pick-id="${esc(r.id)}">
-      <b>${esc(r.vin)}${r.millesime?` · ${esc(r.millesime)}`:''}</b>
-      <span>${esc(r.domaine||'Domaine non renseigné')}${r.format?` · ${esc(r.format)}`:''}</span>
-    </button>
-  `).join('');
+  list.innerHTML=matches.map(r=>{
+    const usedCount=inv.filter(p=>p.refId===r.id).length;
+
+    return `
+      <div class="pick-result-row">
+        <button type="button"
+                class="pick-result wine-color ${wineClass(r.couleur)} ${r.id===pendingAddRefId?'active':''}"
+                data-pick-id="${esc(r.id)}">
+          <b>${esc(r.vin)}${r.millesime?` · ${esc(r.millesime)}`:''}</b>
+          <span>${esc(r.domaine||'Domaine non renseigné')}${r.format?` · ${esc(r.format)}`:''}</span>
+          <small>${usedCount} bouteille${usedCount>1?'s':''} en cave</small>
+        </button>
+
+        <button type="button"
+                class="delete-ref"
+                data-delete-ref="${esc(r.id)}"
+                title="Supprimer cette référence"
+                aria-label="Supprimer cette référence">🗑️</button>
+      </div>
+    `;
+  }).join('');
 
   $('#useRef').disabled=!pendingAddRefId;
 }
@@ -1434,6 +1447,38 @@ function continueVoiceBottle(){
   $('#dialog').showModal();
 }
 
+function deleteReference(id){
+  const r=ref(id);
+  if(!r) return;
+
+  const usedCount=inv.filter(p=>p.refId===id).length;
+
+  if(usedCount>0){
+    alert(`Impossible de supprimer cette référence : ${usedCount} bouteille${usedCount>1?'s utilisent':' utilise'} encore cette référence dans la cave.`);
+    return;
+  }
+
+  const label=[r.vin,r.millesime,r.domaine].filter(Boolean).join(' · ');
+  if(!confirm(`Supprimer définitivement la référence « ${label} » ?\n\nCette action ne supprime pas les anciennes entrées déjà enregistrées dans l’historique des bouteilles bues.`)){
+    return;
+  }
+
+  refs=refs.filter(x=>x.id!==id);
+
+  if(pendingAddRefId===id){
+    pendingAddRefId='';
+  }
+
+  if(voiceExactRefId===id) voiceExactRefId='';
+  if(voiceSimilarRefId===id) voiceSimilarRefId='';
+
+  persist();
+  renderPickResults();
+  render();
+
+  alert('Référence supprimée.');
+}
+
 function chooseAdd(x){
   prepareAddTargets(x);
   pendingAddRefId='';
@@ -1448,6 +1493,12 @@ $('#pickSearch').addEventListener('input',()=>{
 });
 
 $('#pickResults').addEventListener('click',e=>{
+  const del=e.target.closest('[data-delete-ref]');
+  if(del){
+    deleteReference(del.dataset.deleteRef);
+    return;
+  }
+
   const btn=e.target.closest('[data-pick-id]');
   if(!btn) return;
   pendingAddRefId=btn.dataset.pickId;
