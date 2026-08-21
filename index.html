@@ -1180,7 +1180,10 @@ button.result-item{
 
 /* V6.10 — vote replié dans l'historique */
 .vote-wrap{
-  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
 }
 .vote-open{
   -webkit-appearance:none;
@@ -1202,16 +1205,15 @@ button.result-item{
 .consumed-rating-edit[hidden]{
   display:none!important;
 }
-.consumed-rating-edit{
-  position:absolute;
-  right:0;
-  top:34px;
-  z-index:20;
+.vote-wrap .consumed-rating-edit{
+  position:static!important;
+  display:flex;
+  gap:3px;
   padding:4px;
   border:1px solid #5a5353;
   border-radius:8px;
   background:#201d1d;
-  box-shadow:0 5px 14px rgba(0,0,0,.45);
+  box-shadow:none;
 }
 
 </style>
@@ -1463,6 +1465,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.10"></script>
+<script src="app.js?v=6.11"></script>
 </body>
 </html>
