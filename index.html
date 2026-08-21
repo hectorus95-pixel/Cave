@@ -1216,6 +1216,96 @@ button.result-item{
   box-shadow:none;
 }
 
+
+/* =========================================================
+   V7.1 — ajout par recherche dans la base
+   ========================================================= */
+.add-dlg{
+  max-width:520px;
+}
+.add-search-label{
+  display:block;
+  margin-top:12px;
+  color:#bbb;
+  font-size:11px;
+}
+#pickSearch{
+  width:100%;
+  margin-top:5px;
+  padding:11px 12px;
+  border:1px solid #686363;
+  border-radius:9px;
+  background:#292626;
+  color:#fff;
+  font:inherit;
+}
+.pick-results{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:42vh;
+  margin-top:9px;
+  overflow-y:auto;
+}
+.pick-empty{
+  padding:16px 8px;
+  color:#aaa;
+  text-align:center;
+  font-size:11px;
+}
+.pick-result{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  min-height:52px;
+  padding:8px 10px;
+  border:2px solid transparent;
+  border-radius:9px;
+  text-align:left;
+  font:inherit;
+}
+.pick-result.active{
+  border-color:#fff!important;
+  box-shadow:0 0 0 2px rgba(0,0,0,.72)!important;
+}
+.pick-result b{
+  display:block;
+  font-size:12px;
+  line-height:1.15;
+}
+.pick-result span{
+  display:block;
+  margin-top:3px;
+  font-size:9px;
+  font-weight:650;
+  opacity:.82;
+}
+#useRef:disabled{
+  opacity:.42;
+}
+
+/* Fiche : édition d'une bouteille ou de toute la référence */
+#viewActions{
+  grid-template-columns:1fr 1fr!important;
+}
+#editOneBottle,
+#editAllBottles{
+  min-width:0;
+  padding-left:8px!important;
+  padding-right:8px!important;
+  font-size:11px!important;
+}
+#editAllBottles[hidden]{
+  display:none!important;
+}
+#viewActions #consumed{
+  grid-column:1 / -1;
+}
+#viewActions #remove,
+#viewActions #cancel{
+  grid-column:1 / -1;
+}
+
 </style>
 </head>
 <body>
@@ -1341,12 +1431,20 @@ button.result-item{
 </main>
 
 <dialog id="addDialog">
-  <div class="dlg">
+  <div class="dlg add-dlg">
     <h2>Ajouter une bouteille</h2>
-    <p>Choisis un vin existant ou crée une nouvelle référence.</p>
-    <select id="pick"></select>
+    <p>Recherche un vin déjà présent dans ta base ou crée une nouvelle référence.</p>
+
+    <label class="add-search-label">
+      Rechercher
+      <input id="pickSearch" type="search" autocomplete="off"
+             placeholder="Cuvée, domaine, millésime…">
+    </label>
+
+    <div id="pickResults" class="pick-results"></div>
+
     <div class="dlgactions">
-      <button id="useRef" class="primary">Ajouter depuis ma base</button>
+      <button id="useRef" class="primary" disabled>Ajouter le vin sélectionné</button>
       <button id="newRef" class="primary">Créer un nouveau vin</button>
       <button id="cancelAdd" class="secondary">Annuler</button>
     </div>
@@ -1419,7 +1517,8 @@ button.result-item{
     </div>
 
     <div id="viewActions" class="dlgactions">
-      <button id="editBottle" class="primary">✏️ Éditer</button>
+      <button id="editOneBottle" class="primary">✏️ Éditer cette bouteille</button>
+      <button id="editAllBottles" class="primary">✏️ Éditer toutes les bouteilles</button>
       <button id="consumed" class="consumed-btn">🍷 Bue</button>
       <button id="remove" class="danger">Sortir cette bouteille</button>
       <button id="cancel" class="secondary">Fermer</button>
@@ -1465,6 +1564,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=7.0"></script>
+<script src="app.js?v=7.1"></script>
 </body>
 </html>

@@ -15,6 +15,8 @@ consumed.forEach(e=>{
 });
 let activeCasier=1;
 let selected=null;
+let pendingAddRefId='';
+let editScope=null; // 'single' | 'all' | 'new'
 let dialogHistory=false;
 
 const $=s=>document.querySelector(s);
@@ -849,6 +851,8 @@ function closeDialogsFromPop(){
   [$('#dialog'),$('#addDialog'),$('#rankingDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
   dialogHistory=false;
   selected=null;
+  pendingAddRefId='';
+  editScope=null;
 }
 window.addEventListener('popstate',closeDialogsFromPop);
 
@@ -921,17 +925,36 @@ function fillBottleView(r){
 }
 
 function showBottleView(r){
+  editScope=null;
   fillBottleView(r);
   $('#dialogTitle').textContent=r.vin;
   $('#where').textContent=selected.emplacement;
+
+  const sameCount=inv.filter(p=>p.refId===r.id).length;
+  $('#editAllBottles').hidden=sameCount<2;
+  $('#editAllBottles').textContent=`✏️ Toutes les bouteilles (×${sameCount})`;
+
   $('#bottleView').hidden=false;
   $('#bottleEdit').hidden=true;
   $('#viewActions').hidden=false;
   $('#editActions').hidden=true;
 }
 
-function showBottleEdit(r){
+function showBottleEdit(r,scope='all'){
+  editScope=scope;
   fill(r);
+
+  const sameCount=inv.filter(p=>p.refId===r.id).length;
+  if(scope==='single'){
+    $('#where').textContent=selected.emplacement+' · modification de cette bouteille uniquement';
+    $('#save').textContent='Enregistrer cette bouteille';
+  }else{
+    $('#where').textContent=selected.emplacement+` · modification de ${sameCount} bouteille${sameCount>1?'s':''}`;
+    $('#save').textContent=sameCount>1
+      ? `Enregistrer les ${sameCount} bouteilles`
+      : 'Enregistrer la bouteille';
+  }
+
   $('#bottleView').hidden=true;
   $('#bottleEdit').hidden=false;
   $('#viewActions').hidden=true;
@@ -944,25 +967,82 @@ function editRef(x,r){
   showDialog($('#dialog'));
 }
 
+function addReferenceSearchText(r){
+  return normalizeSearchText([
+    r.vin||'',
+    r.domaine||'',
+    r.millesime||'',
+    r.couleur||'',
+    r.format||''
+  ].join(' '));
+}
+
+function renderPickResults(){
+  const q=normalizeSearchText($('#pickSearch').value.trim());
+
+  const matches=refs
+    .filter(r=>!q || addReferenceSearchText(r).includes(q))
+    .slice()
+    .sort((a,b)=>{
+      const byWine=String(a.vin||'').localeCompare(String(b.vin||''),'fr',{sensitivity:'base'});
+      if(byWine) return byWine;
+      return String(b.millesime||'').localeCompare(String(a.millesime||''),'fr');
+    });
+
+  const list=$('#pickResults');
+
+  if(!matches.length){
+    list.innerHTML='<div class="pick-empty">Aucun vin trouvé dans ta base.</div>';
+    $('#useRef').disabled=true;
+    return;
+  }
+
+  list.innerHTML=matches.map(r=>`
+    <button type="button"
+            class="pick-result wine-color ${wineClass(r.couleur)} ${r.id===pendingAddRefId?'active':''}"
+            data-pick-id="${esc(r.id)}">
+      <b>${esc(r.vin)}${r.millesime?` · ${esc(r.millesime)}`:''}</b>
+      <span>${esc(r.domaine||'Domaine non renseigné')}${r.format?` · ${esc(r.format)}`:''}</span>
+    </button>
+  `).join('');
+
+  $('#useRef').disabled=!pendingAddRefId;
+}
+
 function chooseAdd(x){
   selected=x;
-  $('#pick').innerHTML='<option value="">— Choisir dans ma base —</option>'+
-    refs.slice().sort((a,b)=>String(a.vin).localeCompare(String(b.vin),'fr')).map(r=>
-      `<option value="${r.id}">${esc(r.vin)} ${r.millesime||''} — ${esc(r.domaine)}</option>`
-    ).join('');
+  pendingAddRefId='';
+  $('#pickSearch').value='';
+  renderPickResults();
   showDialog($('#addDialog'));
 }
 
+$('#pickSearch').addEventListener('input',()=>{
+  pendingAddRefId='';
+  renderPickResults();
+});
+
+$('#pickResults').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-pick-id]');
+  if(!btn) return;
+  pendingAddRefId=btn.dataset.pickId;
+  renderPickResults();
+});
+
 $('#useRef').addEventListener('click',()=>{
-  const id=$('#pick').value;
-  if(!id) return alert('Choisis une référence.');
+  const id=pendingAddRefId;
+  if(!id) return alert('Choisis un vin dans les résultats.');
   selected.refId=id;
-  persist(); render();
+  pendingAddRefId='';
+  persist();
+  render();
   requestClose($('#addDialog'));
 });
 $('#newRef').addEventListener('click',()=>{
   // On ferme "Ajouter", puis on ouvre directement l'édition d'une nouvelle référence.
   $('#addDialog').close();
+  pendingAddRefId='';
+  editScope='new';
   $('#dialogTitle').textContent='Nouveau vin';
   $('#where').textContent=selected.emplacement+' · nouvelle référence';
   fill(null);
@@ -986,7 +1066,23 @@ $('#save').addEventListener('click',()=>{
   const existed=!!selected.refId;
 
   if(existed){
-    Object.assign(ref(selected.refId),vals);
+    const originalId=selected.refId;
+    const original=ref(originalId);
+    const sameCount=inv.filter(p=>p.refId===originalId).length;
+
+    if(editScope==='single' && sameCount>1){
+      // Dupliquer la référence : seule cette bouteille reçoit les nouvelles informations.
+      const clone={
+        ...original,
+        ...vals,
+        id:`r${Date.now()}_${Math.random().toString(36).slice(2,6)}`
+      };
+      refs.push(clone);
+      selected.refId=clone.id;
+    }else{
+      // Une seule bouteille utilise cette référence, ou l'utilisateur a choisi "toutes".
+      Object.assign(original,vals);
+    }
   }else{
     vals.id='r'+Date.now();
     refs.push(vals);
@@ -1000,16 +1096,24 @@ $('#save').addEventListener('click',()=>{
     const updated=ref(selected.refId);
     showBottleView(updated);
   }else{
+    editScope=null;
     requestClose($('#dialog'));
   }
 });
-$('#editBottle').addEventListener('click',()=>{
+$('#editOneBottle').addEventListener('click',()=>{
   if(!selected || !selected.refId) return;
   const r=ref(selected.refId);
-  if(r) showBottleEdit(r);
+  if(r) showBottleEdit(r,'single');
+});
+
+$('#editAllBottles').addEventListener('click',()=>{
+  if(!selected || !selected.refId) return;
+  const r=ref(selected.refId);
+  if(r) showBottleEdit(r,'all');
 });
 
 $('#cancelEdit').addEventListener('click',()=>{
+  editScope=null;
   if(selected?.refId){
     const r=ref(selected.refId);
     if(r) showBottleView(r);

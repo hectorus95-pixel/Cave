@@ -1,5 +1,5 @@
-const C='ma-cave-v7';
-const A=['./','./index.html','./app.js?v=7.0','./manifest.webmanifest?v=5.4'];
+const C='ma-cave-v7-1';
+const A=['./','./index.html','./app.js?v=7.1','./manifest.webmanifest?v=5.4'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(A)))});
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x))))])));
 self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(C).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request))));
