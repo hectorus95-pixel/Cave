@@ -1426,10 +1426,30 @@ button.result-item{
   border-color:#a58d45;
 }
 
+
+/* V7.3 — numéro de version visible en haut à droite */
+header{
+  position:relative;
+}
+.app-version{
+  position:absolute;
+  top:6px;
+  right:8px;
+  z-index:20;
+  font-size:9px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.62);
+  pointer-events:none;
+  user-select:none;
+}
+
 </style>
 </head>
 <body>
 <header>
+  <span class="app-version">v7.3</span>
   <h1>🍷 Ma Cave à Vin</h1>
   <div class="topstats">
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
@@ -1726,6 +1746,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=7.2"></script>
+<script src="app.js?v=7.3"></script>
 </body>
 </html>
