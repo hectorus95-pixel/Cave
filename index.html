@@ -1306,6 +1306,126 @@ button.result-item{
   grid-column:1 / -1;
 }
 
+
+/* =========================================================
+   V7.2 — ajout vocal guidé
+   ========================================================= */
+.voice-add-btn{
+  width:100%;
+  background:#5d3d7a!important;
+  color:#fff!important;
+}
+.voice-dialog{
+  width:min(94vw,520px);
+}
+.voice-instruction{
+  margin-top:10px;
+  padding:11px;
+  border:1px solid #4a4444;
+  border-radius:10px;
+  background:#211e1e;
+}
+.voice-instruction>b{
+  display:block;
+  margin-bottom:8px;
+}
+.voice-order{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+}
+.voice-order span{
+  padding:6px 7px;
+  border-radius:7px;
+  background:#302b2b;
+  font-size:10px;
+  font-weight:800;
+}
+.voice-instruction p{
+  margin:10px 0 3px;
+  color:#aaa;
+  font-size:9px;
+}
+.voice-instruction strong{
+  display:block;
+  font-size:11px;
+  line-height:1.35;
+}
+.voice-start{
+  width:100%;
+  min-height:48px;
+  margin-top:10px;
+  border:0;
+  border-radius:10px;
+  background:#7a1837;
+  color:#fff;
+  font-size:13px;
+  font-weight:850;
+}
+.voice-start.listening{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+.voice-status{
+  min-height:28px;
+  padding:8px 2px 2px;
+  color:#bbb;
+  font-size:10px;
+}
+.voice-transcript{
+  margin-top:8px;
+}
+.voice-transcript>span{
+  display:block;
+  margin-bottom:4px;
+  color:#999;
+  font-size:9px;
+}
+#voiceTranscript{
+  min-height:44px;
+  padding:9px;
+  border:1px solid #4a4444;
+  border-radius:8px;
+  background:#252222;
+  font-size:11px;
+  line-height:1.35;
+}
+.voice-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.voice-fields label{
+  color:#bbb;
+  font-size:10px;
+}
+.voice-fields input{
+  width:100%;
+  margin-top:4px;
+  padding:9px;
+  border:1px solid #686363;
+  border-radius:8px;
+  background:#292626;
+  color:#fff;
+  font:inherit;
+}
+.voice-match{
+  margin-top:9px;
+  padding:9px;
+  border:1px solid #4c4646;
+  border-radius:8px;
+  background:#201d1d;
+  font-size:10px;
+  line-height:1.35;
+}
+.voice-match.exact{
+  border-color:#5c8d61;
+}
+.voice-match.similar{
+  border-color:#a58d45;
+}
+
 </style>
 </head>
 <body>
@@ -1444,9 +1564,51 @@ button.result-item{
     <div id="pickResults" class="pick-results"></div>
 
     <div class="dlgactions">
+      <button id="voiceAdd" class="voice-add-btn">🎤 Ajouter par la voix</button>
       <button id="useRef" class="primary" disabled>Ajouter le vin sélectionné</button>
       <button id="newRef" class="primary">Créer un nouveau vin</button>
       <button id="cancelAdd" class="secondary">Annuler</button>
+    </div>
+  </div>
+</dialog>
+
+
+<dialog id="voiceDialog" class="voice-dialog">
+  <div class="dlg voice-dlg">
+    <h2>🎤 Ajouter par la voix</h2>
+
+    <div class="voice-instruction">
+      <b>Dites dans cet ordre :</b>
+      <div class="voice-order">
+        <span>1. Domaine</span>
+        <span>2. Cuvée</span>
+        <span>3. Année</span>
+        <span>4. Prix</span>
+      </div>
+      <p>Exemple :</p>
+      <strong>« Domaine Clos Marie, cuvée Simon, année 2021, prix 22 euros »</strong>
+    </div>
+
+    <button type="button" id="voiceStart" class="voice-start">🎤 Commencer la dictée</button>
+    <div id="voiceStatus" class="voice-status">Appuyez sur le micro puis dictez les 4 informations.</div>
+
+    <div class="voice-transcript">
+      <span>Transcription</span>
+      <div id="voiceTranscript">—</div>
+    </div>
+
+    <div class="voice-fields">
+      <label>Domaine<input id="voiceDomaine"></label>
+      <label>Cuvée<input id="voiceCuvee"></label>
+      <label>Année<input id="voiceYear" inputmode="numeric"></label>
+      <label>Prix (€)<input id="voicePrice" inputmode="decimal"></label>
+    </div>
+
+    <div id="voiceMatch" class="voice-match" hidden></div>
+
+    <div class="dlgactions">
+      <button type="button" id="voiceContinue" class="primary" disabled>Continuer</button>
+      <button type="button" id="voiceCancel" class="secondary">Annuler</button>
     </div>
   </div>
 </dialog>
@@ -1564,6 +1726,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=7.1"></script>
+<script src="app.js?v=7.2"></script>
 </body>
 </html>

@@ -17,6 +17,9 @@ let activeCasier=1;
 let selected=null;
 let pendingAddRefId='';
 let editScope=null; // 'single' | 'all' | 'new'
+let voiceRecognition=null;
+let voiceExactRefId='';
+let voiceSimilarRefId='';
 let dialogHistory=false;
 
 const $=s=>document.querySelector(s);
@@ -848,11 +851,17 @@ function showDialog(d){
   d.showModal();
 }
 function closeDialogsFromPop(){
-  [$('#dialog'),$('#addDialog'),$('#rankingDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
+  [$('#dialog'),$('#addDialog'),$('#voiceDialog'),$('#rankingDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
   dialogHistory=false;
   selected=null;
   pendingAddRefId='';
   editScope=null;
+  voiceExactRefId='';
+  voiceSimilarRefId='';
+  if(voiceRecognition){
+    try{ voiceRecognition.abort(); }catch(e){}
+    voiceRecognition=null;
+  }
 }
 window.addEventListener('popstate',closeDialogsFromPop);
 
@@ -873,6 +882,7 @@ function backdropClose(e){
 }
 $('#dialog').addEventListener('click',backdropClose);
 $('#addDialog').addEventListener('click',backdropClose);
+$('#voiceDialog').addEventListener('click',backdropClose);
 
 function fill(r){
   ['vin','domaine','millesime','couleur','format','prix','maturiteDebut','maturiteFin'].forEach(k=>{
@@ -1009,6 +1019,244 @@ function renderPickResults(){
   $('#useRef').disabled=!pendingAddRefId;
 }
 
+function clearVoiceForm(){
+  voiceExactRefId='';
+  voiceSimilarRefId='';
+  $('#voiceTranscript').textContent='—';
+  $('#voiceDomaine').value='';
+  $('#voiceCuvee').value='';
+  $('#voiceYear').value='';
+  $('#voicePrice').value='';
+  $('#voiceMatch').hidden=true;
+  $('#voiceMatch').className='voice-match';
+  $('#voiceMatch').innerHTML='';
+  $('#voiceContinue').disabled=true;
+  $('#voiceStatus').textContent='Appuyez sur le micro puis dictez les 4 informations.';
+  $('#voiceStart').classList.remove('listening');
+}
+
+function normalizeVoiceNumber(value){
+  return String(value||'')
+    .replace(/\s/g,'')
+    .replace(',','.')
+    .replace(/[^\d.]/g,'');
+}
+
+function parseVoiceBottle(text){
+  const source=String(text||'').trim();
+  const norm=normalizeSearchText(source);
+
+  // Extraction entre les mots-clés, dans l'ordre imposé.
+  const m=norm.match(
+    /domaine\s+(.+?)\s+(?:cuvee|cuvée)\s+(.+?)\s+(?:annee|année|millesime|millésime)\s+(\d{4})\s+prix\s+([\d]+(?:[.,]\d+)?)/i
+  );
+
+  if(!m) return null;
+
+  // On reprend les valeurs depuis la transcription normalisée pour rester robuste aux accents.
+  return {
+    domaine:m[1].trim(),
+    cuvee:m[2].trim(),
+    year:m[3].trim(),
+    price:normalizeVoiceNumber(m[4])
+  };
+}
+
+function voiceBottleKey(v){
+  return {
+    domaine:normalizeSearchText(v.domaine||'').trim(),
+    cuvee:normalizeSearchText(v.cuvee||v.vin||'').trim(),
+    year:String(v.year||v.millesime||'').trim()
+  };
+}
+
+function analyzeVoiceBottle(){
+  const data={
+    domaine:$('#voiceDomaine').value.trim(),
+    cuvee:$('#voiceCuvee').value.trim(),
+    year:$('#voiceYear').value.trim(),
+    price:normalizeVoiceNumber($('#voicePrice').value)
+  };
+
+  $('#voicePrice').value=data.price;
+
+  const ready=!!(data.domaine && data.cuvee && /^\d{4}$/.test(data.year) && data.price);
+  $('#voiceContinue').disabled=!ready;
+  voiceExactRefId='';
+  voiceSimilarRefId='';
+
+  if(!ready){
+    $('#voiceMatch').hidden=true;
+    return;
+  }
+
+  const key=voiceBottleKey(data);
+
+  const exact=refs.find(r=>{
+    const rk=voiceBottleKey(r);
+    return rk.domaine===key.domaine && rk.cuvee===key.cuvee && rk.year===key.year;
+  });
+
+  const similar=refs.find(r=>{
+    const rk=voiceBottleKey(r);
+    return rk.domaine===key.domaine && rk.cuvee===key.cuvee;
+  });
+
+  const box=$('#voiceMatch');
+  box.hidden=false;
+
+  if(exact){
+    voiceExactRefId=exact.id;
+    box.className='voice-match exact';
+    box.innerHTML=`<b>✓ Référence déjà présente</b><br>
+      ${esc(exact.vin)} ${esc(exact.millesime||'')} · ${esc(exact.domaine||'')}<br>
+      <small>Continuer ajoutera directement cette référence à l’emplacement choisi.</small>`;
+  }else if(similar){
+    voiceSimilarRefId=similar.id;
+    box.className='voice-match similar';
+    box.innerHTML=`<b>Référence proche trouvée</b><br>
+      ${esc(similar.vin)} ${esc(similar.millesime||'')} · ${esc(similar.domaine||'')}<br>
+      <small>Ses autres informations serviront de modèle pour le nouveau millésime.</small>`;
+  }else{
+    box.className='voice-match';
+    box.innerHTML='<b>Nouvelle référence</b><br><small>Une fiche préremplie sera créée.</small>';
+  }
+}
+
+function openVoiceAdd(){
+  clearVoiceForm();
+
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    $('#voiceStatus').textContent='La dictée vocale n’est pas disponible dans ce navigateur. Vous pouvez saisir les 4 champs manuellement.';
+    $('#voiceStart').disabled=true;
+  }else{
+    $('#voiceStart').disabled=false;
+  }
+
+  $('#addDialog').close();
+  showDialog($('#voiceDialog'));
+}
+
+function startVoiceRecognition(){
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    $('#voiceStatus').textContent='Reconnaissance vocale indisponible dans ce navigateur.';
+    return;
+  }
+
+  if(voiceRecognition){
+    try{ voiceRecognition.abort(); }catch(e){}
+  }
+
+  const recognition=new SpeechRecognition();
+  voiceRecognition=recognition;
+  recognition.lang='fr-FR';
+  recognition.continuous=false;
+  recognition.interimResults=false;
+  recognition.maxAlternatives=1;
+
+  $('#voiceStatus').textContent='Écoute en cours… Domaine, cuvée, année, prix.';
+  $('#voiceStart').classList.add('listening');
+
+  recognition.onresult=e=>{
+    const transcript=e.results?.[0]?.[0]?.transcript||'';
+    $('#voiceTranscript').textContent=transcript||'—';
+
+    const parsed=parseVoiceBottle(transcript);
+
+    if(parsed){
+      $('#voiceDomaine').value=parsed.domaine;
+      $('#voiceCuvee').value=parsed.cuvee;
+      $('#voiceYear').value=parsed.year;
+      $('#voicePrice').value=parsed.price;
+      $('#voiceStatus').textContent='Dictée comprise. Vérifiez les 4 informations ci-dessous.';
+      analyzeVoiceBottle();
+    }else{
+      $('#voiceStatus').textContent='Je n’ai pas reconnu les 4 mots-clés dans l’ordre. Corrigez les champs ou recommencez.';
+    }
+  };
+
+  recognition.onerror=e=>{
+    const messages={
+      'not-allowed':'Autorisation du microphone refusée.',
+      'audio-capture':'Microphone indisponible.',
+      'no-speech':'Aucune parole détectée.',
+      'network':'La reconnaissance vocale n’a pas pu se connecter.'
+    };
+    $('#voiceStatus').textContent=messages[e.error]||'La dictée a échoué. Vous pouvez recommencer.';
+  };
+
+  recognition.onend=()=>{
+    $('#voiceStart').classList.remove('listening');
+    voiceRecognition=null;
+  };
+
+  try{
+    recognition.start();
+  }catch(e){
+    $('#voiceStatus').textContent='Impossible de démarrer la dictée. Réessayez.';
+    $('#voiceStart').classList.remove('listening');
+  }
+}
+
+function continueVoiceBottle(){
+  analyzeVoiceBottle();
+  if($('#voiceContinue').disabled) return;
+
+  const domaine=$('#voiceDomaine').value.trim();
+  const cuvee=$('#voiceCuvee').value.trim();
+  const year=$('#voiceYear').value.trim();
+  const price=Number(normalizeVoiceNumber($('#voicePrice').value))||0;
+
+  if(voiceExactRefId){
+    // Référence exacte : on l'ajoute directement.
+    selected.refId=voiceExactRefId;
+    const r=ref(voiceExactRefId);
+    if(r && price>0 && !Number(r.prix)){
+      r.prix=price;
+    }
+    persist();
+    render();
+    requestClose($('#voiceDialog'));
+    return;
+  }
+
+  // Nouvelle année / nouvelle référence.
+  let baseRef=voiceSimilarRefId ? ref(voiceSimilarRefId) : null;
+
+  const draft=baseRef ? {
+    ...baseRef,
+    id:'',
+    domaine,
+    vin:cuvee,
+    millesime:year,
+    prix:price
+  } : {
+    id:'',
+    domaine,
+    vin:cuvee,
+    millesime:year,
+    couleur:'Rouge',
+    format:'75 cl',
+    prix:price,
+    maturiteDebut:'',
+    maturiteFin:''
+  };
+
+  editScope='new';
+  $('#dialogTitle').textContent='Nouveau vin';
+  $('#where').textContent=selected.emplacement+' · nouvelle référence';
+  fill(draft);
+  $('#bottleView').hidden=true;
+  $('#bottleEdit').hidden=false;
+  $('#viewActions').hidden=true;
+  $('#editActions').hidden=false;
+
+  $('#voiceDialog').close();
+  $('#dialog').showModal();
+}
+
 function chooseAdd(x){
   selected=x;
   pendingAddRefId='';
@@ -1038,6 +1286,20 @@ $('#useRef').addEventListener('click',()=>{
   render();
   requestClose($('#addDialog'));
 });
+$('#voiceAdd').addEventListener('click',openVoiceAdd);
+$('#voiceStart').addEventListener('click',startVoiceRecognition);
+$('#voiceContinue').addEventListener('click',continueVoiceBottle);
+$('#voiceCancel').addEventListener('click',()=>{
+  if(voiceRecognition){
+    try{ voiceRecognition.abort(); }catch(e){}
+    voiceRecognition=null;
+  }
+  requestClose($('#voiceDialog'));
+});
+['voiceDomaine','voiceCuvee','voiceYear','voicePrice'].forEach(id=>{
+  $('#'+id).addEventListener('input',analyzeVoiceBottle);
+});
+
 $('#newRef').addEventListener('click',()=>{
   // On ferme "Ajouter", puis on ouvre directement l'édition d'une nouvelle référence.
   $('#addDialog').close();
