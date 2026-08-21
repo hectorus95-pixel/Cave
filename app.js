@@ -4,10 +4,12 @@ const SEED_REFS=[{"id": "r1", "vin": "Silice rouge", "domaine": "Domaine des Ard
 
 // On conserve volontairement les clés V2 : une personne qui met à jour
 // l'application garde ses prix / ajouts / sorties déjà enregistrés.
-const KI='ma-cave-v2-inv', KR='ma-cave-v2-refs';
+const KI='ma-cave-v2-inv', KR='ma-cave-v2-refs', KC='ma-cave-v6-consumed';
 
 let inv=load(KI,SEED_INV);
 let refs=load(KR,SEED_REFS);
+let consumed=load(KC,[]);
+if(!Array.isArray(consumed)) consumed=[];
 let activeCasier=1;
 let selected=null;
 let dialogHistory=false;
@@ -49,6 +51,7 @@ if(localStorage.getItem(MATURITY_DB_KEY)!=='1'){
 function persist(){
   localStorage.setItem(KI,JSON.stringify(inv));
   localStorage.setItem(KR,JSON.stringify(refs));
+  localStorage.setItem(KC,JSON.stringify(consumed));
 }
 function save(){ persist(); render(); }
 
@@ -444,6 +447,229 @@ function showVintageResults(year){
   $('#resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
+
+function consumedSnapshot(x,r){
+  return {
+    id:`c${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+    drunkAt:new Date().toISOString(),
+    refId:r.id||'',
+    vin:r.vin||'',
+    domaine:r.domaine||'',
+    millesime:r.millesime||'',
+    couleur:r.couleur||'',
+    format:r.format||'',
+    prix:Number(r.prix)||0,
+    maturiteDebut:r.maturiteDebut||'',
+    maturiteFin:r.maturiteFin||'',
+    emplacement:x.emplacement||`C${x.casier}-L${x.ligne}-P${x.position}`,
+    casier:Number(x.casier)||0,
+    ligne:Number(x.ligne)||0,
+    position:Number(x.position)||0
+  };
+}
+
+function localMonthValue(d=new Date()){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  return `${y}-${m}`;
+}
+
+function consumptionRange(){
+  const mode=$('#consumptionPeriod')?.value||'current';
+  const now=new Date();
+  let start=null,end=null;
+
+  if(mode==='all') return {start:null,end:null};
+
+  if(mode==='custom'){
+    const from=$('#consumptionFrom').value;
+    const to=$('#consumptionTo').value;
+    if(!from || !to) return {start:null,end:null,invalid:true};
+
+    let [fy,fm]=from.split('-').map(Number);
+    let [ty,tm]=to.split('-').map(Number);
+    let a=new Date(fy,fm-1,1);
+    let b=new Date(ty,tm,1);
+
+    if(a>b){
+      const tmp=a;
+      a=new Date(ty,tm-1,1);
+      b=new Date(fy,fm,1);
+    }
+    return {start:a,end:b};
+  }
+
+  const firstThisMonth=new Date(now.getFullYear(),now.getMonth(),1);
+  const firstNextMonth=new Date(now.getFullYear(),now.getMonth()+1,1);
+
+  if(mode==='current'){
+    start=firstThisMonth;
+    end=firstNextMonth;
+  }else if(mode==='previous'){
+    start=new Date(now.getFullYear(),now.getMonth()-1,1);
+    end=firstThisMonth;
+  }else{
+    const months=Math.max(1,Number(mode)||1);
+    start=new Date(now.getFullYear(),now.getMonth()-(months-1),1);
+    end=firstNextMonth;
+  }
+  return {start,end};
+}
+
+function filteredConsumed(){
+  const range=consumptionRange();
+  if(range.invalid) return [];
+  return consumed.filter(item=>{
+    const d=new Date(item.drunkAt);
+    if(Number.isNaN(d.getTime())) return false;
+    if(range.start && d<range.start) return false;
+    if(range.end && d>=range.end) return false;
+    return true;
+  }).sort((a,b)=>new Date(b.drunkAt)-new Date(a.drunkAt));
+}
+
+function consumedGroupKey(e){
+  return [
+    e.refId||'',
+    e.vin||'',
+    e.domaine||'',
+    e.millesime||'',
+    e.format||'',
+    e.couleur||''
+  ].join('|');
+}
+
+function renderConsumption(){
+  if(!$('#consumptionList')) return;
+
+  const items=filteredConsumed();
+  $('#consumptionCount').textContent=items.length;
+  $('#consumptionValue').textContent=euro(items.reduce((s,e)=>s+(Number(e.prix)||0),0));
+
+  const typeCounts={red:0,white:0,rose:0,spark:0};
+  items.forEach(e=>{
+    const wc=wineClass(e.couleur);
+    if(typeCounts[wc]!==undefined) typeCounts[wc]++;
+  });
+
+  $('#consumptionTypes').innerHTML=`
+    <span class="consumption-type red">Rouge<small>${typeCounts.red}</small></span>
+    <span class="consumption-type white">Blanc<small>${typeCounts.white}</small></span>
+    <span class="consumption-type rose">Rosé<small>${typeCounts.rose}</small></span>
+    <span class="consumption-type spark">Effervescent<small>${typeCounts.spark}</small></span>
+  `;
+
+  const list=$('#consumptionList');
+  if(!items.length){
+    list.innerHTML='<div class="consumption-empty">Aucune bouteille enregistrée comme bue sur cette période.</div>';
+    return;
+  }
+
+  const groups=new Map();
+  items.forEach(e=>{
+    const key=consumedGroupKey(e);
+    if(!groups.has(key)) groups.set(key,{sample:e,entries:[]});
+    groups.get(key).entries.push(e);
+  });
+
+  const sorted=[...groups.values()].sort((a,b)=>
+    new Date(b.entries[0].drunkAt)-new Date(a.entries[0].drunkAt)
+  );
+
+  list.innerHTML=sorted.map(({sample,entries})=>{
+    const wc=wineClass(sample.couleur);
+    const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(sample.format||''));
+    const vintage=sample.millesime ? ` · ${esc(sample.millesime)}` : '';
+    const format=isMagnum ? ' · Magnum' : '';
+    const groupValue=entries.reduce((s,e)=>s+(Number(e.prix)||0),0);
+
+    return `
+      <article class="consumed-card">
+        <div class="consumed-card-head wine-color ${wc}">
+          <b>${esc(sample.vin)} ×${entries.length}${vintage}${format}</b>
+          ${sample.domaine?`<span class="consumed-domain">${esc(sample.domaine)}</span>`:''}
+          <span class="consumed-meta">${euro(groupValue)}</span>
+        </div>
+        <div class="consumed-dates">
+          ${entries.map(e=>`
+            <div class="consumed-entry">
+              <div class="consumed-entry-info">
+                <b>${new Date(e.drunkAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}</b>
+                <small>${esc(e.emplacement||'Emplacement inconnu')} · ${euro(e.prix)}</small>
+              </div>
+              <button type="button" class="restore-consumed" data-consumed-id="${esc(e.id)}">↩ Remettre</button>
+            </div>
+          `).join('')}
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function ensureRefForConsumed(entry){
+  if(entry.refId && ref(entry.refId)) return entry.refId;
+
+  const id=`r${Date.now()}_${Math.random().toString(36).slice(2,6)}`;
+  refs.push({
+    id,
+    vin:entry.vin||'Vin restauré',
+    domaine:entry.domaine||'',
+    millesime:entry.millesime||'',
+    couleur:entry.couleur||'Rouge',
+    format:entry.format||'75 cl',
+    prix:Number(entry.prix)||0,
+    maturiteDebut:entry.maturiteDebut||'',
+    maturiteFin:entry.maturiteFin||''
+  });
+  return id;
+}
+
+function restoreConsumedBottle(id){
+  const entry=consumed.find(e=>e.id===id);
+  if(!entry) return;
+
+  const original=inv.find(x=>
+    x.casier===entry.casier &&
+    x.ligne===entry.ligne &&
+    x.position===entry.position
+  );
+
+  let target=(original && !original.refId) ? original : null;
+  if(!target){
+    target=inv.find(x=>x.casier===entry.casier && !x.refId);
+  }
+  if(!target){
+    target=inv.find(x=>!x.refId);
+  }
+  if(!target){
+    alert('Aucune place libre pour remettre cette bouteille dans la cave.');
+    return;
+  }
+
+  const message=target===original
+    ? `Remettre cette bouteille dans ${target.emplacement} ?`
+    : `L’emplacement d’origine ${entry.emplacement} n’est plus libre.\nRemettre la bouteille dans ${target.emplacement} ?`;
+
+  if(!confirm(message)) return;
+
+  target.refId=ensureRefForConsumed(entry);
+  consumed=consumed.filter(e=>e.id!==id);
+  activeCasier=target.casier;
+  persist();
+  render();
+  refreshPhotoButtons();
+  alert(`Bouteille remise en cave : ${target.emplacement}.`);
+}
+
+function initConsumptionPeriod(){
+  const nowMonth=localMonthValue();
+  if($('#consumptionFrom') && !$('#consumptionFrom').value) $('#consumptionFrom').value=nowMonth;
+  if($('#consumptionTo') && !$('#consumptionTo').value) $('#consumptionTo').value=nowMonth;
+
+  const custom=$('#consumptionPeriod')?.value==='custom';
+  if($('#consumptionCustom')) $('#consumptionCustom').hidden=!custom;
+}
+
 function render(){
   renderStats();
   const q=$('#search').value.trim().toLowerCase();
@@ -478,6 +704,7 @@ function render(){
     g.appendChild(b);
   });
   $$('.tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.c)===activeCasier));
+  renderConsumption();
 }
 
 function pushDialogHistory(){
@@ -542,6 +769,7 @@ function editRef(x,r){
   $('#dialogTitle').textContent=r.vin;
   $('#where').textContent=x.emplacement+' · modification de la référence';
   fill(r);
+  $('#consumed').hidden=false;
   $('#remove').hidden=false;
   showDialog($('#dialog'));
 }
@@ -567,6 +795,7 @@ $('#newRef').addEventListener('click',()=>{
   $('#dialogTitle').textContent='Nouveau vin';
   $('#where').textContent=selected.emplacement+' · nouvelle référence';
   fill(null);
+  $('#consumed').hidden=true;
   $('#remove').hidden=true;
   $('#dialog').showModal();
 });
@@ -589,6 +818,19 @@ $('#save').addEventListener('click',()=>{
   persist(); render();
   requestClose($('#dialog'));
 });
+$('#consumed').addEventListener('click',()=>{
+  if(!selected || !selected.refId) return;
+  const r=ref(selected.refId);
+  if(!r) return;
+  if(!confirm(`Marquer « ${r.vin} » comme bue aujourd’hui ?`)) return;
+
+  consumed.push(consumedSnapshot(selected,r));
+  selected.refId=null;
+  persist();
+  render();
+  requestClose($('#dialog'));
+});
+
 $('#remove').addEventListener('click',()=>{
   if(!selected || !confirm('Sortir cette bouteille de la cave ?')) return;
   selected.refId=null;
@@ -623,12 +865,24 @@ $$('.tab').forEach(b=>b.addEventListener('click',async()=>{
   await refreshPhotoButtons();
 }));
 
+$('#consumptionPeriod').addEventListener('change',()=>{
+  initConsumptionPeriod();
+  renderConsumption();
+});
+$('#consumptionFrom').addEventListener('change',renderConsumption);
+$('#consumptionTo').addEventListener('change',renderConsumption);
+$('#consumptionList').addEventListener('click',e=>{
+  const btn=e.target.closest('.restore-consumed');
+  if(!btn) return;
+  restoreConsumedBottle(btn.dataset.consumedId);
+});
+
 $('#export').addEventListener('click',()=>{
-  const payload={version:3,exportedAt:new Date().toISOString(),inv,refs};
+  const payload={version:4,exportedAt:new Date().toISOString(),inv,refs,consumed};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='sauvegarde-ma-cave-v3.json';
+  a.download='sauvegarde-ma-cave-v4.json';
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 });
@@ -637,12 +891,18 @@ $('#import').addEventListener('change',async e=>{
   try{
     const d=JSON.parse(await f.text());
     if(!Array.isArray(d.inv)||!Array.isArray(d.refs)) throw new Error();
-    inv=d.inv; refs=d.refs;
+    inv=d.inv;
+    refs=d.refs;
+    consumed=Array.isArray(d.consumed)?d.consumed:[];
     refs.forEach(r=>{
       if(r.maturiteDebut===undefined) r.maturiteDebut='';
       if(r.maturiteFin===undefined) r.maturiteFin='';
     });
-    persist(); render(); alert('Sauvegarde restaurée.');
+    persist();
+    render();
+    alert(d.version>=4
+      ? 'Sauvegarde restaurée avec l’historique des bouteilles bues.'
+      : 'Ancienne sauvegarde restaurée. Elle ne contenait pas encore d’historique de consommation.');
   }catch(err){ alert('Sauvegarde invalide.'); }
   e.target.value='';
 });
@@ -772,6 +1032,7 @@ $('#grid').addEventListener('touchend',e=>{
 },{passive:true});
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+initConsumptionPeriod();
 persist();
 render();
 refreshPhotoButtons();

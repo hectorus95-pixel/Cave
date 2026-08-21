@@ -755,6 +755,190 @@ button.result-item{
   opacity:1!important;
 }
 
+
+/* =========================================================
+   V6.6 — HISTORIQUE DES BOUTEILLES BUES
+   ========================================================= */
+.consumed-btn{
+  background:#76501f!important;
+  color:#fff!important;
+}
+.consumption-panel{
+  margin:0 0 12px;
+  padding:12px;
+  background:#181515;
+  border:1px solid #373232;
+  border-radius:12px;
+}
+.consumption-head h2{
+  margin:0;
+  font-size:16px;
+}
+.consumption-head small{
+  display:block;
+  margin-top:2px;
+  color:#aaa;
+  font-size:10px;
+}
+.consumption-period{
+  margin-top:11px;
+}
+.consumption-period>label,
+.consumption-custom label{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  font-size:10px;
+  color:#bbb;
+}
+.consumption-period select,
+.consumption-custom input{
+  width:100%;
+  min-height:40px;
+  padding:8px 9px;
+  border:1px solid #514b4b;
+  border-radius:8px;
+  background:#252222;
+  color:#fff;
+  font:inherit;
+}
+.consumption-custom{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
+}
+.consumption-custom[hidden]{
+  display:none!important;
+}
+.consumption-summary{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.consumption-summary>div{
+  padding:10px 7px;
+  border-radius:9px;
+  background:#252121;
+  text-align:center;
+}
+.consumption-summary b{
+  display:block;
+  font-size:18px;
+}
+.consumption-summary span{
+  display:block;
+  margin-top:2px;
+  color:#bbb;
+  font-size:9px;
+}
+.consumption-types{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;
+  margin-top:8px;
+}
+.consumption-type{
+  min-width:0;
+  padding:6px 2px;
+  border-radius:7px;
+  text-align:center;
+  font-size:8px;
+  font-weight:800;
+}
+.consumption-type.red{background:#A71930;color:#fff}
+.consumption-type.rose{background:#F06A94;color:#241018}
+.consumption-type.white{background:#E6B92E;color:#211800}
+.consumption-type.spark{background:#FFF2A6;color:#211800}
+.consumption-type small{
+  display:block;
+  margin-top:2px;
+  font-size:8px;
+  opacity:.78;
+}
+.consumption-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:10px;
+  max-height:430px;
+  overflow-y:auto;
+}
+.consumption-empty{
+  padding:16px 8px;
+  color:#aaa;
+  text-align:center;
+  font-size:11px;
+}
+.consumed-card{
+  overflow:hidden;
+  border:1px solid #454040;
+  border-radius:10px;
+}
+.consumed-card-head{
+  padding:9px 10px;
+}
+.consumed-card-head b{
+  display:block;
+  font-size:13px;
+  line-height:1.15;
+}
+.consumed-card-head .consumed-domain{
+  display:block;
+  margin-top:2px;
+  font-size:9px;
+  font-weight:650;
+  opacity:.82;
+}
+.consumed-card-head .consumed-meta{
+  display:block;
+  margin-top:4px;
+  font-size:9px;
+  opacity:.75;
+}
+.consumed-dates{
+  background:#171414;
+}
+.consumed-entry{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  padding:7px 9px;
+  border-top:1px solid #302c2c;
+}
+.consumed-entry:first-child{
+  border-top:0;
+}
+.consumed-entry-info{
+  min-width:0;
+}
+.consumed-entry-info b{
+  display:block;
+  font-size:10px;
+}
+.consumed-entry-info small{
+  display:block;
+  margin-top:2px;
+  color:#aaa;
+  font-size:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.restore-consumed{
+  -webkit-appearance:none;
+  appearance:none;
+  border:1px solid #5b5656;
+  border-radius:7px;
+  padding:6px 7px;
+  background:#302c2c;
+  color:#fff;
+  font-size:9px;
+  font-weight:750;
+}
+
 </style>
 </head>
 <body>
@@ -806,6 +990,43 @@ button.result-item{
     <h2>Valeur estimée de la cave</h2>
     <div id="valueByCasier"></div>
     <div class="totalvalue"><span>Total</span><b id="valueTotal">—</b></div>
+  </section>
+
+  <section class="consumption-panel">
+    <div class="consumption-head">
+      <div>
+        <h2>🍷 Bouteilles bues</h2>
+        <small>Historique de consommation</small>
+      </div>
+    </div>
+
+    <div class="consumption-period">
+      <label>
+        Période
+        <select id="consumptionPeriod">
+          <option value="current">Ce mois</option>
+          <option value="previous">Mois précédent</option>
+          <option value="3">3 derniers mois</option>
+          <option value="6">6 derniers mois</option>
+          <option value="12">12 derniers mois</option>
+          <option value="all">Tout l’historique</option>
+          <option value="custom">Période personnalisée</option>
+        </select>
+      </label>
+
+      <div id="consumptionCustom" class="consumption-custom" hidden>
+        <label>Du<input id="consumptionFrom" type="month"></label>
+        <label>Au<input id="consumptionTo" type="month"></label>
+      </div>
+    </div>
+
+    <div class="consumption-summary">
+      <div><b id="consumptionCount">0</b><span>bouteilles bues</span></div>
+      <div><b id="consumptionValue">0,00 €</b><span>valeur consommée</span></div>
+    </div>
+
+    <div id="consumptionTypes" class="consumption-types"></div>
+    <div id="consumptionList" class="consumption-list"></div>
   </section>
 
   <section class="photos-panel">
@@ -876,6 +1097,7 @@ button.result-item{
     </div>
     <div class="dlgactions">
       <button id="save" class="primary">Enregistrer la référence</button>
+      <button id="consumed" class="consumed-btn">🍷 Bue</button>
       <button id="remove" class="danger">Sortir cette bouteille</button>
       <button id="cancel" class="secondary">Annuler</button>
     </div>
@@ -896,6 +1118,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.5"></script>
+<script src="app.js?v=6.6"></script>
 </body>
 </html>
