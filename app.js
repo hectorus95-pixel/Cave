@@ -10,6 +10,9 @@ let inv=load(KI,SEED_INV);
 let refs=load(KR,SEED_REFS);
 let consumed=load(KC,[]);
 if(!Array.isArray(consumed)) consumed=[];
+consumed.forEach(e=>{
+  if(!['good','bad','neutral'].includes(e.rating)) e.rating='neutral';
+});
 let activeCasier=1;
 let selected=null;
 let dialogHistory=false;
@@ -464,7 +467,8 @@ function consumedSnapshot(x,r){
     emplacement:x.emplacement||`C${x.casier}-L${x.ligne}-P${x.position}`,
     casier:Number(x.casier)||0,
     ligne:Number(x.ligne)||0,
-    position:Number(x.position)||0
+    position:Number(x.position)||0,
+    rating:'neutral'
   };
 }
 
@@ -539,6 +543,20 @@ function consumedGroupKey(e){
   ].join('|');
 }
 
+function ratingIcon(rating){
+  if(rating==='good') return '<span class="rating-icon" title="Très bon">👍</span>';
+  if(rating==='bad') return '<span class="rating-icon" title="Pas bon">👎</span>';
+  return '';
+}
+
+function setConsumedRating(id,rating){
+  const entry=consumed.find(e=>e.id===id);
+  if(!entry) return;
+  entry.rating=['good','bad'].includes(rating)?rating:'neutral';
+  persist();
+  renderConsumption();
+}
+
 function renderConsumption(){
   if(!$('#consumptionList')) return;
 
@@ -594,10 +612,17 @@ function renderConsumption(){
           ${entries.map(e=>`
             <div class="consumed-entry">
               <div class="consumed-entry-info">
-                <b>${new Date(e.drunkAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}</b>
+                <b>${new Date(e.drunkAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})}${ratingIcon(e.rating||'neutral')}</b>
                 <small>${esc(e.emplacement||'Emplacement inconnu')} · ${euro(e.prix)}</small>
               </div>
-              <button type="button" class="restore-consumed" data-consumed-id="${esc(e.id)}">↩ Remettre</button>
+              <div class="consumed-entry-actions">
+                <div class="consumed-rating-edit">
+                  <button type="button" class="${(e.rating||'neutral')==='good'?'active good':''}" data-rating-id="${esc(e.id)}" data-rating-value="good" title="Très bon">👍</button>
+                  <button type="button" class="${(e.rating||'neutral')==='neutral'?'active neutral':''}" data-rating-id="${esc(e.id)}" data-rating-value="neutral" title="Neutre">•</button>
+                  <button type="button" class="${(e.rating||'neutral')==='bad'?'active bad':''}" data-rating-id="${esc(e.id)}" data-rating-value="bad" title="Pas bon">👎</button>
+                </div>
+                <button type="button" class="restore-consumed" data-consumed-id="${esc(e.id)}" title="Remettre en cave">↩</button>
+              </div>
             </div>
           `).join('')}
         </div>
@@ -747,6 +772,7 @@ function fill(r){
   });
   updateMaturityPreview();
 }
+
 function updateMaturityPreview(){
   const draft={
     millesime:$('#f_millesime').value,
@@ -756,23 +782,64 @@ function updateMaturityPreview(){
   const mi=maturityInfo(draft);
   $('#maturityStatus').textContent=mi.label;
   $('#maturityBar').className='maturity-bar four-zone';
-  $('#maturityBar').innerHTML=`
+  $('#maturityBar').innerHTML=mi.known ? `
     <i class="z1"></i>
     <i class="z2"></i>
     <i class="z3"></i>
     <i class="z4"></i>
-    <b class="maturity-cursor ${mi.known?'':'unknown-cursor'}" style="left:${mi.known?Math.max(0,Math.min(100,mi.cursor)):0}%"></b>`;
+    <b class="maturity-cursor" style="left:${Math.max(0,Math.min(100,mi.cursor))}%"></b>` : '';
+}
+
+function fillBottleView(r){
+  $('#v_vin').textContent=r?.vin||'—';
+  $('#v_domaine').textContent=r?.domaine||'—';
+  $('#v_millesime').textContent=r?.millesime||'Sans année';
+  $('#v_couleur').textContent=r?.couleur||'—';
+  $('#v_format').textContent=r?.format||'—';
+  $('#v_prix').textContent=euro(Number(r?.prix)||0);
+
+  const mi=maturityInfo(r);
+  $('#viewMaturity').hidden=!mi.known;
+
+  if(mi.known){
+    $('#v_maturiteDebut').textContent=r.maturiteDebut||'—';
+    $('#v_maturiteFin').textContent=r.maturiteFin||'—';
+    $('#viewMaturityStatus').textContent=mi.label;
+    $('#viewMaturityBar').innerHTML=`
+      <i class="z1"></i>
+      <i class="z2"></i>
+      <i class="z3"></i>
+      <i class="z4"></i>
+      <b class="maturity-cursor" style="left:${Math.max(0,Math.min(100,mi.cursor))}%"></b>`;
+  }else{
+    $('#viewMaturityBar').innerHTML='';
+  }
+}
+
+function showBottleView(r){
+  fillBottleView(r);
+  $('#dialogTitle').textContent=r.vin;
+  $('#where').textContent=selected.emplacement;
+  $('#bottleView').hidden=false;
+  $('#bottleEdit').hidden=true;
+  $('#viewActions').hidden=false;
+  $('#editActions').hidden=true;
+}
+
+function showBottleEdit(r){
+  fill(r);
+  $('#bottleView').hidden=true;
+  $('#bottleEdit').hidden=false;
+  $('#viewActions').hidden=true;
+  $('#editActions').hidden=false;
 }
 
 function editRef(x,r){
   selected=x;
-  $('#dialogTitle').textContent=r.vin;
-  $('#where').textContent=x.emplacement+' · modification de la référence';
-  fill(r);
-  $('#consumed').hidden=false;
-  $('#remove').hidden=false;
+  showBottleView(r);
   showDialog($('#dialog'));
 }
+
 function chooseAdd(x){
   selected=x;
   $('#pick').innerHTML='<option value="">— Choisir dans ma base —</option>'+
@@ -790,13 +857,15 @@ $('#useRef').addEventListener('click',()=>{
   requestClose($('#addDialog'));
 });
 $('#newRef').addEventListener('click',()=>{
-  // On ferme la boîte "ajouter" sans quitter l'état historique, puis on ouvre la fiche.
+  // On ferme "Ajouter", puis on ouvre directement l'édition d'une nouvelle référence.
   $('#addDialog').close();
   $('#dialogTitle').textContent='Nouveau vin';
   $('#where').textContent=selected.emplacement+' · nouvelle référence';
   fill(null);
-  $('#consumed').hidden=true;
-  $('#remove').hidden=true;
+  $('#bottleView').hidden=true;
+  $('#bottleEdit').hidden=false;
+  $('#viewActions').hidden=true;
+  $('#editActions').hidden=false;
   $('#dialog').showModal();
 });
 $('#save').addEventListener('click',()=>{
@@ -804,27 +873,56 @@ $('#save').addEventListener('click',()=>{
   ['vin','domaine','millesime','couleur','format','maturiteDebut','maturiteFin'].forEach(k=>vals[k]=$('#f_'+k).value.trim());
   const p=parseFloat($('#f_prix').value.replace(',','.'));
   vals.prix=Number.isFinite(p)?p:0;
+
   if(!vals.vin) return alert('Indique la cuvée.');
   if(vals.maturiteDebut && vals.maturiteFin && Number(vals.maturiteFin)<Number(vals.maturiteDebut)){
     return alert('La fin de maturité doit être après le début.');
   }
-  if(selected.refId){
+
+  const existed=!!selected.refId;
+
+  if(existed){
     Object.assign(ref(selected.refId),vals);
   }else{
     vals.id='r'+Date.now();
     refs.push(vals);
     selected.refId=vals.id;
   }
-  persist(); render();
-  requestClose($('#dialog'));
+
+  persist();
+  render();
+
+  if(existed){
+    const updated=ref(selected.refId);
+    showBottleView(updated);
+  }else{
+    requestClose($('#dialog'));
+  }
 });
+$('#editBottle').addEventListener('click',()=>{
+  if(!selected || !selected.refId) return;
+  const r=ref(selected.refId);
+  if(r) showBottleEdit(r);
+});
+
+$('#cancelEdit').addEventListener('click',()=>{
+  if(selected?.refId){
+    const r=ref(selected.refId);
+    if(r) showBottleView(r);
+  }else{
+    requestClose($('#dialog'));
+  }
+});
+
 $('#consumed').addEventListener('click',()=>{
   if(!selected || !selected.refId) return;
   const r=ref(selected.refId);
   if(!r) return;
   if(!confirm(`Marquer « ${r.vin} » comme bue aujourd’hui ?`)) return;
 
-  consumed.push(consumedSnapshot(selected,r));
+  const snap=consumedSnapshot(selected,r);
+  snap.rating='neutral';
+  consumed.push(snap);
   selected.refId=null;
   persist();
   render();
@@ -872,6 +970,12 @@ $('#consumptionPeriod').addEventListener('change',()=>{
 $('#consumptionFrom').addEventListener('change',renderConsumption);
 $('#consumptionTo').addEventListener('change',renderConsumption);
 $('#consumptionList').addEventListener('click',e=>{
+  const ratingBtn=e.target.closest('[data-rating-id]');
+  if(ratingBtn){
+    setConsumedRating(ratingBtn.dataset.ratingId,ratingBtn.dataset.ratingValue);
+    return;
+  }
+
   const btn=e.target.closest('.restore-consumed');
   if(!btn) return;
   restoreConsumedBottle(btn.dataset.consumedId);
@@ -894,6 +998,9 @@ $('#import').addEventListener('change',async e=>{
     inv=d.inv;
     refs=d.refs;
     consumed=Array.isArray(d.consumed)?d.consumed:[];
+    consumed.forEach(e=>{
+      if(!['good','bad','neutral'].includes(e.rating)) e.rating='neutral';
+    });
     refs.forEach(r=>{
       if(r.maturiteDebut===undefined) r.maturiteDebut='';
       if(r.maturiteFin===undefined) r.maturiteFin='';

@@ -939,6 +939,119 @@ button.result-item{
   font-weight:750;
 }
 
+
+/* V6.7 — appréciation conservée uniquement dans l’historique */
+.rating-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:4px;
+  font-size:15px;
+  vertical-align:middle;
+}
+
+.consumed-entry-actions{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.consumed-rating-edit{
+  display:flex;
+  gap:3px;
+}
+.consumed-rating-edit button{
+  -webkit-appearance:none;
+  appearance:none;
+  width:27px;
+  height:27px;
+  padding:0;
+  border:1px solid #514b4b;
+  border-radius:6px;
+  background:#302c2c;
+  color:#fff;
+  font-size:13px;
+}
+.consumed-rating-edit button.active.good{background:#347b46}
+.consumed-rating-edit button.active.bad{background:#8e3038}
+.consumed-rating-edit button.active.neutral{background:#666}
+
+
+/* =========================================================
+   V6.8 — fiche bouteille : consultation puis édition
+   ========================================================= */
+.bottle-info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:10px 0 12px;
+}
+.bottle-info{
+  min-width:0;
+  padding:9px 10px;
+  border:1px solid #494343;
+  border-radius:9px;
+  background:#252222;
+}
+.bottle-info.wide{
+  grid-column:1 / -1;
+}
+.bottle-info span{
+  display:block;
+  margin-bottom:3px;
+  color:#aaa;
+  font-size:9px;
+}
+.bottle-info b{
+  display:block;
+  overflow-wrap:anywhere;
+  font-size:14px;
+  line-height:1.2;
+}
+.view-maturity{
+  margin:10px 0 12px;
+  padding:10px;
+  border:1px solid #454040;
+  border-radius:10px;
+  background:#211e1e;
+}
+.view-maturity-years{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;
+  color:#bbb;
+  font-size:9px;
+}
+.view-maturity-years b{
+  color:#fff;
+}
+#viewMaturityStatus{
+  display:block;
+  margin-bottom:8px;
+  font-size:13px;
+}
+#viewMaturityBar{
+  width:100%;
+}
+#bottleEdit[hidden],
+#bottleView[hidden],
+#viewActions[hidden],
+#editActions[hidden]{
+  display:none!important;
+}
+#viewActions{
+  grid-template-columns:1fr 1fr;
+}
+#viewActions #remove{
+  grid-column:1 / -1;
+}
+#viewActions #cancel{
+  grid-column:1 / -1;
+}
+#editActions{
+  grid-template-columns:1fr;
+}
+
 </style>
 </head>
 <body>
@@ -1076,30 +1189,77 @@ button.result-item{
   <div class="dlg">
     <h2 id="dialogTitle"></h2>
     <p id="where" class="where"></p>
-    <div class="form">
-      <label class="wide">Vin / Cuvée<input id="f_vin"></label>
-      <label class="wide">Domaine<input id="f_domaine"></label>
-      <label>Millésime<input id="f_millesime" inputmode="numeric"></label>
-      <label>Couleur
-        <select id="f_couleur">
-          <option>Rouge</option><option>Blanc</option><option>Rosé</option><option>Effervescent</option>
-        </select>
-      </label>
-      <label>Format<input id="f_format" placeholder="75 cl"></label>
-      <label>Prix (€)<input id="f_prix" inputmode="decimal"></label>
-      <label>Maturité : à partir de<input id="f_maturiteDebut" inputmode="numeric" placeholder="2026"></label>
-      <label>À boire avant / jusqu'à<input id="f_maturiteFin" inputmode="numeric" placeholder="2031"></label>
-      <div class="maturity-panel">
-        <b id="maturityStatus">Maturité non renseignée</b>
-        <div id="maturityBar" class="maturity-bar four-zone"></div>
-        <small>La jauge évolue automatiquement avec la date du téléphone.</small>
+
+    <div id="bottleView" class="bottle-view">
+      <div class="bottle-info-grid">
+        <div class="bottle-info wide">
+          <span>Vin / Cuvée</span>
+          <b id="v_vin">—</b>
+        </div>
+        <div class="bottle-info wide">
+          <span>Domaine</span>
+          <b id="v_domaine">—</b>
+        </div>
+        <div class="bottle-info">
+          <span>Millésime</span>
+          <b id="v_millesime">—</b>
+        </div>
+        <div class="bottle-info">
+          <span>Couleur</span>
+          <b id="v_couleur">—</b>
+        </div>
+        <div class="bottle-info">
+          <span>Format</span>
+          <b id="v_format">—</b>
+        </div>
+        <div class="bottle-info">
+          <span>Prix</span>
+          <b id="v_prix">—</b>
+        </div>
+      </div>
+
+      <div id="viewMaturity" class="view-maturity" hidden>
+        <div class="view-maturity-years">
+          <span>À partir de <b id="v_maturiteDebut">—</b></span>
+          <span>Jusqu’à <b id="v_maturiteFin">—</b></span>
+        </div>
+        <b id="viewMaturityStatus"></b>
+        <div id="viewMaturityBar" class="maturity-bar four-zone"></div>
       </div>
     </div>
-    <div class="dlgactions">
-      <button id="save" class="primary">Enregistrer la référence</button>
+
+    <div id="bottleEdit" hidden>
+      <div class="form">
+        <label class="wide">Vin / Cuvée<input id="f_vin"></label>
+        <label class="wide">Domaine<input id="f_domaine"></label>
+        <label>Millésime<input id="f_millesime" inputmode="numeric"></label>
+        <label>Couleur
+          <select id="f_couleur">
+            <option>Rouge</option><option>Blanc</option><option>Rosé</option><option>Effervescent</option>
+          </select>
+        </label>
+        <label>Format<input id="f_format" placeholder="75 cl"></label>
+        <label>Prix (€)<input id="f_prix" inputmode="decimal"></label>
+        <label>Maturité : à partir de<input id="f_maturiteDebut" inputmode="numeric" placeholder="2026"></label>
+        <label>À boire avant / jusqu'à<input id="f_maturiteFin" inputmode="numeric" placeholder="2031"></label>
+        <div class="maturity-panel">
+          <b id="maturityStatus">Maturité non renseignée</b>
+          <div id="maturityBar" class="maturity-bar four-zone"></div>
+          <small>La jauge évolue automatiquement avec la date du téléphone.</small>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewActions" class="dlgactions">
+      <button id="editBottle" class="primary">✏️ Éditer</button>
       <button id="consumed" class="consumed-btn">🍷 Bue</button>
       <button id="remove" class="danger">Sortir cette bouteille</button>
-      <button id="cancel" class="secondary">Annuler</button>
+      <button id="cancel" class="secondary">Fermer</button>
+    </div>
+
+    <div id="editActions" class="dlgactions" hidden>
+      <button id="save" class="primary">Enregistrer la référence</button>
+      <button id="cancelEdit" class="secondary">Annuler les modifications</button>
     </div>
   </div>
 </dialog>
@@ -1118,6 +1278,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.6"></script>
+<script src="app.js?v=6.8"></script>
 </body>
 </html>
