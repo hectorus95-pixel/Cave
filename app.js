@@ -17,6 +17,9 @@ let activeCasier=1;
 let selected=null;
 let pendingAddRefId='';
 let editScope=null; // 'single' | 'all' | 'new'
+let selectedEmptyKeys=new Set();
+let addTargets=[];
+let emptyTapTimers=new Map();
 let voiceRecognition=null;
 let voiceExactRefId='';
 let voiceSimilarRefId='';
@@ -804,7 +807,88 @@ function initConsumptionPeriod(){
   if($('#consumptionCustom')) $('#consumptionCustom').hidden=!custom;
 }
 
+function slotKey(x){
+  return `${x.casier}-${x.ligne}-${x.position}`;
+}
+
+function emptyTargetsFromSelection(){
+  return inv.filter(x=>selectedEmptyKeys.has(slotKey(x)) && !x.refId);
+}
+
+function clearEmptySelection(){
+  selectedEmptyKeys.clear();
+  emptyTapTimers.forEach(t=>clearTimeout(t));
+  emptyTapTimers.clear();
+}
+
+function toggleEmptySelection(x){
+  if(x.refId) return;
+  const key=slotKey(x);
+  if(selectedEmptyKeys.has(key)) selectedEmptyKeys.delete(key);
+  else selectedEmptyKeys.add(key);
+  render();
+}
+
+function handleEmptySlotClick(x){
+  const key=slotKey(x);
+  const existingTimer=emptyTapTimers.get(key);
+
+  if(existingTimer){
+    clearTimeout(existingTimer);
+    emptyTapTimers.delete(key);
+    toggleEmptySelection(x);
+    return;
+  }
+
+  const timer=setTimeout(()=>{
+    emptyTapTimers.delete(key);
+    chooseAdd(x);
+  },280);
+
+  emptyTapTimers.set(key,timer);
+}
+
+function prepareAddTargets(x){
+  const key=slotKey(x);
+  const selectedTargets=emptyTargetsFromSelection();
+
+  if(selectedEmptyKeys.has(key) && selectedTargets.length){
+    addTargets=selectedTargets;
+  }else{
+    addTargets=[x];
+  }
+
+  selected=x;
+
+  if($('#addHint')){
+    $('#addHint').textContent=addTargets.length>1
+      ? `${addTargets.length} emplacements sélectionnés : le même vin sera ajouté dans chacun.`
+      : 'Recherche un vin déjà présent dans ta base ou crée une nouvelle référence.';
+  }
+}
+
+function applyRefToAddTargets(refId){
+  const targets=addTargets.length ? addTargets : (selected ? [selected] : []);
+  let count=0;
+
+  targets.forEach(x=>{
+    if(x && !x.refId){
+      x.refId=refId;
+      count++;
+    }
+  });
+
+  clearEmptySelection();
+  addTargets=[];
+  return count;
+}
+
 function render(){
+  selectedEmptyKeys.forEach(key=>{
+    const x=inv.find(p=>slotKey(p)===key);
+    if(!x || x.refId) selectedEmptyKeys.delete(key);
+  });
+
   renderStats();
   const q=$('#search').value.trim().toLowerCase();
   const g=$('#grid');
@@ -815,7 +899,8 @@ function render(){
     const b=document.createElement('button');
     b.type='button';
     b.dataset.line=x.ligne; b.dataset.pos=x.position;
-    b.className=`slot ${r?'occupied':'empty'}`;
+    const isMultiSelected=!r && selectedEmptyKeys.has(slotKey(x));
+    b.className=`slot ${r?'occupied':'empty'}${isMultiSelected?' multi-selected':''}`;
     if(r){
       const wc=wineClass(r.couleur);
       const ac=ageClass(r.millesime);
@@ -831,10 +916,10 @@ function render(){
     }else{
       b.innerHTML=`
         <span class="pos">L${x.ligne}·P${x.position}</span>
-        <span class="name">＋ Vide</span>
+        <span class="name">${isMultiSelected?'✓ Sélectionnée':'＋ Vide'}</span>
       `;
     }
-    b.addEventListener('click',()=>r?editRef(x,r):chooseAdd(x));
+    b.addEventListener('click',()=>r?editRef(x,r):handleEmptySlotClick(x));
     g.appendChild(b);
   });
   $$('.tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.c)===activeCasier));
@@ -856,6 +941,7 @@ function closeDialogsFromPop(){
   selected=null;
   pendingAddRefId='';
   editScope=null;
+  addTargets=[];
   voiceExactRefId='';
   voiceSimilarRefId='';
   if(voiceRecognition){
@@ -1297,8 +1383,8 @@ function continueVoiceBottle(){
   const price=Number(normalizeVoiceNumber($('#voicePrice').value))||0;
 
   if(voiceExactRefId){
-    // Référence exacte : on l'ajoute directement.
-    selected.refId=voiceExactRefId;
+    // Référence exacte : on l'ajoute à tous les emplacements préparés.
+    const count=applyRefToAddTargets(voiceExactRefId);
     const r=ref(voiceExactRefId);
     if(r && price>0 && !Number(r.prix)){
       r.prix=price;
@@ -1306,6 +1392,10 @@ function continueVoiceBottle(){
     persist();
     render();
     requestClose($('#voiceDialog'));
+
+    if(count>1){
+      setTimeout(()=>alert(`${count} bouteilles identiques ajoutées.`),120);
+    }
     return;
   }
 
@@ -1345,7 +1435,7 @@ function continueVoiceBottle(){
 }
 
 function chooseAdd(x){
-  selected=x;
+  prepareAddTargets(x);
   pendingAddRefId='';
   $('#pickSearch').value='';
   renderPickResults();
@@ -1367,11 +1457,16 @@ $('#pickResults').addEventListener('click',e=>{
 $('#useRef').addEventListener('click',()=>{
   const id=pendingAddRefId;
   if(!id) return alert('Choisis un vin dans les résultats.');
-  selected.refId=id;
+
+  const count=applyRefToAddTargets(id);
   pendingAddRefId='';
   persist();
   render();
   requestClose($('#addDialog'));
+
+  if(count>1){
+    setTimeout(()=>alert(`${count} bouteilles identiques ajoutées.`),120);
+  }
 });
 $('#voiceAdd').addEventListener('click',openVoiceAdd);
 $('#voiceStart').addEventListener('click',startVoiceRecognition);
@@ -1435,7 +1530,12 @@ $('#save').addEventListener('click',()=>{
   }else{
     vals.id='r'+Date.now();
     refs.push(vals);
-    selected.refId=vals.id;
+
+    if(editScope==='new' && addTargets.length){
+      applyRefToAddTargets(vals.id);
+    }else{
+      selected.refId=vals.id;
+    }
   }
 
   persist();

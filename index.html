@@ -1445,11 +1445,30 @@ header{
   user-select:none;
 }
 
+
+/* =========================================================
+   V7.5 — sélection multiple des emplacements vides
+   Double-tap = sélectionner / désélectionner
+   ========================================================= */
+.slot.empty{
+  touch-action:manipulation;
+}
+.slot.empty.multi-selected{
+  outline:3px solid rgba(255,255,255,.96)!important;
+  outline-offset:-3px!important;
+  box-shadow:0 0 0 2px rgba(0,0,0,.75)!important;
+  background:#565151!important;
+}
+.slot.empty.multi-selected .name{
+  color:#fff!important;
+  font-weight:850!important;
+}
+
 </style>
 </head>
 <body>
 <header>
-  <span class="app-version">v7.4</span>
+  <span class="app-version">v7.5</span>
   <h1>🍷 Ma Cave à Vin</h1>
   <div class="topstats">
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
@@ -1573,7 +1592,7 @@ header{
 <dialog id="addDialog">
   <div class="dlg add-dlg">
     <h2>Ajouter une bouteille</h2>
-    <p>Recherche un vin déjà présent dans ta base ou crée une nouvelle référence.</p>
+    <p id="addHint">Recherche un vin déjà présent dans ta base ou crée une nouvelle référence.</p>
 
     <label class="add-search-label">
       Rechercher
@@ -1746,6 +1765,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=7.4"></script>
+<script src="app.js?v=7.5"></script>
 </body>
 </html>
