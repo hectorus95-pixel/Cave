@@ -557,6 +557,105 @@ function setConsumedRating(id,rating){
   renderConsumption();
 }
 
+function consumptionPeriodLabel(){
+  const mode=$('#consumptionPeriod')?.value||'current';
+  const labels={
+    current:'Ce mois',
+    previous:'Mois précédent',
+    '3':'3 derniers mois',
+    '6':'6 derniers mois',
+    '12':'12 derniers mois',
+    all:'Tout l’historique',
+    custom:'Période personnalisée'
+  };
+
+  if(mode!=='custom') return labels[mode]||'Historique';
+
+  const from=$('#consumptionFrom').value;
+  const to=$('#consumptionTo').value;
+  if(from && to) return `${from} → ${to}`;
+  return 'Période personnalisée';
+}
+
+function consumedRankingData(){
+  const items=consumed
+    .slice()
+    .sort((a,b)=>new Date(b.drunkAt)-new Date(a.drunkAt));
+  const groups=new Map();
+
+  items.forEach(e=>{
+    const key=consumedGroupKey(e);
+    if(!groups.has(key)){
+      groups.set(key,{
+        sample:e,
+        total:0,
+        good:0,
+        bad:0,
+        neutral:0
+      });
+    }
+
+    const g=groups.get(key);
+    g.total++;
+
+    const rating=['good','bad'].includes(e.rating)?e.rating:'neutral';
+    if(rating==='good') g.good++;
+    else if(rating==='bad') g.bad++;
+    else g.neutral++;
+  });
+
+  return [...groups.values()].map(g=>{
+    const raw=g.good-g.bad;
+    const score=g.total ? (raw/g.total)*100 : 0;
+    return {...g,raw,score};
+  }).sort((a,b)=>{
+    if(b.score!==a.score) return b.score-a.score;
+    if(b.good!==a.good) return b.good-a.good;
+    if(a.bad!==b.bad) return a.bad-b.bad;
+    if(b.total!==a.total) return b.total-a.total;
+    return String(a.sample.vin).localeCompare(String(b.sample.vin),'fr');
+  });
+}
+
+function renderConsumedRanking(){
+  const list=$('#rankingList');
+  if(!list) return;
+
+  $('#rankingPeriodLabel').textContent='Tout l’historique';
+  const data=consumedRankingData();
+
+  if(!data.length){
+    list.innerHTML='<div class="ranking-empty">Aucune bouteille bue sur cette période.</div>';
+    return;
+  }
+
+  list.innerHTML=data.map((g,index)=>{
+    const e=g.sample;
+    const score=Math.round(g.score);
+    const scoreClass=score>0?'positive':score<0?'negative':'neutral';
+    const mill=e.millesime ? ` · ${esc(e.millesime)}` : '';
+    const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(e.format||''));
+    const format=isMagnum ? ' · Magnum' : '';
+
+    return `
+      <article class="ranking-card">
+        <div class="ranking-position">#${index+1}</div>
+        <div class="ranking-main wine-color ${wineClass(e.couleur)}">
+          <b>${esc(e.vin)}${mill}${format}</b>
+          ${e.domaine?`<span class="ranking-domain">${esc(e.domaine)}</span>`:''}
+          <span class="ranking-counts">
+            ${g.total} bue${g.total>1?'s':''} · 👍 ${g.good} · 👎 ${g.bad} · neutre ${g.neutral}
+          </span>
+        </div>
+        <div class="ranking-score ${scoreClass}">
+          <b>${score>0?'+':''}${score}%</b>
+          <span>score</span>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
 function renderConsumption(){
   if(!$('#consumptionList')) return;
 
@@ -616,10 +715,15 @@ function renderConsumption(){
                 <small>${esc(e.emplacement||'Emplacement inconnu')} · ${euro(e.prix)}</small>
               </div>
               <div class="consumed-entry-actions">
-                <div class="consumed-rating-edit">
-                  <button type="button" class="${(e.rating||'neutral')==='good'?'active good':''}" data-rating-id="${esc(e.id)}" data-rating-value="good" title="Très bon">👍</button>
-                  <button type="button" class="${(e.rating||'neutral')==='neutral'?'active neutral':''}" data-rating-id="${esc(e.id)}" data-rating-value="neutral" title="Neutre">•</button>
-                  <button type="button" class="${(e.rating||'neutral')==='bad'?'active bad':''}" data-rating-id="${esc(e.id)}" data-rating-value="bad" title="Pas bon">👎</button>
+                <div class="vote-wrap">
+                  <button type="button" class="vote-open" data-vote-open="${esc(e.id)}">
+                    Voter${ratingIcon(e.rating||'neutral')}
+                  </button>
+                  <div class="consumed-rating-edit" data-vote-choices="${esc(e.id)}" hidden>
+                    <button type="button" class="${(e.rating||'neutral')==='good'?'active good':''}" data-rating-id="${esc(e.id)}" data-rating-value="good" title="Très bon">👍</button>
+                    <button type="button" class="${(e.rating||'neutral')==='neutral'?'active neutral':''}" data-rating-id="${esc(e.id)}" data-rating-value="neutral" title="Neutre">•</button>
+                    <button type="button" class="${(e.rating||'neutral')==='bad'?'active bad':''}" data-rating-id="${esc(e.id)}" data-rating-value="bad" title="Pas bon">👎</button>
+                  </div>
                 </div>
                 <button type="button" class="restore-consumed" data-consumed-id="${esc(e.id)}" title="Remettre en cave">↩</button>
               </div>
@@ -742,7 +846,7 @@ function showDialog(d){
   d.showModal();
 }
 function closeDialogsFromPop(){
-  [$('#dialog'),$('#addDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
+  [$('#dialog'),$('#addDialog'),$('#rankingDialog'),$('#photoDialog')].forEach(d=>{ if(d.open) d.close(); });
   dialogHistory=false;
   selected=null;
 }
@@ -963,6 +1067,13 @@ $$('.tab').forEach(b=>b.addEventListener('click',async()=>{
   await refreshPhotoButtons();
 }));
 
+$('#openConsumedRanking').addEventListener('click',()=>{
+  renderConsumedRanking();
+  showDialog($('#rankingDialog'));
+});
+$('#rankingClose').addEventListener('click',()=>requestClose($('#rankingDialog')));
+$('#rankingDialog').addEventListener('click',backdropClose);
+
 $('#consumptionPeriod').addEventListener('change',()=>{
   initConsumptionPeriod();
   renderConsumption();
@@ -970,6 +1081,17 @@ $('#consumptionPeriod').addEventListener('change',()=>{
 $('#consumptionFrom').addEventListener('change',renderConsumption);
 $('#consumptionTo').addEventListener('change',renderConsumption);
 $('#consumptionList').addEventListener('click',e=>{
+  const voteOpen=e.target.closest('[data-vote-open]');
+  if(voteOpen){
+    const id=voteOpen.dataset.voteOpen;
+    const choices=$(`[data-vote-choices="${id}"]`);
+    const willOpen=choices.hidden;
+
+    $$('[data-vote-choices]').forEach(el=>el.hidden=true);
+    choices.hidden=!willOpen;
+    return;
+  }
+
   const ratingBtn=e.target.closest('[data-rating-id]');
   if(ratingBtn){
     setConsumedRating(ratingBtn.dataset.ratingId,ratingBtn.dataset.ratingValue);

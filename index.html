@@ -1052,6 +1052,168 @@ button.result-item{
   grid-template-columns:1fr;
 }
 
+
+/* =========================================================
+   V6.9 — classement des vins bus par appréciation
+   ========================================================= */
+.ranking-open{
+  width:100%;
+  min-height:44px;
+  margin-top:10px;
+  border:1px solid #575050;
+  border-radius:9px;
+  background:#2b2727;
+  color:#fff;
+  font-size:12px;
+  font-weight:850;
+}
+.ranking-dialog{
+  width:min(94vw,620px);
+}
+.ranking-dlg{
+  max-width:620px;
+}
+.ranking-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+.ranking-head h2{
+  margin:0;
+}
+.ranking-head small{
+  display:block;
+  margin-top:3px;
+  color:#aaa;
+  font-size:9px;
+}
+.ranking-help{
+  margin:10px 0;
+  padding:8px 9px;
+  border:1px solid #464040;
+  border-radius:8px;
+  background:#211e1e;
+  color:#bbb;
+  font-size:9px;
+}
+.ranking-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:65vh;
+  overflow-y:auto;
+}
+.ranking-empty{
+  padding:18px 8px;
+  color:#aaa;
+  text-align:center;
+  font-size:11px;
+}
+.ranking-card{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) 70px;
+  align-items:stretch;
+  overflow:hidden;
+  border:1px solid #454040;
+  border-radius:10px;
+  background:#1c1919;
+}
+.ranking-position{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 4px;
+  background:#2a2525;
+  font-size:17px;
+  font-weight:900;
+}
+.ranking-main{
+  min-width:0;
+  padding:9px 10px;
+}
+.ranking-main b{
+  display:block;
+  font-size:12px;
+  line-height:1.15;
+}
+.ranking-main .ranking-domain{
+  display:block;
+  margin-top:2px;
+  font-size:9px;
+  font-weight:650;
+  opacity:.80;
+}
+.ranking-main .ranking-counts{
+  display:block;
+  margin-top:5px;
+  color:#bbb;
+  font-size:9px;
+}
+.ranking-score{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:7px 5px;
+  font-size:10px;
+  font-weight:800;
+  text-align:center;
+}
+.ranking-score b{
+  font-size:17px;
+  line-height:1;
+}
+.ranking-score.positive{
+  background:#347b46;
+  color:#fff;
+}
+.ranking-score.neutral{
+  background:#555;
+  color:#fff;
+}
+.ranking-score.negative{
+  background:#8e3038;
+  color:#fff;
+}
+
+
+/* V6.10 — vote replié dans l'historique */
+.vote-wrap{
+  position:relative;
+}
+.vote-open{
+  -webkit-appearance:none;
+  appearance:none;
+  min-height:28px;
+  padding:4px 7px;
+  border:1px solid #514b4b;
+  border-radius:6px;
+  background:#302c2c;
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.vote-open .rating-icon{
+  margin-left:3px;
+  font-size:12px;
+}
+.consumed-rating-edit[hidden]{
+  display:none!important;
+}
+.consumed-rating-edit{
+  position:absolute;
+  right:0;
+  top:34px;
+  z-index:20;
+  padding:4px;
+  border:1px solid #5a5353;
+  border-radius:8px;
+  background:#201d1d;
+  box-shadow:0 5px 14px rgba(0,0,0,.45);
+}
+
 </style>
 </head>
 <body>
@@ -1140,6 +1302,10 @@ button.result-item{
 
     <div id="consumptionTypes" class="consumption-types"></div>
     <div id="consumptionList" class="consumption-list"></div>
+
+    <button type="button" id="openConsumedRanking" class="ranking-open">
+      🏆 Classement des vins bus
+    </button>
   </section>
 
   <section class="photos-panel">
@@ -1265,6 +1431,25 @@ button.result-item{
 </dialog>
 
 
+
+<dialog id="rankingDialog" class="ranking-dialog">
+  <div class="dlg ranking-dlg">
+    <div class="ranking-head">
+      <div>
+        <h2>🏆 Classement des vins bus</h2>
+        <small id="rankingPeriodLabel"></small>
+      </div>
+      <button type="button" id="rankingClose" class="secondary">Fermer</button>
+    </div>
+
+    <div class="ranking-help">
+      Score global = (👍 − 👎) ÷ toutes les bouteilles bues de ce vin × 100
+    </div>
+
+    <div id="rankingList" class="ranking-list"></div>
+  </div>
+</dialog>
+
 <dialog id="photoDialog" class="photo-dialog">
   <div class="photo-viewer">
     <div class="photo-viewer-head">
@@ -1278,6 +1463,6 @@ button.result-item{
   </div>
 </dialog>
 
-<script src="app.js?v=6.8"></script>
+<script src="app.js?v=6.10"></script>
 </body>
 </html>
