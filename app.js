@@ -1043,21 +1043,108 @@ function normalizeVoiceNumber(value){
 }
 
 function parseVoiceBottle(text){
-  const source=String(text||'').trim();
-  const norm=normalizeSearchText(source);
+  const original=String(text||'').trim();
+  if(!original) return null;
 
-  // Extraction entre les mots-clés, dans l'ordre imposé.
+  // On travaille sans accents et en minuscules pour reconnaître les mots-clés.
+  // La transcription vocale peut produire des variantes comme "cuvee", "cuve",
+  // "cuvéguy" ou coller légèrement le mot-clé au contenu.
+  let norm=normalizeSearchText(original)
+    .replace(/[€]/g,' euros ')
+    .replace(/\s+/g,' ')
+    .trim();
+
+  // Variantes tolérées des mots-clés.
+  // "cuve" / "cuvee" / "cuvé" sont acceptés.
+  const domaineRe=/\bdomaine\b/i;
+  const cuveeRe=/\b(?:cuvee|cuve|cuvee?|cuvee)\b/i;
+  const yearRe=/\b(?:annee|millesime)\b/i;
+  const priceRe=/\bprix\b/i;
+
+  const dMatch=domaineRe.exec(norm);
+  const yMatch=yearRe.exec(norm);
+  const pMatch=priceRe.exec(norm);
+
+  if(!dMatch || !yMatch || !pMatch) return null;
+
+  // Chercher "cuvée" entre Domaine et Année.
+  const betweenDomainAndYear=norm.slice(dMatch.index+dMatch[0].length,yMatch.index).trim();
+
+  let cuveeIndex=-1;
+  let cuveeLen=0;
+
+  const candidates=[
+    'cuvee','cuve','cuvé','cuvee'
+  ];
+
+  for(const key of candidates){
+    const idx=betweenDomainAndYear.indexOf(key);
+    if(idx>=0 && (cuveeIndex<0 || idx<cuveeIndex)){
+      cuveeIndex=idx;
+      cuveeLen=key.length;
+    }
+  }
+
+  // Cas fréquent de transcription collée : "cuvéguy", "cuveeguy".
+  // On accepte un début de mot "cuve..." et on considère la suite comme la cuvée.
+  if(cuveeIndex<0){
+    const loose=betweenDomainAndYear.match(/\bcuve(?:e)?([a-z0-9].*)$/i);
+    if(loose){
+      cuveeIndex=betweenDomainAndYear.indexOf(loose[0]);
+      cuveeLen=loose[0].length-loose[1].length;
+    }
+  }
+
+  if(cuveeIndex<0) return null;
+
+  const domaine=betweenDomainAndYear.slice(0,cuveeIndex).trim()
+    .replace(/[,:;-]+$/,'')
+    .trim();
+
+  let cuvee=betweenDomainAndYear.slice(cuveeIndex+cuveeLen).trim()
+    .replace(/^[,:;-]+/,'')
+    .trim();
+
+  // Si Chrome colle le nom directement après "cuve/cuvee", on récupère la suite.
+  if(!cuvee){
+    const loose=betweenDomainAndYear.match(/\bcuve(?:e)?([a-z0-9].*)$/i);
+    if(loose) cuvee=loose[1].trim();
+  }
+
+  const afterYear=norm.slice(yMatch.index+yMatch[0].length,pMatch.index).trim();
+  const yearMatch=afterYear.match(/\b(19|20)\d{2}\b/);
+  if(!yearMatch) return null;
+
+  const afterPrice=norm.slice(pMatch.index+pMatch[0].length).trim();
+  const priceMatch=afterPrice.match(/(\d+(?:[.,]\d+)?)/);
+  if(!priceMatch) return null;
+
+  const price=normalizeVoiceNumber(priceMatch[1]);
+
+  if(!domaine || !cuvee || !yearMatch[0] || !price) return null;
+
+  return {
+    domaine,
+    cuvee,
+    year:yearMatch[0],
+    price
+  };
+}
+
+function repairVoiceCuveeToken(text){
+  const original=String(text||'').trim();
+  const norm=normalizeSearchText(original);
+
+  // Exemple : "domaine Mathurin cuveguy annee 1983 prix 500"
   const m=norm.match(
-    /domaine\s+(.+?)\s+(?:cuvee|cuvée)\s+(.+?)\s+(?:annee|année|millesime|millésime)\s+(\d{4})\s+prix\s+([\d]+(?:[.,]\d+)?)/i
+    /\bdomaine\s+(.+?)\s+cuve(?:e)?([a-z0-9][a-z0-9 '\-]*)\s+(?:annee|millesime)\s+((?:19|20)\d{2})\s+prix\s+(\d+(?:[.,]\d+)?)/i
   );
-
   if(!m) return null;
 
-  // On reprend les valeurs depuis la transcription normalisée pour rester robuste aux accents.
   return {
     domaine:m[1].trim(),
     cuvee:m[2].trim(),
-    year:m[3].trim(),
+    year:m[3],
     price:normalizeVoiceNumber(m[4])
   };
 }
@@ -1163,7 +1250,7 @@ function startVoiceRecognition(){
     const transcript=e.results?.[0]?.[0]?.transcript||'';
     $('#voiceTranscript').textContent=transcript||'—';
 
-    const parsed=parseVoiceBottle(transcript);
+    const parsed=parseVoiceBottle(transcript) || repairVoiceCuveeToken(transcript);
 
     if(parsed){
       $('#voiceDomaine').value=parsed.domaine;
@@ -1173,7 +1260,7 @@ function startVoiceRecognition(){
       $('#voiceStatus').textContent='Dictée comprise. Vérifiez les 4 informations ci-dessous.';
       analyzeVoiceBottle();
     }else{
-      $('#voiceStatus').textContent='Je n’ai pas reconnu les 4 mots-clés dans l’ordre. Corrigez les champs ou recommencez.';
+      $('#voiceStatus').textContent='Je n’ai pas pu séparer correctement les 4 informations. Vous pouvez corriger les champs ou recommencer.';
     }
   };
 
