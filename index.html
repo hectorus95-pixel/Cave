@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
-<title>Ma Cave à Vin</title>
-<link rel="manifest" href="manifest.webmanifest?v=5.4">
+<title>Ma Cave à Vin – Configurable v2.1</title>
+<link rel="manifest" href="manifest.webmanifest?v=2.9">
 <style>:root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:#0d0b0b;color:#fff}
@@ -23,7 +23,7 @@ main{padding:14px;max-width:760px;margin:auto}
 .tabs{display:flex;gap:8px;margin:12px 0}
 .tab{flex:1;min-width:0;padding:11px 4px;border:0;border-radius:11px;background:#494646;color:white}
 .tab.active{background:#7a1837}
-#grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;width:100%}
+#grid{display:grid;grid-template-columns:repeat(var(--bpl,5),minmax(56px,1fr));gap:7px;width:100%;overflow-x:auto;padding:3px 3px 7px}
 .slot{width:100%;min-width:0;min-height:96px;border:0;border-radius:11px;padding:0 6px 7px;text-align:left;color:white;overflow:hidden;position:relative}
 .slot.empty{background:#373434;color:#aaa;padding-top:7px}
 .pos{font-size:10px;opacity:.72;display:block;white-space:nowrap}
@@ -41,7 +41,7 @@ main{padding:14px;max-width:760px;margin:auto}
 .filelabel input{display:none}
 .valuebox{border-top:1px solid #403b3b;padding:18px 0 28px}
 .valuebox h2{font-size:16px;margin:0 0 10px}
-#valueByCasier{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+#valueByCasier{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:7px}
 #valueByCasier div{background:#211e1e;border-radius:10px;padding:9px}
 #valueByCasier span{display:block;font-size:11px;opacity:.7}
 #valueByCasier b{font-size:14px}
@@ -1500,21 +1500,647 @@ header{
   background:#6e292f;
 }
 
+
+/* V7.7 — poubelle seulement pour les références totalement inutilisées */
+.pick-result-row.no-delete{
+  grid-template-columns:minmax(0,1fr)!important;
+}
+
+/* =========================================================
+   Cave configurable v1.0
+   ========================================================= */
+.top-casier-tabs{
+  overflow-x:auto!important;
+  padding:3px 3px 5px!important;
+  scrollbar-width:none;
+}
+.top-casier-tabs::-webkit-scrollbar{display:none}
+.top-casier-tabs .tab{
+  flex:0 0 94px!important;
+}
+.config-dialog{
+  width:min(92vw,500px);
+}
+.config-intro{
+  margin:5px 0 14px;
+  color:#bbb;
+  font-size:11px;
+  line-height:1.35;
+}
+.config-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+}
+.config-grid label{
+  color:#bbb;
+  font-size:11px;
+}
+.config-grid input{
+  width:100%;
+  margin-top:4px;
+  padding:11px;
+  border:1px solid #686363;
+  border-radius:8px;
+  background:#292626;
+  color:#fff;
+  font:inherit;
+}
+.config-capacity{
+  margin-top:11px;
+  padding:10px;
+  border-radius:9px;
+  background:#292525;
+  font-size:11px;
+  font-weight:800;
+  text-align:center;
+}
+.config-error{
+  margin-top:9px;
+  padding:10px;
+  border:1px solid #9a3e48;
+  border-radius:9px;
+  background:#3b2024;
+  color:#fff;
+  font-size:10px;
+  line-height:1.4;
+}
+.config-note{
+  margin-top:9px;
+  color:#aaa;
+  font-size:9px;
+  line-height:1.4;
+}
+.actions{
+  flex-wrap:wrap;
+}
+.actions button,.actions .filelabel{
+  min-width:105px;
+}
+
+
+/* =========================================================
+   V2.0 — plusieurs caves + ventes
+   ========================================================= */
+.cave-tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 3px 7px;margin-top:9px;scrollbar-width:none}.cave-tabs::-webkit-scrollbar{display:none}
+.cave-tab{flex:0 0 92px;min-width:92px;padding:7px 5px;border:1px solid transparent;border-radius:10px;background:#ffffff12;color:#fff;text-align:center}
+.cave-tab b{display:block;font-size:14px}.cave-tab span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px;opacity:.8}.cave-tab small{display:block;margin-top:2px;font-size:8px;opacity:.7}
+.cave-tab.active{outline:2px solid rgba(255,255,255,.96);outline-offset:2px;box-shadow:0 0 0 2px rgba(0,0,0,.7)}
+#valueByCave{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:7px}#valueByCave div{background:#211e1e;border-radius:10px;padding:9px}#valueByCave span{display:block;font-size:10px;opacity:.72}#valueByCave b{font-size:14px}
+.cave-count-label{display:block;color:#bbb;font-size:11px}.cave-count-label input{width:100%;margin-top:4px;padding:10px;border:1px solid #686363;border-radius:8px;background:#292626;color:#fff;font:inherit}
+.cfg-caves-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}.cave-config-card{padding:10px;border:1px solid #474141;border-radius:10px;background:#211e1e}.cave-config-title{font-size:12px;font-weight:850;margin-bottom:8px}.cave-name-row{display:grid;grid-template-columns:2fr 1fr;gap:7px}.cave-dims-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.cave-config-card label{color:#bbb;font-size:9px}.cave-config-card input{width:100%;margin-top:3px;padding:8px 7px;border:1px solid #5c5656;border-radius:7px;background:#2a2727;color:#fff;font:inherit}
+.slot.occupied.exit-selected{outline:3px solid #fff!important;outline-offset:-3px!important;box-shadow:0 0 0 2px #000!important}.exit-check{position:absolute;right:4px;top:3px;z-index:8;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;color:#111;font-size:12px;font-weight:900}
+.batch-exit-list{display:flex;flex-direction:column;gap:5px;max-height:38vh;overflow:auto}.batch-exit-list>div{padding:7px 8px;border-radius:7px;background:#272323}.batch-exit-list b{display:block;font-size:11px}.batch-exit-list small{display:block;margin-top:2px;color:#aaa;font-size:8px}
+.sell-btn{background:#376d45!important;color:#fff!important}.sale-dialog{width:min(95vw,650px)}.sale-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sale-meta label,.sale-common label,.sale-row label{color:#bbb;font-size:10px}.sale-meta input,.sale-common input,.sale-row input{width:100%;margin-top:4px;padding:9px;border:1px solid #625c5c;border-radius:8px;background:#292626;color:#fff;font:inherit}.sale-common{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:end;margin-top:10px}.sale-common button{min-height:40px}.sale-rows{display:flex;flex-direction:column;gap:7px;max-height:42vh;overflow:auto;margin-top:10px}.sale-row{display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:7px;align-items:stretch}.sale-wine{padding:8px;border-radius:8px}.sale-wine b{display:block;font-size:11px}.sale-wine span,.sale-wine small{display:block;margin-top:2px;font-size:8px;opacity:.8}.sale-preview{margin-top:9px;padding:9px;border-radius:8px;background:#252121}.sale-preview b,.sale-preview span{display:block}.sale-preview b{font-size:13px}.sale-preview span{margin-top:2px;color:#bbb;font-size:9px}
+.sales-panel{margin:0 0 12px;padding:12px;background:#181515;border:1px solid #373232;border-radius:12px}.sales-head h2{margin:0;font-size:16px}.sales-head small{color:#aaa;font-size:10px}.sales-period{margin-top:10px}.sales-period>label,.sales-custom label{display:flex;flex-direction:column;gap:4px;color:#bbb;font-size:10px}.sales-period select,.sales-custom input{width:100%;min-height:40px;padding:8px;border:1px solid #514b4b;border-radius:8px;background:#252222;color:#fff;font:inherit}.sales-custom{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.sales-custom[hidden]{display:none!important}.sales-summary{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.sales-summary>div{padding:9px 5px;border-radius:8px;background:#252121;text-align:center}.sales-summary b{display:block;font-size:15px}.sales-summary span{display:block;margin-top:2px;color:#aaa;font-size:8px}.sales-unknown{min-height:12px;margin-top:4px;color:#d5a6a6;font-size:8px;text-align:right}.sales-list{display:flex;flex-direction:column;gap:8px;margin-top:8px;max-height:480px;overflow:auto}.sales-empty{padding:15px;color:#aaa;text-align:center;font-size:10px}.sale-history-card{overflow:hidden;border:1px solid #454040;border-radius:9px}.sale-history-head{display:flex;justify-content:space-between;gap:8px;padding:8px 9px;background:#262222}.sale-history-head b{display:block;font-size:11px}.sale-history-head small{display:block;margin-top:2px;color:#aaa;font-size:8px}.sale-history-head strong{font-size:12px}.sale-history-lines{background:#171414}.sale-history-line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:7px 9px;border-top:1px solid #302c2c}.sale-history-line b{display:block;font-size:10px}.sale-history-line small{display:block;margin-top:2px;color:#999;font-size:8px}.sale-money{text-align:right;font-size:8px}.sale-money span,.sale-money b{display:block}.sale-money b{margin-top:2px;font-size:10px}.sale-history-total{padding:6px 9px;background:#211e1e;text-align:right;font-size:8px}.sale-history-total b{font-size:9px}
+#viewActions #sellBottle{grid-column:1 / -1}
+@media(max-width:430px){.cave-name-row{grid-template-columns:1fr 90px}.cave-dims-row{grid-template-columns:repeat(3,minmax(0,1fr))}.sale-row{grid-template-columns:minmax(0,1fr) 92px}}
+
+
+/* =========================================================
+   V2.1 — modules Vente / Vrac + commentaires dégustation
+   ========================================================= */
+.module-config{margin:12px 0;padding:10px;border:1px solid #494343;border-radius:10px;background:#211e1e}.module-config>b{display:block;margin-bottom:7px;font-size:12px}.module-config label{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid #373232}.module-config label:first-of-type{border-top:0}.module-config span{min-width:0}.module-config strong,.module-config small{display:block}.module-config strong{font-size:11px}.module-config small{margin-top:2px;color:#aaa;font-size:8px;line-height:1.3}.module-config input{width:22px;height:22px;flex:0 0 auto}
+.bulk-panel{margin:0 0 12px;padding:12px;background:#181515;border:1px solid #373232;border-radius:12px}.bulk-panel[hidden]{display:none!important}.bulk-head{display:flex;justify-content:space-between;gap:9px;align-items:center}.bulk-head h2{margin:0;font-size:16px}.bulk-head small{display:block;margin-top:2px;color:#aaa;font-size:9px}.bulk-head button{padding:8px 9px;border:0;border-radius:8px;background:#6b4a1e;color:#fff;font-size:10px;font-weight:800}.bulk-list{display:flex;flex-direction:column;gap:7px;margin-top:9px;max-height:390px;overflow:auto}.bulk-empty{padding:14px;color:#aaa;text-align:center;font-size:10px}.bulk-card{position:relative;width:100%;padding:9px 50px 9px 10px;border:1px solid #514a4a;border-radius:9px;text-align:left}.bulk-card b,.bulk-card span,.bulk-card small{display:block}.bulk-card b{font-size:11px}.bulk-card span{margin-top:2px;font-size:9px;font-weight:650;opacity:.85}.bulk-card small{margin-top:4px;font-size:8px;opacity:.72}.bulk-card .bulk-qty{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:900;opacity:1}.bulk-dialog{width:min(94vw,560px)}.bulk-add-fields{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px}.bulk-add-fields label,.bulk-action-qty{color:#bbb;font-size:10px}.bulk-add-fields input,.bulk-action-qty input{width:100%;margin-top:4px;padding:9px;border:1px solid #625c5c;border-radius:8px;background:#292626;color:#fff;font:inherit}.bulk-add-fields .wide{grid-column:auto}.bulk-pick-results{display:flex;flex-direction:column;gap:6px;max-height:35vh;margin-top:8px;overflow:auto}.bulk-pick-result{width:100%;padding:8px 10px;border:2px solid transparent;border-radius:8px;text-align:left}.bulk-pick-result.active{border-color:#fff!important}.bulk-pick-result b,.bulk-pick-result span{display:block}.bulk-pick-result b{font-size:11px}.bulk-pick-result span{margin-top:2px;font-size:8px;opacity:.8}.bulk-action-info{padding:10px;border-radius:9px;background:#252121}.bulk-action-info b,.bulk-action-info span,.bulk-action-info small{display:block}.bulk-action-info b{font-size:12px}.bulk-action-info span{margin-top:2px;font-size:9px}.bulk-action-info small{margin-top:4px;color:#aaa;font-size:8px}.bulk-action-qty{display:block;margin-top:10px}.bulk-actions{display:grid!important;grid-template-columns:1fr 1fr}.bulk-actions #bulkActionClose{grid-column:1/-1}
+.annotated-filter{display:flex!important;flex-direction:row!important;align-items:center;gap:6px;margin-top:8px;padding:7px 8px;border-radius:8px;background:#252121;color:#ddd!important;font-size:9px!important}.annotated-filter input{width:17px;height:17px}.consumed-comment{display:block;margin-top:5px;padding:5px 6px;border-radius:6px;background:#2a2626;color:#ddd;font-size:9px;line-height:1.3}.comment-open{min-height:28px;padding:4px 6px;border:1px solid #514b4b;border-radius:6px;background:#302c2c;color:#fff;font-size:9px;font-weight:750}.comment-editor{margin-top:6px}.comment-editor[hidden]{display:none!important}.comment-editor textarea{width:100%;min-height:65px;padding:7px;border:1px solid #514b4b;border-radius:7px;background:#252222;color:#fff;font:inherit;font-size:10px;resize:vertical}.comment-editor>div{display:flex;gap:5px;margin-top:4px}.comment-editor button{padding:5px 7px;border:0;border-radius:6px;background:#494343;color:#fff;font-size:8px}.comment-editor button:first-child{background:#6e2340}
+@media(max-width:430px){.bulk-add-fields{grid-template-columns:1fr}.bulk-add-fields .wide{grid-column:1}.bulk-actions{grid-template-columns:1fr 1fr}}
+
+
+/* V2.2 — appréciation sur 5 niveaux */
+.consumed-rating-edit{gap:3px!important;flex-wrap:nowrap!important}
+.consumed-rating-edit button{width:auto!important;min-width:28px!important;padding:0 4px!important}
+.consumed-rating-edit button.active.verygood{background:#1f6b37!important}
+.consumed-rating-edit button.active.verybad{background:#6f2029!important}
+
+
+/* V2.3 — ajout vocal en vrac */
+#bulkVoiceAdd{
+  width:100%;
+  flex-basis:100%;
+}
+
+
+/* V2.5 — historiques dans des fenêtres dédiées */
+.history-launchers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:10px 0;
+}
+.history-launch-btn{
+  min-height:44px;
+  border:1px solid #514b4b;
+  border-radius:9px;
+  background:#2a2626;
+  color:#fff;
+  font-weight:850;
+}
+.history-dialog{
+  width:min(96vw,680px);
+  max-height:94vh;
+  padding:0;
+}
+.history-dialog-inner{
+  max-height:92vh;
+  overflow:auto;
+  padding-top:8px;
+}
+.history-dialog-head{
+  position:sticky;
+  top:-8px;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 0 10px;
+  background:#1d1a1a;
+}
+.history-dialog-head h2{margin:0;font-size:17px}
+.sale-transaction-summary{
+  width:100%;
+  color:#fff;
+  border:0;
+  cursor:pointer;
+}
+.sale-tx-summary-money{
+  text-align:right;
+  white-space:nowrap;
+}
+.sale-tx-summary-money strong{
+  display:block;
+  font-size:12px;
+}
+.sale-tx-summary-money small{
+  display:block;
+  margin-top:3px;
+}
+.sale-transaction-detail{
+  border-top:1px solid #413b3b;
+}
+.sale-transaction-detail[hidden]{
+  display:none!important;
+}
+
+
+/* =========================================================
+   V2.7 — fenêtre Ventes beaucoup plus lisible
+   ========================================================= */
+
+#salesHistoryDialog{
+  width:calc(100vw - 20px)!important;
+  max-width:900px!important;
+  height:calc(100vh - 28px)!important;
+  max-height:none!important;
+  margin:auto!important;
+  padding:0!important;
+  border-radius:18px!important;
+}
+
+#salesHistoryDialog .history-dialog-inner{
+  height:100%!important;
+  max-height:none!important;
+  overflow:auto!important;
+  box-sizing:border-box;
+  padding:14px 14px 24px!important;
+}
+
+#salesHistoryDialog .history-dialog-head{
+  top:-14px!important;
+  padding:14px 0 12px!important;
+  background:#1d1a1a!important;
+}
+
+#salesHistoryDialog .history-dialog-head h2{
+  font-size:24px!important;
+  line-height:1.1!important;
+}
+
+#salesHistoryDialog .history-dialog-head .secondary{
+  min-height:42px!important;
+  padding:8px 14px!important;
+  font-size:14px!important;
+}
+
+#salesHistoryDialog .sales-head-intro{
+  margin:4px 0 14px!important;
+  padding:0!important;
+}
+
+#salesHistoryDialog .sales-head-intro small{
+  font-size:13px!important;
+  line-height:1.4!important;
+  color:#bdb7b7!important;
+}
+
+#salesHistoryDialog .sales-period{
+  margin:0 0 14px!important;
+}
+
+#salesHistoryDialog .sales-period label{
+  font-size:13px!important;
+}
+
+#salesHistoryDialog .sales-period select,
+#salesHistoryDialog .sales-period input{
+  min-height:50px!important;
+  font-size:16px!important;
+  margin-top:6px!important;
+}
+
+#salesHistoryDialog .sales-summary{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:10px!important;
+  margin:14px 0!important;
+}
+
+#salesHistoryDialog .sales-summary .sales-kpi{
+  min-height:110px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:flex-start!important;
+  padding:14px!important;
+  border:1px solid #423d3d!important;
+  border-radius:14px!important;
+  background:#272323!important;
+  box-sizing:border-box!important;
+}
+
+#salesHistoryDialog .sales-kpi span{
+  order:0!important;
+  display:block!important;
+  margin-bottom:8px!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+  color:#bdb7b7!important;
+}
+
+#salesHistoryDialog .sales-kpi b{
+  order:1!important;
+  font-size:27px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  color:#fff!important;
+}
+
+#salesHistoryDialog .sales-kpi b.positive,
+#salesHistoryDialog #salesProfit.positive{
+  color:#8fd89f!important;
+}
+
+#salesHistoryDialog .sales-kpi b.negative,
+#salesHistoryDialog #salesProfit.negative{
+  color:#ff9999!important;
+}
+
+#salesHistoryDialog .sales-unknown{
+  margin:8px 0 14px!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+
+#salesHistoryDialog .sales-list{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:12px!important;
+}
+
+#salesHistoryDialog .sale-transaction-card{
+  margin:0!important;
+  border:1px solid #484242!important;
+  border-radius:14px!important;
+  overflow:hidden!important;
+  background:#231f1f!important;
+}
+
+#salesHistoryDialog .sale-transaction-summary{
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.4fr) 86px!important;
+  gap:12px!important;
+  padding:15px!important;
+  border:0!important;
+  background:#302b2b!important;
+  color:#fff!important;
+  text-align:left!important;
+  box-sizing:border-box!important;
+}
+
+#salesHistoryDialog .sale-tx-client{
+  min-width:0!important;
+}
+
+#salesHistoryDialog .sale-tx-label{
+  display:block!important;
+  margin-bottom:3px!important;
+  font-size:10px!important;
+  text-transform:uppercase!important;
+  letter-spacing:.08em!important;
+  color:#9f9999!important;
+}
+
+#salesHistoryDialog .sale-tx-client b{
+  display:block!important;
+  font-size:19px!important;
+  line-height:1.15!important;
+  overflow-wrap:anywhere!important;
+}
+
+#salesHistoryDialog .sale-tx-client small{
+  display:block!important;
+  margin-top:6px!important;
+  font-size:12px!important;
+  color:#aaa!important;
+}
+
+#salesHistoryDialog .sale-tx-count{
+  text-align:center!important;
+  align-self:start!important;
+}
+
+#salesHistoryDialog .sale-tx-count b{
+  display:block!important;
+  font-size:30px!important;
+  line-height:1!important;
+}
+
+#salesHistoryDialog .sale-tx-count small{
+  display:block!important;
+  margin-top:4px!important;
+  font-size:11px!important;
+  color:#aaa!important;
+}
+
+#salesHistoryDialog .sale-tx-finance{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+}
+
+#salesHistoryDialog .sale-tx-finance>div{
+  padding:10px!important;
+  border-radius:10px!important;
+  background:#211e1e!important;
+}
+
+#salesHistoryDialog .sale-tx-finance span{
+  display:block!important;
+  margin-bottom:4px!important;
+  font-size:11px!important;
+  color:#aaa!important;
+}
+
+#salesHistoryDialog .sale-tx-finance b{
+  display:block!important;
+  font-size:19px!important;
+  line-height:1.1!important;
+}
+
+#salesHistoryDialog .positive{color:#8fd89f!important}
+#salesHistoryDialog .negative{color:#ff9999!important}
+#salesHistoryDialog .neutral{color:#fff!important}
+
+#salesHistoryDialog .sale-tx-open{
+  grid-column:1/-1!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:8px!important;
+  margin-top:2px!important;
+  padding-top:8px!important;
+  border-top:1px solid #464040!important;
+  color:#c7c1c1!important;
+}
+
+#salesHistoryDialog .sale-tx-open span{
+  font-size:12px!important;
+  font-weight:800!important;
+}
+
+#salesHistoryDialog .sale-tx-open b{
+  font-size:18px!important;
+}
+
+#salesHistoryDialog .sale-transaction-detail{
+  padding:12px 14px 16px!important;
+  background:#1c1919!important;
+}
+
+#salesHistoryDialog .sale-tx-detail-summary{
+  display:grid!important;
+  grid-template-columns:1fr 1fr 1fr!important;
+  gap:8px!important;
+  margin-bottom:6px!important;
+}
+
+#salesHistoryDialog .sale-tx-detail-summary>div{
+  padding:10px!important;
+  border-radius:10px!important;
+  background:#282424!important;
+}
+
+#salesHistoryDialog .sale-tx-detail-summary span{
+  display:block!important;
+  min-height:28px!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+  color:#aaa!important;
+}
+
+#salesHistoryDialog .sale-tx-detail-summary b{
+  display:block!important;
+  margin-top:5px!important;
+  font-size:15px!important;
+}
+
+#salesHistoryDialog .sale-tx-detail-note{
+  margin:0 0 10px!important;
+  font-size:9px!important;
+  color:#8f8989!important;
+}
+
+#salesHistoryDialog .sale-history-lines{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:8px!important;
+}
+
+#salesHistoryDialog .sale-history-line{
+  display:grid!important;
+  grid-template-columns:26px minmax(0,1fr)!important;
+  gap:9px!important;
+  padding:11px!important;
+  border:1px solid #383333!important;
+  border-radius:10px!important;
+  background:#242020!important;
+}
+
+#salesHistoryDialog .sale-line-number{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  padding-top:2px!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  color:#888!important;
+}
+
+#salesHistoryDialog .sale-line-wine b{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+}
+
+#salesHistoryDialog .sale-line-wine span{
+  display:block!important;
+  margin-top:3px!important;
+  font-size:11px!important;
+  color:#c0baba!important;
+}
+
+#salesHistoryDialog .sale-line-wine small{
+  display:block!important;
+  margin-top:5px!important;
+  font-size:10px!important;
+  line-height:1.25!important;
+  color:#888!important;
+}
+
+#salesHistoryDialog .sale-line-money{
+  grid-column:1/-1!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr 1fr!important;
+  gap:6px!important;
+}
+
+#salesHistoryDialog .sale-line-money>div{
+  padding:8px!important;
+  border-radius:8px!important;
+  background:#191717!important;
+}
+
+#salesHistoryDialog .sale-line-money span{
+  display:block!important;
+  font-size:9px!important;
+  color:#999!important;
+}
+
+#salesHistoryDialog .sale-line-money b{
+  display:block!important;
+  margin-top:3px!important;
+  font-size:13px!important;
+}
+
+@media (min-width:700px){
+  #salesHistoryDialog .sales-summary{
+    grid-template-columns:repeat(4,1fr)!important;
+  }
+  #salesHistoryDialog .sale-transaction-summary{
+    grid-template-columns:minmax(0,1.5fr) 110px minmax(280px,1fr) auto!important;
+    align-items:center!important;
+  }
+  #salesHistoryDialog .sale-tx-finance{
+    grid-column:auto!important;
+  }
+  #salesHistoryDialog .sale-tx-open{
+    grid-column:auto!important;
+    border-top:0!important;
+    padding-top:0!important;
+  }
+}
+
+
+/* V2.8 — recherche sans accents dans les historiques */
+.history-search-label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin:8px 0 12px;
+  font-size:12px;
+  font-weight:750;
+  color:#c9c3c3;
+}
+.history-search-label input{
+  width:100%;
+  min-height:46px;
+  box-sizing:border-box;
+  padding:10px 12px;
+  border:1px solid #514b4b;
+  border-radius:10px;
+  background:#292525;
+  color:#fff;
+  font:inherit;
+  font-size:15px;
+}
+.history-search-label input::placeholder{
+  color:#898383;
+}
+#salesHistoryDialog .history-search-label{
+  margin:10px 0 14px;
+}
+#salesHistoryDialog .history-search-label input{
+  min-height:50px;
+  font-size:16px;
+}
+
+
+/* V2.9 — vote au moment de boire */
+.drink-rating-dialog{
+  width:min(94vw,520px);
+}
+.drink-rating-question{
+  margin:14px 0 10px;
+  text-align:center;
+  font-size:15px;
+  font-weight:850;
+}
+.drink-rating-buttons{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+  margin:8px 0 14px;
+}
+.drink-rating-buttons button{
+  min-width:0;
+  min-height:65px;
+  padding:7px 2px;
+  border:1px solid #514b4b;
+  border-radius:10px;
+  background:#2b2727;
+  color:#fff;
+  font-size:19px;
+  font-weight:850;
+}
+.drink-rating-buttons button small{
+  display:block;
+  margin-top:5px;
+  font-size:10px;
+  color:#aaa;
+}
+.drink-rating-note{
+  display:block;
+  margin-top:8px;
+  color:#999;
+  font-size:10px;
+  line-height:1.35;
+  text-align:center;
+}
+
 </style>
 </head>
 <body>
 <header>
-  <span class="app-version">v7.6</span>
+  <span class="app-version">v2.9</span>
   <h1>🍷 Ma Cave à Vin</h1>
   <div class="topstats">
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
     <div class="metric"><b id="free">—</b><span>places libres</span></div>
   </div>
-  <div class="tabs top-casier-tabs" aria-label="Choisir un casier">
-    <button class="tab active" data-c="1"><b>Casier 1</b><small id="casierCount1">— bt</small></button>
-    <button class="tab" data-c="2"><b>Casier 2</b><small id="casierCount2">— bt</small></button>
-    <button class="tab" data-c="3"><b>Casier 3</b><small id="casierCount3">— bt</small></button>
-  </div>
+  <div id="caveTabs" class="cave-tabs" aria-label="Choisir une cave"></div>
+  <div id="casierTabs" class="tabs top-casier-tabs" aria-label="Choisir un casier"></div>
   <div id="yearStats" class="yearbox" aria-label="Répartition par millésime"></div>
 </header>
 
@@ -1547,55 +2173,27 @@ header{
 
   <div id="grid"></div>
 
+  <section id="bulkPanel" class="bulk-panel" hidden>
+    <div class="bulk-head">
+      <div><h2>📦 Vrac</h2><small id="bulkCaveLabel"></small></div>
+      <button type="button" id="openBulkAdd">＋ Ajouter en vrac</button>
+    </div>
+    <div id="bulkList" class="bulk-list"></div>
+  </section>
 
   <section class="valuebox">
-    <h2>Valeur estimée de la cave</h2>
-    <div id="valueByCasier"></div>
+    <h2>Valeur estimée des caves</h2>
+    <div id="valueByCave"></div>
     <div class="totalvalue"><span>Total</span><b id="valueTotal">—</b></div>
   </section>
 
-  <section class="consumption-panel">
-    <div class="consumption-head">
-      <div>
-        <h2>🍷 Bouteilles bues</h2>
-        <small>Historique de consommation</small>
-      </div>
-    </div>
-
-    <div class="consumption-period">
-      <label>
-        Période
-        <select id="consumptionPeriod">
-          <option value="current">Ce mois</option>
-          <option value="previous">Mois précédent</option>
-          <option value="3">3 derniers mois</option>
-          <option value="6">6 derniers mois</option>
-          <option value="12">12 derniers mois</option>
-          <option value="all">Tout l’historique</option>
-          <option value="custom">Période personnalisée</option>
-        </select>
-      </label>
-
-      <div id="consumptionCustom" class="consumption-custom" hidden>
-        <label>Du<input id="consumptionFrom" type="month"></label>
-        <label>Au<input id="consumptionTo" type="month"></label>
-      </div>
-    </div>
-
-    <div class="consumption-summary">
-      <div><b id="consumptionCount">0</b><span>bouteilles bues</span></div>
-      <div><b id="consumptionValue">0,00 €</b><span>valeur consommée</span></div>
-    </div>
-
-    <div id="consumptionTypes" class="consumption-types"></div>
-    <div id="consumptionList" class="consumption-list"></div>
-
-    <button type="button" id="openConsumedRanking" class="ranking-open">
-      🏆 Classement des vins bus
-    </button>
+  
+  <section class="history-launchers">
+    <button id="openConsumptionWindow" type="button" class="history-launch-btn">🍷 Bouteilles bues</button>
+    <button id="openSalesWindow" type="button" class="history-launch-btn sell-btn">💶 Ventes</button>
   </section>
 
-  <section class="photos-panel">
+<section class="photos-panel">
     <div class="photos-head">
       <div>
         <b>Photos du casier <span id="photoCasier">1</span></b>
@@ -1619,11 +2217,126 @@ header{
   </section>
 
   <div class="actions">
+    <button id="openConfig">⚙️ Configuration</button>
     <button id="export">Sauvegarder</button>
     <label class="filelabel">Restaurer<input id="import" type="file" accept="application/json"></label>
   </div>
 
 </main>
+
+
+
+<dialog id="consumptionDialog" class="history-dialog">
+  <div class="dlg history-dialog-inner">
+    <div class="history-dialog-head">
+      <h2>🍷 Bouteilles bues</h2>
+      <button id="consumptionDialogClose" type="button" class="secondary">Fermer</button>
+    </div>
+    <section class="consumption-panel">
+    <div class="consumption-head">
+      <div>
+        <h2>🍷 Bouteilles bues</h2>
+        <small>Historique de consommation</small>
+      </div>
+    </div>
+
+    <label class="history-search-label">
+      Rechercher
+      <input id="consumptionSearch" type="search" autocomplete="off"
+             placeholder="Vin, domaine, année, commentaire, emplacement…">
+    </label>
+
+    <div class="consumption-period">
+      <label>
+        Période
+        <select id="consumptionPeriod">
+          <option value="current">Ce mois</option>
+          <option value="previous">Mois précédent</option>
+          <option value="3">3 derniers mois</option>
+          <option value="6">6 derniers mois</option>
+          <option value="12">12 derniers mois</option>
+          <option value="all">Tout l’historique</option>
+          <option value="custom">Période personnalisée</option>
+        </select>
+      </label>
+
+      <div id="consumptionCustom" class="consumption-custom" hidden>
+        <label>Du<input id="consumptionFrom" type="month"></label>
+        <label>Au<input id="consumptionTo" type="month"></label>
+      </div>
+      <label class="annotated-filter"><input id="consumptionAnnotatedOnly" type="checkbox"> 📝 Afficher uniquement les vins annotés</label>
+    </div>
+
+    <div class="consumption-summary">
+      <div><b id="consumptionCount">0</b><span>bouteilles bues</span></div>
+      <div><b id="consumptionValue">0,00 €</b><span>valeur consommée</span></div>
+    </div>
+
+    <div id="consumptionTypes" class="consumption-types"></div>
+    <div id="consumptionList" class="consumption-list"></div>
+
+    <button type="button" id="openConsumedRanking" class="ranking-open">
+      🏆 Classement des vins bus
+    </button>
+  </section>
+  </div>
+</dialog>
+
+<dialog id="salesHistoryDialog" class="history-dialog">
+  <div class="dlg history-dialog-inner">
+    <div class="history-dialog-head">
+      <h2>💶 Ventes</h2>
+      <button id="salesHistoryClose" type="button" class="secondary">Fermer</button>
+    </div>
+    <section id="salesPanel" class="sales-panel">
+    <div class="sales-head sales-head-intro"><small>Suivi des transactions, chiffre d’affaires et bénéfice réellement réalisé.</small></div>
+    <label class="history-search-label">
+      Rechercher
+      <input id="salesSearch" type="search" autocomplete="off"
+             placeholder="Client, vin, domaine, année, emplacement…">
+    </label>
+    <div class="sales-period">
+      <label>Période
+        <select id="salesPeriod">
+          <option value="current">Ce mois</option><option value="previous">Mois précédent</option>
+          <option value="3">3 derniers mois</option><option value="6">6 derniers mois</option>
+          <option value="12">12 derniers mois</option><option value="all">Tout l’historique</option>
+          <option value="custom">Période personnalisée</option>
+        </select>
+      </label>
+      <div id="salesCustom" class="sales-custom" hidden><label>Du<input id="salesFrom" type="month"></label><label>Au<input id="salesTo" type="month"></label></div>
+    </div>
+    <div class="sales-summary">
+      <div class="sales-kpi"><span>Bouteilles vendues</span><b id="salesCount">0</b></div>
+      <div class="sales-kpi"><span>Montant des ventes</span><b id="salesRevenue">0,00 €</b></div>
+      <div class="sales-kpi"><span>Coût d’achat total</span><b id="salesCost">0,00 €</b></div>
+      <div class="sales-kpi sales-kpi-profit"><span>Bénéfice réalisé</span><b id="salesProfit">+0,00 €</b></div>
+    </div>
+    <div id="salesUnknown" class="sales-unknown"></div>
+    <div id="salesList" class="sales-list"></div>
+  </section>
+  </div>
+</dialog>
+
+<dialog id="configDialog" class="config-dialog">
+  <div class="dlg">
+    <h2 id="configTitle">Configurer mes caves</h2>
+    <p class="config-intro">Choisis le nombre de caves, puis donne à chacune un nom, un code court et sa structure.</p>
+    <label class="cave-count-label">Nombre de caves
+      <input id="cfgCaveCount" type="number" min="1" max="12" inputmode="numeric" value="1">
+    </label>
+    <div id="cfgCavesList" class="cfg-caves-list"></div>
+    <section class="module-config">
+      <b>Modules optionnels</b>
+      <label><span><strong>💶 Vente</strong><small>Vendre des bouteilles, clients, bénéfices et historique.</small></span><input id="cfgModuleSales" type="checkbox"></label>
+      <label><span><strong>📦 Vrac</strong><small>Stocker des bouteilles hors casiers avec un emplacement écrit librement.</small></span><input id="cfgModuleBulk" type="checkbox"></label>
+    </section>
+    <div id="configCapacity" class="config-capacity"></div>
+    <div id="configError" class="config-error" hidden></div>
+    <div class="config-note">Tu peux agrandir librement. Une cave ne peut être supprimée ou réduite que si les emplacements concernés sont vides.</div>
+    <div class="dlgactions"><button type="button" id="configSave" class="primary">Enregistrer la configuration</button><button type="button" id="configCancel" class="secondary">Annuler</button></div>
+  </div>
+</dialog>
 
 <dialog id="addDialog">
   <div class="dlg add-dlg">
@@ -1743,12 +2456,12 @@ header{
         </label>
         <label>Format<input id="f_format" placeholder="75 cl"></label>
         <label>Prix (€)<input id="f_prix" inputmode="decimal"></label>
-        <label>Maturité : à partir de<input id="f_maturiteDebut" inputmode="numeric" placeholder="2026"></label>
-        <label>À boire avant / jusqu'à<input id="f_maturiteFin" inputmode="numeric" placeholder="2031"></label>
+        <label>Maturité : à partir de<input id="f_maturiteDebut" inputmode="numeric"></label>
+        <label>À boire avant / jusqu'à<input id="f_maturiteFin" inputmode="numeric"></label>
         <div class="maturity-panel">
           <b id="maturityStatus">Maturité non renseignée</b>
           <div id="maturityBar" class="maturity-bar four-zone"></div>
-          <small>La jauge évolue automatiquement avec la date du téléphone.</small>
+          <small>La jauge évolue automatiquement avec la date du téléphone. Si tu modifies la maturité d’une seule bouteille, l’application proposera de l’appliquer aux bouteilles identiques.</small>
         </div>
       </div>
     </div>
@@ -1756,6 +2469,7 @@ header{
     <div id="viewActions" class="dlgactions">
       <button id="editOneBottle" class="primary">✏️ Éditer cette bouteille</button>
       <button id="editAllBottles" class="primary">✏️ Éditer toutes les bouteilles</button>
+      <button id="sellBottle" class="sell-btn">💶 Vendre</button>
       <button id="consumed" class="consumed-btn">🍷 Bue</button>
       <button id="remove" class="danger">Sortir cette bouteille</button>
       <button id="cancel" class="secondary">Fermer</button>
@@ -1770,6 +2484,79 @@ header{
 
 
 
+
+<dialog id="drinkRatingDialog" class="drink-rating-dialog">
+  <div class="dlg">
+    <h2 id="drinkRatingTitle">🍷 Bouteille bue</h2>
+    <p id="drinkRatingInfo" class="where"></p>
+
+    <div class="drink-rating-question">Comment était ce vin ?</div>
+
+    <div class="drink-rating-buttons">
+      <button type="button" data-drink-rating="verybad" title="Très mauvais · −2">👎👎<small>−2</small></button>
+      <button type="button" data-drink-rating="bad" title="Pas bon · −1">👎<small>−1</small></button>
+      <button type="button" data-drink-rating="neutral" title="Neutre · 0">•<small>0</small></button>
+      <button type="button" data-drink-rating="good" title="Bon · +1">👍<small>+1</small></button>
+      <button type="button" data-drink-rating="verygood" title="Excellent · +2">👍👍<small>+2</small></button>
+    </div>
+
+    <div class="dlgactions">
+      <button id="drinkLater" type="button" class="primary">Noter plus tard</button>
+      <button id="drinkRatingCancel" type="button" class="secondary">Annuler</button>
+    </div>
+    <small class="drink-rating-note">La note pourra toujours être modifiée plus tard dans « Bouteilles bues ».</small>
+  </div>
+</dialog>
+
+<dialog id="bulkAddDialog" class="bulk-dialog">
+  <div class="dlg">
+    <h2>📦 Ajouter en vrac</h2>
+    <p class="where">Cave : <b id="bulkAddCave"></b></p>
+    <div class="bulk-add-fields">
+      <label>Quantité<input id="bulkQty" type="number" min="1" max="999" inputmode="numeric" value="6"></label>
+      <label class="wide">Emplacement (facultatif)<input id="bulkLocation" maxlength="120" placeholder="Ex. Garage, carton 3, étagère du fond"></label>
+    </div>
+    <label class="add-search-label">Rechercher un vin existant<input id="bulkPickSearch" type="search" autocomplete="off" placeholder="Cuvée, domaine, millésime…"></label>
+    <div id="bulkPickResults" class="bulk-pick-results"></div>
+    <div class="dlgactions">
+      <button id="bulkVoiceAdd" class="voice-add-btn">🎤 Ajouter par la voix</button>
+      <button id="bulkUseRef" class="primary" disabled>Ajouter le vin sélectionné</button>
+      <button id="bulkNewRef" class="primary">Créer un nouveau vin</button>
+      <button id="bulkAddCancel" class="secondary">Annuler</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="bulkActionDialog" class="bulk-dialog">
+  <div class="dlg">
+    <h2 id="bulkActionTitle">Vin en vrac</h2>
+    <div id="bulkActionInfo" class="bulk-action-info"></div>
+    <label class="bulk-action-qty">Nombre de bouteilles concernées<input id="bulkActionQty" type="number" min="1" inputmode="numeric"></label>
+    <div class="dlgactions bulk-actions">
+      <button id="bulkActionDrink" class="consumed-btn">🍷 Bue</button>
+      <button id="bulkActionSell" class="sell-btn">💶 Vendre</button>
+      <button id="bulkActionEdit" class="primary">✏️ Éditer le vin</button>
+      <button id="bulkActionRemove" class="danger">Sortir sans vente</button>
+      <button id="bulkActionClose" class="secondary">Fermer</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="batchExitDialog" class="batch-exit-dialog">
+  <div class="dlg"><h2>Sortie groupée</h2><p id="batchExitCount" class="where"></p><div id="batchExitList" class="batch-exit-list"></div>
+    <div class="dlgactions"><button id="batchSell" class="sell-btn">💶 Vendre la sélection</button><button id="batchRemove" class="danger">Sortir sans vente</button><button id="batchCancel" class="secondary">Annuler</button></div>
+  </div>
+</dialog>
+
+<dialog id="saleDialog" class="sale-dialog">
+  <div class="dlg"><h2>💶 Enregistrer une vente</h2>
+    <div class="sale-meta"><label>Client<input id="saleClient" placeholder="Nom du client"></label><label>Date<input id="saleDate" type="date"></label></div>
+    <div class="sale-common"><label>Prix commun / bouteille (€)<input id="saleCommonPrice" inputmode="decimal" placeholder="Ex. 20"></label><button id="saleApplyCommon" type="button" class="secondary">Appliquer à toutes</button></div>
+    <div id="saleRows" class="sale-rows"></div><div id="salePreview" class="sale-preview"></div>
+    <div class="dlgactions"><button id="saleConfirm" class="sell-btn">Valider la vente</button><button id="saleCancel" class="secondary">Annuler</button></div>
+  </div>
+</dialog>
+
 <dialog id="rankingDialog" class="ranking-dialog">
   <div class="dlg ranking-dlg">
     <div class="ranking-head">
@@ -1781,7 +2568,7 @@ header{
     </div>
 
     <div class="ranking-help">
-      Score global = (👍 − 👎) ÷ toutes les bouteilles bues de ce vin × 100
+      Score = somme des notes (−2 à +2) ÷ bouteilles bues × 100
     </div>
 
     <div id="rankingList" class="ranking-list"></div>
@@ -1801,6 +2588,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=7.6"></script>
+<script src="app.js?v=2.9"></script>
 </body>
 </html>
