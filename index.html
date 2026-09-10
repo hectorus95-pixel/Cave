@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
-<title>Ma Cave à Vin – Configurable v2.1</title>
-<link rel="manifest" href="manifest.webmanifest?v=2.9">
+<title>Ma Cave à Vin – Configurable v5.12</title>
+<link rel="manifest" href="manifest.webmanifest?v=5.12">
 <style>:root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:#0d0b0b;color:#fff}
@@ -215,7 +215,7 @@ header{
   display:flex;
   flex-direction:column;
   gap:6px;
-  max-height:310px;
+  max-height:min(52vh,410px);
   overflow:auto;
 }
 .result-item{
@@ -2129,11 +2129,1227 @@ header{
   text-align:center;
 }
 
+
+/* V2.10 — cave sans lignes = vrac uniquement */
+.bulk-only-tab{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #4b4545;
+  border-radius:10px;
+  background:#252121;
+  color:#d7d1d1;
+  font-size:13px;
+  font-weight:800;
+  text-align:center;
+}
+.bulk-only-grid-message{
+  grid-column:1/-1;
+  min-height:86px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:16px;
+  border:1px dashed #514b4b;
+  border-radius:12px;
+  background:#211e1e;
+  text-align:center;
+}
+.bulk-only-grid-message b{
+  font-size:15px;
+}
+.bulk-only-grid-message span{
+  font-size:11px;
+  color:#aaa;
+}
+
+
+/* V3.1 — déplacement visuel d'une bouteille */
+.move-btn{
+  background:#3f566c!important;
+  color:#fff!important;
+}
+.move-banner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:10px 0;
+  padding:12px;
+  border:2px solid #76a7d4;
+  border-radius:12px;
+  background:#1d2b38;
+}
+.move-banner[hidden]{display:none!important}
+.move-banner>div{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.move-banner b{
+  font-size:14px;
+}
+.move-banner span{
+  font-size:11px;
+  line-height:1.35;
+  color:#c7d5e2;
+}
+.move-banner button{
+  flex:0 0 auto;
+}
+.move-mode .slot.empty.move-target{
+  border:2px dashed #84c795!important;
+  box-shadow:inset 0 0 0 2px rgba(132,199,149,.12);
+}
+.move-mode .slot.empty.move-target .name{
+  font-weight:900!important;
+  color:#b6e7c1!important;
+}
+.move-mode .slot.occupied:not(.move-source){
+  opacity:.5;
+}
+.slot.move-source{
+  position:relative;
+  outline:3px solid #76a7d4!important;
+  outline-offset:-3px;
+}
+.move-source-badge{
+  position:absolute;
+  z-index:5;
+  top:3px;
+  right:3px;
+  padding:2px 5px;
+  border-radius:6px;
+  background:#234c70;
+  color:#fff;
+  font-size:7px;
+  font-weight:900;
+}
+#moveToBulk{
+  min-height:38px;
+  white-space:nowrap;
+}
+.move-mode #bulkPanel{
+  border-color:#76a7d4!important;
+}
+
+
+/* V3.2 — déplacement groupé */
+.move-banner-actions{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  flex:0 0 auto;
+}
+.move-banner-actions button{
+  min-height:36px;
+}
+.move-mode .slot.empty.move-target.move-target-selected{
+  border:3px solid #8ed49e!important;
+  background:#1d3825!important;
+  box-shadow:inset 0 0 0 2px rgba(142,212,158,.18)!important;
+}
+.move-mode .slot.empty.move-target.move-target-selected .name{
+  color:#d6f3dd!important;
+  font-weight:950!important;
+}
+@media (max-width:520px){
+  .move-banner{
+    align-items:flex-start;
+  }
+  .move-banner-actions{
+    min-width:104px;
+  }
+  #confirmMoveTargets{
+    font-size:11px;
+    line-height:1.15;
+    padding:7px 8px;
+  }
+}
+
+
+/* V3.3 — Annuler / Rétablir, historique 20 actions */
+.undo-panel{
+  margin:14px 0 4px;
+  padding:10px;
+  border:1px solid #403a3a;
+  border-radius:12px;
+  background:#181515;
+}
+.undo-controls{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:7px;
+}
+.undo-controls button{
+  min-height:42px;
+  padding:8px 10px;
+  border:1px solid #5b5555;
+  border-radius:9px;
+  background:#302c2c;
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+}
+.undo-controls button:disabled{
+  opacity:.35;
+}
+#openUndoHistory{
+  min-width:78px;
+}
+#historyLast{
+  display:block;
+  margin-top:7px;
+  color:#9f9999;
+  font-size:10px;
+  line-height:1.3;
+}
+.undo-history-dialog{
+  width:min(94vw,560px);
+}
+.undo-history-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.undo-history-head h2{
+  margin:0 0 3px;
+  font-size:18px;
+}
+.undo-history-head small{
+  color:#aaa;
+  font-size:10px;
+}
+.undo-history-quick{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:10px 0 14px;
+}
+.undo-history-quick button{
+  min-height:42px;
+  border:0;
+  border-radius:9px;
+  font-weight:800;
+}
+.undo-history-quick button:disabled{
+  opacity:.35;
+}
+.undo-history-section{
+  margin:12px 0;
+}
+.undo-history-section h3{
+  margin:0 0 7px;
+  font-size:12px;
+  color:#cfc9c9;
+}
+.undo-history-row{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:8px;
+  align-items:center;
+  padding:9px;
+  margin:5px 0;
+  border:1px solid #3d3838;
+  border-radius:9px;
+  background:#242020;
+}
+.undo-history-row.redo-row{
+  opacity:.75;
+}
+.undo-history-index{
+  font-size:13px;
+  font-weight:900;
+  text-align:center;
+  color:#b9b2b2;
+}
+.undo-history-row b{
+  display:block;
+  font-size:12px;
+}
+.undo-history-row small{
+  display:block;
+  margin-top:2px;
+  font-size:9px;
+  color:#918b8b;
+}
+.undo-history-empty{
+  padding:12px;
+  border:1px dashed #423c3c;
+  border-radius:9px;
+  color:#8d8787;
+  font-size:11px;
+}
+.undo-history-note{
+  display:block;
+  margin-top:14px;
+  color:#888;
+  font-size:9px;
+  line-height:1.4;
+}
+
+
+/* V3.4 — validation du déplacement en retouchant une destination */
+.move-confirm-dialog{
+  width:min(94vw,540px);
+}
+.move-confirm-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  max-height:48vh;
+  overflow:auto;
+  margin:12px 0;
+}
+.move-confirm-row{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  gap:8px;
+  align-items:center;
+  padding:10px;
+  border:1px solid #413b3b;
+  border-radius:9px;
+  background:#242020;
+}
+.move-confirm-number{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:#35566d;
+  font-size:12px;
+  font-weight:900;
+}
+.move-confirm-row b{
+  display:block;
+  font-size:12px;
+}
+.move-confirm-row small{
+  display:block;
+  margin-top:4px;
+  color:#9f9999;
+  font-size:10px;
+}
+.move-mode .slot.empty.move-target.move-target-selected .name{
+  line-height:1.15!important;
+}
+
+
+/* V3.5 — centrage automatique des boutons Caves / Casiers
+   uniquement quand toute la rangée tient dans l'écran */
+.cave-tabs.tabs-fit,
+.top-casier-tabs.tabs-fit{
+  justify-content:center!important;
+}
+.cave-tabs:not(.tabs-fit),
+.top-casier-tabs:not(.tabs-fit){
+  justify-content:flex-start!important;
+}
+
+
+/* V3.6 — cadre du casier sélectionné entièrement visible */
+.top-casier-tabs .tab.active{
+  outline:none!important;
+  border-color:transparent!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.98),
+    inset 0 0 0 4px rgba(0,0,0,.72)!important;
+}
+
+
+/* =========================================================
+   V3.7 — cadre année entier + historiques presque plein écran
+   ========================================================= */
+
+/* Le cadre du millésime actif est dessiné DANS le bouton.
+   Il ne peut donc plus être rogné par la rangée horizontale. */
+.year-chip.active{
+  outline:none!important;
+  outline-offset:0!important;
+  border-color:transparent!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.98),
+    inset 0 0 0 4px rgba(0,0,0,.72)!important;
+}
+
+/* Bouteilles bues + Ventes : presque toute la page sur téléphone
+   comme sur grand écran, sans ancienne limite de 680/900 px. */
+#consumptionDialog,
+#salesHistoryDialog{
+  width:calc(100vw - 8px)!important;
+  max-width:none!important;
+  height:calc(100dvh - 8px)!important;
+  max-height:none!important;
+  margin:auto!important;
+  padding:0!important;
+  border-radius:12px!important;
+}
+
+#consumptionDialog .history-dialog-inner,
+#salesHistoryDialog .history-dialog-inner{
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  overflow:auto!important;
+  box-sizing:border-box!important;
+  padding:12px 12px 24px!important;
+}
+
+#consumptionDialog .history-dialog-head,
+#salesHistoryDialog .history-dialog-head{
+  top:-12px!important;
+  padding:12px 0 10px!important;
+  background:#1d1a1a!important;
+}
+
+/* En paysage ou sur une tablette, on garde également toute la largeur utile. */
+@media (min-width:700px){
+  #consumptionDialog,
+  #salesHistoryDialog{
+    width:calc(100vw - 16px)!important;
+    height:calc(100dvh - 16px)!important;
+  }
+}
+
+
+/* V3.9 — Vrac activable séparément pour chaque cave */
+.cave-bulk-toggle{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  margin-top:10px!important;
+  padding:10px!important;
+  border:1px solid #494343!important;
+  border-radius:9px!important;
+  background:#292525!important;
+}
+.cave-bulk-toggle span{
+  min-width:0;
+}
+.cave-bulk-toggle strong{
+  display:block;
+  color:#fff;
+  font-size:11px;
+}
+.cave-bulk-toggle small{
+  display:block;
+  margin-top:3px;
+  color:#aaa;
+  font-size:8px;
+  line-height:1.3;
+}
+.cave-bulk-toggle input{
+  flex:0 0 auto!important;
+  width:24px!important;
+  height:24px!important;
+  margin:0!important;
+}
+
+
+/* V3.10 — indication Magnum visible dans les casiers et le Vrac */
+.slot .magnum-badge{
+  display:inline-block!important;
+  margin-top:3px!important;
+  padding:2px 5px!important;
+  border-radius:5px!important;
+  background:rgba(0,0,0,.46)!important;
+  border:1px solid rgba(255,255,255,.62)!important;
+  color:#fff!important;
+  font-size:7px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+}
+.bulk-magnum-badge{
+  display:inline-block!important;
+  width:max-content!important;
+  margin:4px 0 1px!important;
+  padding:2px 6px!important;
+  border-radius:5px!important;
+  background:rgba(0,0,0,.40)!important;
+  border:1px solid rgba(255,255,255,.58)!important;
+  color:#fff!important;
+  font-size:8px!important;
+  line-height:1.2!important;
+  font-style:normal!important;
+  font-weight:900!important;
+}
+
+
+/* =========================================================
+   V3.11 — cadre année visible + historique des vins bus
+   ========================================================= */
+
+/* Le cadre blanc est posé AU-DESSUS de la couleur du millésime. */
+.year-chip{
+  position:relative!important;
+  isolation:isolate!important;
+}
+.year-chip.active{
+  outline:none!important;
+  box-shadow:none!important;
+}
+.year-chip.active::after{
+  content:""!important;
+  position:absolute!important;
+  inset:2px!important;
+  z-index:20!important;
+  pointer-events:none!important;
+  border:2px solid rgba(255,255,255,.98)!important;
+  border-radius:7px!important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.72)!important;
+}
+
+/* La fenêtre Bouteilles bues défile elle-même :
+   aucune seconde zone de défilement au milieu de la page. */
+#consumptionDialog .consumption-list{
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+
+/* Chaque fiche garde sa hauteur naturelle et ne peut plus être tronquée. */
+#consumptionDialog .consumed-card{
+  display:block!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+
+#consumptionDialog .consumed-card-head,
+#consumptionDialog .consumed-dates{
+  height:auto!important;
+  min-height:0!important;
+}
+
+#consumptionDialog .consumed-dates{
+  overflow:visible!important;
+}
+
+#consumptionDialog .consumed-entry{
+  height:auto!important;
+  min-height:58px!important;
+  overflow:visible!important;
+  align-items:center!important;
+}
+
+#consumptionDialog .consumed-entry-actions{
+  align-self:center!important;
+  flex-wrap:nowrap!important;
+}
+
+/* Sur les téléphones plus étroits, les actions passent sous les infos
+   au lieu de réduire/couper la fiche. */
+@media (max-width:430px){
+  #consumptionDialog .consumed-entry{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #consumptionDialog .consumed-entry-actions{
+    width:100%!important;
+    justify-content:flex-end!important;
+    flex-wrap:wrap!important;
+  }
+}
+
+
+/* =========================================================
+   V3.12 — Magnum compact + actions des vins bus sur la ligne
+   ========================================================= */
+
+/* Magnum ne prend plus aucune hauteur dans la case :
+   badge posé en haut à droite de la zone d'information. */
+.slot .magnum-badge{
+  position:absolute!important;
+  top:7px!important;
+  right:6px!important;
+  z-index:4!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:0!important;
+  padding:2px 4px!important;
+  max-width:45px!important;
+  border-radius:5px!important;
+  background:rgba(0,0,0,.48)!important;
+  border:1px solid rgba(255,255,255,.68)!important;
+  color:#fff!important;
+  font-size:6.5px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+.slot .slot-main:has(.magnum-badge) .pos{
+  padding-right:48px!important;
+}
+
+/* Dans "Bouteilles bues", infos à gauche et actions à droite.
+   flex-wrap permet aux boutons de descendre automatiquement
+   uniquement quand la largeur disponible est insuffisante. */
+#consumptionDialog .consumed-entry{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-height:58px!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+
+#consumptionDialog .consumed-entry-info{
+  flex:1 1 170px!important;
+  min-width:140px!important;
+}
+
+#consumptionDialog .consumed-entry-actions{
+  flex:0 1 auto!important;
+  margin-left:auto!important;
+  align-self:center!important;
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:5px!important;
+}
+
+/* Si les actions passent à la ligne, elles restent alignées à droite. */
+#consumptionDialog .consumed-entry-actions > *{
+  flex:0 0 auto!important;
+}
+
+/* Annule le forçage V3.11 qui mettait systématiquement
+   les actions dessous sur les petits téléphones. */
+@media (max-width:430px){
+  #consumptionDialog .consumed-entry{
+    display:flex!important;
+    grid-template-columns:none!important;
+  }
+  #consumptionDialog .consumed-entry-actions{
+    width:auto!important;
+    flex-wrap:nowrap!important;
+  }
+}
+
+
+/* =========================================================
+   V3.13 — badge Magnum plus haut, centré et plus discret
+   ========================================================= */
+.slot .magnum-badge{
+  top:-7px!important;
+  left:50%!important;
+  right:auto!important;
+  transform:translateX(-50%)!important;
+  padding:1px 3px!important;
+  max-width:none!important;
+  border-radius:4px!important;
+  font-size:5.5px!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+}
+
+/* L'emplacement Lx·Px retrouve toute sa largeur : Magnum
+   n'est plus posé sur la même ligne. */
+.slot .slot-main:has(.magnum-badge) .pos{
+  padding-right:0!important;
+}
+
+
+/* =========================================================
+   V3.14 — vins bus compacts : date et actions sur la même ligne
+   ========================================================= */
+#consumptionDialog .consumed-entry{
+  display:block!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:8px 9px!important;
+  overflow:visible!important;
+}
+
+#consumptionDialog .consumed-entry-top{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:6px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+
+#consumptionDialog .consumed-entry-date{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  margin:0!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+  white-space:nowrap!important;
+}
+
+#consumptionDialog .consumed-entry-actions{
+  flex:0 0 auto!important;
+  width:auto!important;
+  margin:0!important;
+  align-self:auto!important;
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:4px!important;
+}
+
+#consumptionDialog .comment-open,
+#consumptionDialog .vote-open,
+#consumptionDialog .restore-consumed{
+  min-height:29px!important;
+  height:29px!important;
+  padding:3px 6px!important;
+  border-radius:7px!important;
+  font-size:8px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+#consumptionDialog .restore-consumed{
+  width:32px!important;
+  padding:0!important;
+  font-size:11px!important;
+}
+
+#consumptionDialog .vote-open .rating-icon{
+  font-size:11px!important;
+  margin-left:2px!important;
+}
+
+#consumptionDialog .consumed-entry-date .rating-icon{
+  font-size:13px!important;
+  margin-left:3px!important;
+}
+
+#consumptionDialog .consumed-entry-meta{
+  display:block!important;
+  width:100%!important;
+  margin-top:3px!important;
+  color:#aaa!important;
+  font-size:8px!important;
+  line-height:1.15!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+/* Le menu de vote s'ouvre sous son bouton sans modifier
+   l'alignement principal date/actions. */
+#consumptionDialog .vote-wrap{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  gap:3px!important;
+}
+
+#consumptionDialog .vote-wrap .consumed-rating-edit:not([hidden]){
+  position:absolute!important;
+  top:33px!important;
+  right:0!important;
+  z-index:30!important;
+  display:flex!important;
+}
+
+/* Sur téléphone étroit, on garde la ligne compacte :
+   le mot Annoter/Modifier disparaît mais l'icône 📝 reste. */
+@media (max-width:430px){
+  #consumptionDialog .comment-open .action-label{
+    display:none!important;
+  }
+  #consumptionDialog .comment-open{
+    width:31px!important;
+    padding:0!important;
+  }
+  #consumptionDialog .consumed-entry-top{
+    gap:4px!important;
+  }
+  #consumptionDialog .consumed-entry-actions{
+    gap:3px!important;
+  }
+}
+
+
+/* =========================================================
+   V3.16 — correction visuelle définitive de la maturité
+   4 zones réelles : vert / jaune / orange / rouge
+   ========================================================= */
+.maturity-gauge,
+.maturity-bar.four-zone{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+
+
+/* =========================================================
+   V4.0 — échelle temporelle réelle de maturité
+   25 % = début jaune
+   50 % = milieu calculé
+   75 % = fin orange
+   ========================================================= */
+.maturity-gauge,
+.maturity-bar.four-zone{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+
+
+/* =========================================================
+   V4.1 — sélection d'année visuellement cohérente
+   ========================================================= */
+.year-chip.active{
+  outline:none!important;
+  box-shadow:none!important;
+  border-color:transparent!important;
+}
+.year-chip.active::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:30!important;
+  pointer-events:none!important;
+  border:3px solid rgba(255,255,255,.98)!important;
+  border-radius:9px!important;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.72)!important;
+}
+
+
+/* =========================================================
+   V4.2 — historique plus lisible + date de sauvegarde
+   ========================================================= */
+#historyLast{
+  display:flex!important;
+  align-items:flex-start!important;
+  gap:7px!important;
+  margin-top:8px!important;
+  color:#d4cece!important;
+  font-size:10px!important;
+}
+#historyLast .history-last-icon{
+  flex:0 0 auto;
+  font-size:16px;
+  line-height:1;
+}
+#historyLast b{
+  display:block;
+  color:#fff;
+  font-size:10px;
+  line-height:1.2;
+}
+#historyLast small{
+  display:block;
+  margin-top:2px;
+  color:#aaa;
+  font-size:8.5px;
+  line-height:1.25;
+}
+
+.undo-history-row{
+  grid-template-columns:42px minmax(0,1fr)!important;
+  padding:10px!important;
+  gap:10px!important;
+}
+.undo-history-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:38px;
+  border-radius:9px;
+  background:#302b2b;
+  font-size:19px;
+}
+.undo-history-content{
+  min-width:0;
+}
+.undo-history-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.undo-history-title b{
+  min-width:0;
+  font-size:11px;
+  line-height:1.2;
+}
+.undo-history-title span{
+  flex:0 0 auto;
+  color:#8f8989;
+  font-size:9px;
+  font-weight:800;
+}
+.undo-history-detail{
+  margin-top:4px;
+  color:#d1cbcb;
+  font-size:9px;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+.undo-history-content>small{
+  display:block;
+  margin-top:5px;
+  color:#888;
+  font-size:8px;
+}
+
+.last-backup-info{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:7px 0 14px;
+  padding:8px 10px;
+  border:1px solid #3f3939;
+  border-radius:9px;
+  background:#1c1919;
+}
+.last-backup-info span{
+  color:#aaa;
+  font-size:9px;
+}
+.last-backup-info b{
+  color:#fff;
+  font-size:9px;
+  text-align:right;
+}
+
+
+/* =========================================================
+   V4.3 — filtres maturité dans le bandeau bordeaux
+   ========================================================= */
+header #maturityFilters{
+  margin:12px 0 0!important;
+  padding-bottom:2px!important;
+}
+
+header .maturity-filters{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:7px!important;
+  width:100%!important;
+}
+
+header .maturity-filter{
+  min-width:0!important;
+  min-height:50px!important;
+  padding:7px 4px!important;
+}
+
+header .maturity-filter span{
+  font-size:9px!important;
+  line-height:1.05!important;
+}
+
+header .maturity-filter small{
+  margin-top:3px!important;
+  font-size:8px!important;
+}
+
+main{
+  padding-top:14px!important;
+}
+
+main > .search{
+  margin-top:0!important;
+}
+
+
+/* =========================================================
+   V4.4 — commandes du bas alignées sur une seule ligne
+   ========================================================= */
+.actions{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+  align-items:stretch!important;
+}
+
+.actions > button,
+.actions > .filelabel{
+  width:100%!important;
+  min-width:0!important;
+  min-height:52px!important;
+  height:52px!important;
+  margin:0!important;
+  padding:8px 6px!important;
+  box-sizing:border-box!important;
+
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:5px!important;
+
+  white-space:nowrap!important;
+  line-height:1!important;
+  text-align:center!important;
+  font-size:12px!important;
+  font-weight:500!important;
+}
+
+.actions > .filelabel{
+  cursor:pointer!important;
+}
+
+/* Le bouton Configuration ne doit plus empiler l'icône au-dessus du texte. */
+#openConfig{
+  flex-wrap:nowrap!important;
+}
+
+
+/* =========================================================
+   V4.6 — filtres de stock sous la maturité
+   ========================================================= */
+header .stock-filters{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+  width:100%!important;
+  margin:10px 0 0!important;
+  padding-bottom:2px!important;
+}
+
+header .stock-filter{
+  position:relative!important;
+  min-width:0!important;
+  min-height:44px!important;
+  padding:8px 5px!important;
+  border:1px solid #755260!important;
+  border-radius:9px!important;
+  background:#5a1d31!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:850!important;
+  line-height:1.05!important;
+  text-align:center!important;
+}
+
+header .stock-filter.active{
+  outline:none!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.98),
+    inset 0 0 0 4px rgba(0,0,0,.72)!important;
+}
+
+
+/* =========================================================
+   V4.7 — seuils des filtres de stock paramétrables
+   ========================================================= */
+.stock-threshold-config{
+  margin-top:10px;
+  padding:10px;
+  border:1px solid #474141;
+  border-radius:10px;
+  background:#211e1e;
+}
+.stock-threshold-head b{
+  display:block;
+  font-size:12px;
+}
+.stock-threshold-head small{
+  display:block;
+  margin-top:3px;
+  color:#aaa;
+  font-size:9px;
+  line-height:1.3;
+}
+.stock-threshold-inputs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  margin-top:10px;
+}
+.stock-threshold-inputs label{
+  color:#bbb;
+  font-size:8px;
+  line-height:1.2;
+}
+.stock-threshold-inputs input{
+  width:100%;
+  box-sizing:border-box;
+  margin-top:4px;
+  padding:9px 6px;
+  border:1px solid #5c5656;
+  border-radius:7px;
+  background:#2a2727;
+  color:#fff;
+  font:inherit;
+  font-size:12px;
+  text-align:center;
+}
+.stock-threshold-example{
+  display:block;
+  margin-top:8px;
+  padding:7px;
+  border-radius:7px;
+  background:#171515;
+  color:#ccc;
+  font-size:9px;
+  text-align:center;
+}
+.stock-threshold-example.invalid{
+  color:#ff9e9e;
+}
+
+
+/* =========================================================
+   V5.0 — saisie vocale progressive
+   ========================================================= */
+.voice-instruction strong{
+  display:block;
+}
+.voice-instruction strong + strong{
+  margin-top:5px;
+}
+.voice-instruction > small{
+  display:block;
+  margin-top:8px;
+  color:#aaa;
+  font-size:9px;
+  line-height:1.35;
+}
+
+
+/* =========================================================
+   V5.1 — voix : Couleur + Format
+   ========================================================= */
+.voice-order-six{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+.voice-fields select{
+  width:100%;
+  margin-top:4px;
+  padding:9px;
+  border:1px solid #686363;
+  border-radius:8px;
+  background:#292626;
+  color:#fff;
+  font:inherit;
+  box-sizing:border-box;
+}
+
+
+/* =========================================================
+   V5.4 — option de recherche toutes caves compacte
+   ========================================================= */
+.search-all-caves{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin:3px 2px 6px;
+  padding:1px 2px;
+  border:0;
+  background:transparent;
+  color:#aaa;
+  font-size:9px;
+  line-height:1.1;
+  cursor:pointer;
+}
+.search-all-caves input{
+  flex:0 0 auto;
+  width:14px;
+  height:14px;
+  margin:0;
+  accent-color:#8b2444;
+}
+.search-all-caves span{
+  min-width:0;
+  font-weight:650;
+}
+
+
+/* =========================================================
+   V5.5 — double sauvegarde
+   ========================================================= */
+#lastBackupInfo #restoreInternalBackup{
+  width:100%;
+  min-height:34px;
+  margin-top:7px;
+  padding:6px 9px;
+  border:1px solid #494242;
+  border-radius:8px;
+  background:#272323;
+  color:#ddd;
+  font-size:9px;
+  font-weight:700;
+}
+#lastBackupInfo #restoreInternalBackup:disabled{
+  opacity:.42;
+}
+
+
+/* =========================================================
+   V5.6 — emplacement du fichier de sauvegarde
+   ========================================================= */
+#lastBackupInfo #backupLocationHint{
+  display:block;
+  margin-top:4px;
+  color:#999;
+  font-size:8px;
+  line-height:1.3;
+}
+
+
+/* =========================================================
+   V5.10 — recherche de maturité avec Google IA
+   ========================================================= */
+.google-ai-maturity-btn{
+  width:100%;
+  min-height:43px;
+  margin-top:10px;
+  padding:9px 10px;
+  border:1px solid #575050;
+  border-radius:9px;
+  background:#2b2727;
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+}
+.google-ai-maturity-hint{
+  display:block;
+  margin:4px 2px 0;
+  color:#999;
+  font-size:8px;
+  line-height:1.25;
+  text-align:center;
+}
+
+
+/* =========================================================
+   V5.11 — déplacement inter-caves / Vrac
+   ========================================================= */
+.move-banner-actions{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+#moveBannerToBulk{
+  min-height:36px;
+  padding:7px 10px;
+  white-space:nowrap;
+  font-weight:800;
+}
+
 </style>
 </head>
 <body>
 <header>
-  <span class="app-version">v2.9</span>
+  <span class="app-version">v5.12</span>
   <h1>🍷 Ma Cave à Vin</h1>
   <div class="topstats">
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
@@ -2142,11 +3358,6 @@ header{
   <div id="caveTabs" class="cave-tabs" aria-label="Choisir une cave"></div>
   <div id="casierTabs" class="tabs top-casier-tabs" aria-label="Choisir un casier"></div>
   <div id="yearStats" class="yearbox" aria-label="Répartition par millésime"></div>
-</header>
-
-<main>
-  <input id="search" class="search" placeholder="Rechercher un vin, domaine, millésime…">
-
   <div id="maturityFilters" class="maturity-filters" aria-label="Rechercher par maturité">
     <button type="button" class="maturity-filter z1" data-zone="1">
       <span>Jeune</span><small id="matCount1">0 bt</small>
@@ -2164,12 +3375,42 @@ header{
       <span>Non renseigné</span><small id="matCount0">0 bt</small>
     </button>
   </div>
+  <div id="stockFilters" class="stock-filters" aria-label="Filtrer par quantité en stock">
+    <button type="button" class="stock-filter" data-stock="12plus">
+      <span id="stockLabelHigh">13+ bt</span>
+    </button>
+    <button type="button" class="stock-filter" data-stock="6to12">
+      <span id="stockLabelMedium">6 à 12 bt</span>
+    </button>
+    <button type="button" class="stock-filter" data-stock="1to5">
+      <span id="stockLabelLow">1 à 5 bt</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <input id="search" class="search" placeholder="Rechercher un vin, domaine, millésime…">
+
+  <label class="search-all-caves">
+    <input id="searchAllCaves" type="checkbox">
+    <span>Rechercher dans toutes les caves</span>
+  </label>
 
   <div id="resultPanel" class="result-panel" hidden>
     <div id="resultTitle" class="result-title"></div>
     <div id="resultList" class="result-list"></div>
   </div>
 
+  <section id="moveBanner" class="move-banner" hidden>
+    <div>
+      <b id="moveBannerTitle">📦 Déplacer une bouteille</b>
+      <span id="moveBannerText">Choisis une cave, un casier puis touche un emplacement libre.</span>
+    </div>
+    <div class="move-banner-actions">
+      <button id="moveBannerToBulk" type="button" class="move-btn" hidden>📦 Vers Vrac</button>
+      <button id="cancelMove" type="button" class="secondary">Annuler</button>
+    </div>
+  </section>
 
   <div id="grid"></div>
 
@@ -2177,6 +3418,7 @@ header{
     <div class="bulk-head">
       <div><h2>📦 Vrac</h2><small id="bulkCaveLabel"></small></div>
       <button type="button" id="openBulkAdd">＋ Ajouter en vrac</button>
+      <button type="button" id="moveToBulk" class="move-btn" hidden>📦 Déplacer ici</button>
     </div>
     <div id="bulkList" class="bulk-list"></div>
   </section>
@@ -2216,15 +3458,50 @@ header{
     </div>
   </section>
 
+  <section class="undo-panel">
+    <div class="undo-controls">
+      <button id="undoAction" type="button" disabled>↶ Annuler</button>
+      <button id="redoAction" type="button" disabled>↷ Rétablir</button>
+      <button id="openUndoHistory" type="button">🕘 <span id="historyCount">0/20</span></button>
+    </div>
+    <small id="historyLast">Aucune modification mémorisée</small>
+  </section>
+
   <div class="actions">
     <button id="openConfig">⚙️ Configuration</button>
     <button id="export">Sauvegarder</button>
     <label class="filelabel">Restaurer<input id="import" type="file" accept="application/json"></label>
   </div>
+  <div id="lastBackupInfo" class="last-backup-info">
+    <span>💾 Dernière double sauvegarde</span>
+    <b id="lastBackupDate">Jamais</b>
+    <small id="backupLocationHint">Le fichier téléphone peut être enregistré à l’emplacement de ton choix si le navigateur le permet.</small>
+    <button id="restoreInternalBackup" type="button" disabled>↩ Restaurer la copie navigateur</button>
+  </div>
 
 </main>
 
 
+
+<dialog id="undoHistoryDialog" class="undo-history-dialog">
+  <div class="dlg">
+    <div class="undo-history-head">
+      <div>
+        <h2>🕘 Historique des actions</h2>
+        <small>Les 20 dernières modifications de la base sont conservées.</small>
+      </div>
+      <button id="undoHistoryClose" type="button" class="secondary">Fermer</button>
+    </div>
+
+    <div class="undo-history-quick">
+      <button id="undoFromHistory" type="button" class="secondary">↶ Annuler</button>
+      <button id="redoFromHistory" type="button" class="secondary">↷ Rétablir</button>
+    </div>
+
+    <div id="undoHistoryList"></div>
+    <small class="undo-history-note">Les photos de casiers ne font pas partie de cet historique. Une nouvelle modification après « Annuler » efface les étapes « Rétablir ».</small>
+  </div>
+</dialog>
 
 <dialog id="consumptionDialog" class="history-dialog">
   <div class="dlg history-dialog-inner">
@@ -2273,11 +3550,12 @@ header{
     </div>
 
     <div id="consumptionTypes" class="consumption-types"></div>
-    <div id="consumptionList" class="consumption-list"></div>
 
     <button type="button" id="openConsumedRanking" class="ranking-open">
       🏆 Classement des vins bus
     </button>
+
+    <div id="consumptionList" class="consumption-list"></div>
   </section>
   </div>
 </dialog>
@@ -2320,17 +3598,36 @@ header{
 
 <dialog id="configDialog" class="config-dialog">
   <div class="dlg">
-    <h2 id="configTitle">Configurer mes caves</h2>
-    <p class="config-intro">Choisis le nombre de caves, puis donne à chacune un nom, un code court et sa structure.</p>
+    <h2 id="configTitle" tabindex="-1">Configurer mes caves</h2>
+    <p class="config-intro">Choisis le nombre de caves, puis donne à chacune un nom, un code court et sa structure. Pour une cave utilisée uniquement en vrac, mets <b>0 casier / 0 ligne / 0 bouteille par ligne</b>.</p>
     <label class="cave-count-label">Nombre de caves
       <input id="cfgCaveCount" type="number" min="1" max="12" inputmode="numeric" value="1">
     </label>
     <div id="cfgCavesList" class="cfg-caves-list"></div>
     <section class="module-config">
-      <b>Modules optionnels</b>
+      <b>Module général</b>
       <label><span><strong>💶 Vente</strong><small>Vendre des bouteilles, clients, bénéfices et historique.</small></span><input id="cfgModuleSales" type="checkbox"></label>
-      <label><span><strong>📦 Vrac</strong><small>Stocker des bouteilles hors casiers avec un emplacement écrit librement.</small></span><input id="cfgModuleBulk" type="checkbox"></label>
     </section>
+
+    <section class="stock-threshold-config">
+      <div class="stock-threshold-head">
+        <b>📦 Filtres de stock</b>
+        <small>Valeurs par défaut : 13+ · 6 à 12 · 1 à 5.</small>
+      </div>
+      <div class="stock-threshold-inputs">
+        <label>Faible à partir de
+          <input id="cfgStockLow" type="number" min="1" max="997" inputmode="numeric" value="1">
+        </label>
+        <label>Moyen à partir de
+          <input id="cfgStockMedium" type="number" min="2" max="998" inputmode="numeric" value="6">
+        </label>
+        <label>Moyen jusqu’à
+          <input id="cfgStockHigh" type="number" min="3" max="999" inputmode="numeric" value="12">
+        </label>
+      </div>
+      <small class="stock-threshold-example" id="stockThresholdPreview">1 à 5 · 6 à 12 · 13+</small>
+    </section>
+
     <div id="configCapacity" class="config-capacity"></div>
     <div id="configError" class="config-error" hidden></div>
     <div class="config-note">Tu peux agrandir librement. Une cave ne peut être supprimée ou réduite que si les emplacements concernés sont vides.</div>
@@ -2340,7 +3637,7 @@ header{
 
 <dialog id="addDialog">
   <div class="dlg add-dlg">
-    <h2>Ajouter une bouteille</h2>
+    <h2 id="addDialogTitle" tabindex="-1">Ajouter une bouteille</h2>
     <p id="addHint">Recherche un vin déjà présent dans ta base ou crée une nouvelle référence.</p>
 
     <label class="add-search-label">
@@ -2366,19 +3663,23 @@ header{
     <h2>🎤 Ajouter par la voix</h2>
 
     <div class="voice-instruction">
-      <b>Dites dans cet ordre :</b>
-      <div class="voice-order">
-        <span>1. Domaine</span>
-        <span>2. Cuvée</span>
-        <span>3. Année</span>
-        <span>4. Prix</span>
+      <b>6 mots-clés, dans l’ordre que tu veux :</b>
+      <div class="voice-order voice-order-six">
+        <span>Domaine</span>
+        <span>Cuvée</span>
+        <span>Année</span>
+        <span>Prix</span>
+        <span>Couleur</span>
+        <span>Format</span>
       </div>
-      <p>Exemple :</p>
-      <strong>« Domaine Clos Marie, cuvée Simon, année 2021, prix 22 euros »</strong>
+      <p>Exemples :</p>
+      <strong>« Domaine Pieropan, couleur blanc, cuvée Soave Classico »</strong>
+      <strong>« Prix 12 euros, année 2021, format 75 cl »</strong>
+      <small>Chaque valeur doit être précédée de son mot-clé. Les informations reconnues restent dans les champs entre deux dictées. Le format est 75 cl par défaut. La maturité ne se saisit pas par la voix.</small>
     </div>
 
     <button type="button" id="voiceStart" class="voice-start">🎤 Commencer la dictée</button>
-    <div id="voiceStatus" class="voice-status">Appuyez sur le micro puis dictez les 4 informations.</div>
+    <div id="voiceStatus" class="voice-status">Dicte une ou plusieurs informations avec leur mot-clé. Le format est déjà réglé sur 75 cl.</div>
 
     <div class="voice-transcript">
       <span>Transcription</span>
@@ -2390,6 +3691,16 @@ header{
       <label>Cuvée<input id="voiceCuvee"></label>
       <label>Année<input id="voiceYear" inputmode="numeric"></label>
       <label>Prix (€)<input id="voicePrice" inputmode="decimal"></label>
+      <label>Couleur
+        <select id="voiceColor">
+          <option value="">— À renseigner —</option>
+          <option value="Rouge">Rouge</option>
+          <option value="Blanc">Blanc</option>
+          <option value="Rosé">Rosé</option>
+          <option value="Effervescent">Effervescent</option>
+        </select>
+      </label>
+      <label>Format<input id="voiceFormat" value="75 cl"></label>
     </div>
 
     <div id="voiceMatch" class="voice-match" hidden></div>
@@ -2442,6 +3753,13 @@ header{
         <b id="viewMaturityStatus"></b>
         <div id="viewMaturityBar" class="maturity-bar four-zone"></div>
       </div>
+
+      <button type="button" id="searchMaturityGoogleAI" class="google-ai-maturity-btn">
+        🔎 Rechercher la maturité avec Google IA
+      </button>
+      <small id="googleAiMaturityHint" class="google-ai-maturity-hint">
+        Recherche approfondie · réponse limitée aux 2 années.
+      </small>
     </div>
 
     <div id="bottleEdit" hidden>
@@ -2471,6 +3789,7 @@ header{
       <button id="editAllBottles" class="primary">✏️ Éditer toutes les bouteilles</button>
       <button id="sellBottle" class="sell-btn">💶 Vendre</button>
       <button id="consumed" class="consumed-btn">🍷 Bue</button>
+      <button id="moveBottle" class="move-btn">📦 Déplacer</button>
       <button id="remove" class="danger">Sortir cette bouteille</button>
       <button id="cancel" class="secondary">Fermer</button>
     </div>
@@ -2508,6 +3827,32 @@ header{
   </div>
 </dialog>
 
+<dialog id="moveConfirmDialog" class="move-confirm-dialog">
+  <div class="dlg">
+    <h2>📦 Valider le déplacement</h2>
+    <p id="moveConfirmCount" class="where"></p>
+    <div id="moveConfirmList" class="move-confirm-list"></div>
+    <div class="dlgactions">
+      <button id="moveConfirmYes" type="button" class="primary">Confirmer le déplacement</button>
+      <button id="moveConfirmNo" type="button" class="secondary">Retour</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="moveBulkDialog" class="bulk-dialog">
+  <div class="dlg">
+    <h2>📦 Déplacer vers le vrac</h2>
+    <p class="where">Destination : <b id="moveBulkCave"></b></p>
+    <label class="wide">Emplacement (facultatif)
+      <input id="moveBulkLocation" maxlength="120" placeholder="Ex. Frigo, carton 2, étagère…">
+    </label>
+    <div class="dlgactions">
+      <button id="confirmMoveBulk" type="button" class="primary">Déplacer ici</button>
+      <button id="cancelMoveBulk" type="button" class="secondary">Retour</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="bulkAddDialog" class="bulk-dialog">
   <div class="dlg">
     <h2>📦 Ajouter en vrac</h2>
@@ -2535,6 +3880,7 @@ header{
     <div class="dlgactions bulk-actions">
       <button id="bulkActionDrink" class="consumed-btn">🍷 Bue</button>
       <button id="bulkActionSell" class="sell-btn">💶 Vendre</button>
+      <button id="bulkActionMove" class="move-btn">📦 Déplacer</button>
       <button id="bulkActionEdit" class="primary">✏️ Éditer le vin</button>
       <button id="bulkActionRemove" class="danger">Sortir sans vente</button>
       <button id="bulkActionClose" class="secondary">Fermer</button>
@@ -2544,7 +3890,7 @@ header{
 
 <dialog id="batchExitDialog" class="batch-exit-dialog">
   <div class="dlg"><h2>Sortie groupée</h2><p id="batchExitCount" class="where"></p><div id="batchExitList" class="batch-exit-list"></div>
-    <div class="dlgactions"><button id="batchSell" class="sell-btn">💶 Vendre la sélection</button><button id="batchRemove" class="danger">Sortir sans vente</button><button id="batchCancel" class="secondary">Annuler</button></div>
+    <div class="dlgactions"><button id="batchMove" class="move-btn">📦 Déplacer la sélection</button><button id="batchSell" class="sell-btn">💶 Vendre la sélection</button><button id="batchRemove" class="danger">Sortir sans vente</button><button id="batchCancel" class="secondary">Annuler</button></div>
   </div>
 </dialog>
 
@@ -2588,6 +3934,6 @@ header{
   </div>
 </dialog>
 
-<script src="app.js?v=2.9"></script>
+<script src="app.js?v=5.12"></script>
 </body>
 </html>
