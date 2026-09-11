@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4b0d1b">
-<title>Ma Cave à Vin – Configurable v5.12</title>
-<link rel="manifest" href="manifest.webmanifest?v=5.12">
+<title>Ma Cave à Vin – Configurable v6.13</title>
+<link rel="manifest" href="manifest.webmanifest?v=6.13">
 <style>:root{font-family:system-ui,-apple-system,sans-serif;background:#0d0b0b;color:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:#0d0b0b;color:#fff}
@@ -3345,11 +3345,658 @@ header .stock-filter.active{
   font-weight:800;
 }
 
+
+/* =========================================================
+   V6.0 — jauge de maturité dans le Vrac
+   ========================================================= */
+.bulk-maturity-gauge,
+.bulk-action-maturity-gauge{
+  display:block!important;
+  width:100%;
+  margin-top:7px!important;
+  opacity:1!important;
+}
+.bulk-card .bulk-maturity-gauge .maturity-gauge,
+.bulk-action-info .bulk-action-maturity-gauge .maturity-gauge{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:2px!important;
+  width:100%!important;
+  height:8px!important;
+  margin:0!important;
+  overflow:visible!important;
+  opacity:1!important;
+}
+.bulk-card .bulk-maturity-gauge .maturity-gauge i,
+.bulk-action-info .bulk-action-maturity-gauge .maturity-gauge i{
+  display:block!important;
+  height:8px!important;
+  opacity:1!important;
+}
+.bulk-card .bulk-maturity-gauge .maturity-cursor,
+.bulk-action-info .bulk-action-maturity-gauge .maturity-cursor{
+  z-index:3;
+}
+
+
+/* =========================================================
+   V6.1 — classement par prix unitaire
+   ========================================================= */
+.price-ranking-launcher{
+  margin:10px 0 12px;
+}
+.price-ranking-btn{
+  width:100%;
+  min-height:44px;
+  padding:10px 12px;
+  border:1px solid #514b4b;
+  border-radius:9px;
+  background:#2c2622;
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+}
+.price-ranking-launcher>small{
+  display:block;
+  margin-top:4px;
+  color:#999;
+  font-size:8px;
+  text-align:center;
+}
+.price-ranking-dialog{
+  width:min(94vw,620px);
+}
+.price-ranking-inner{
+  padding:14px;
+}
+.price-ranking-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.price-ranking-head h2{
+  margin:0;
+  font-size:16px;
+}
+.price-ranking-head small{
+  display:block;
+  margin-top:2px;
+  color:#aaa;
+  font-size:9px;
+}
+.price-ranking-head button{
+  flex:0 0 auto;
+  padding:8px 10px;
+  border:0;
+  border-radius:8px;
+}
+.price-ranking-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:72vh;
+  overflow:auto;
+}
+.price-ranking-row{
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  min-height:52px;
+  padding:7px 9px;
+  border:1px solid #4b4444;
+  border-radius:8px;
+}
+.price-ranking-rank{
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
+}
+.price-ranking-main{
+  min-width:0;
+}
+.price-ranking-main b,
+.price-ranking-main small{
+  display:block;
+}
+.price-ranking-main b{
+  font-size:11px;
+  line-height:1.15;
+}
+.price-ranking-main small{
+  margin-top:2px;
+  font-size:8px;
+  opacity:.78;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.price-ranking-row strong{
+  font-size:12px;
+  white-space:nowrap;
+}
+.price-ranking-empty{
+  padding:16px;
+  text-align:center;
+  color:#aaa;
+  font-size:10px;
+}
+
+
+/* =========================================================
+   V6.2 — classement prix individuel / prix du lot
+   ========================================================= */
+.price-ranking-mode{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:0 0 10px;
+}
+.price-ranking-mode button{
+  min-height:38px;
+  padding:7px 8px;
+  border:1px solid #514b4b;
+  border-radius:8px;
+  background:#2b2727;
+  color:#bbb;
+  font-size:10px;
+  font-weight:800;
+}
+.price-ranking-mode button.active{
+  background:#7a1837;
+  border-color:#a22b50;
+  color:#fff;
+}
+.price-ranking-main .price-ranking-calc{
+  margin-top:3px;
+  font-size:8px;
+  opacity:.9;
+}
+
+
+/* =========================================================
+   V6.3 — format dans le classement des prix
+   ========================================================= */
+.price-ranking-format{
+  display:inline-block!important;
+  width:max-content;
+  margin-top:4px!important;
+  padding:2px 6px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:999px;
+  background:rgba(0,0,0,.18);
+  color:#fff;
+  font-size:8px!important;
+  line-height:1.1;
+  font-weight:850!important;
+  opacity:1!important;
+}
+
+
+/* =========================================================
+   V6.4 — déplacement entre casiers de la même cave
+   ========================================================= */
+.move-banner-main{
+  flex:1 1 auto;
+  min-width:0;
+}
+.move-casier-choices{
+  display:flex!important;
+  flex-direction:row!important;
+  gap:5px!important;
+  margin-top:5px;
+  overflow-x:auto;
+  padding:1px 0 2px;
+  scrollbar-width:none;
+}
+.move-casier-choices[hidden]{
+  display:none!important;
+}
+.move-casier-choices::-webkit-scrollbar{
+  display:none;
+}
+.move-casier-choices button{
+  flex:0 0 auto!important;
+  min-height:31px!important;
+  padding:5px 8px!important;
+  border:1px solid #6689a8!important;
+  border-radius:7px!important;
+  background:#26394a!important;
+  color:#d7e5f1!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  white-space:nowrap;
+}
+.move-casier-choices button.active{
+  background:#527da4!important;
+  border-color:#9cc5e8!important;
+  color:#fff!important;
+}
+
+
+/* =========================================================
+   V6.5 — destinations visibles pendant un déplacement
+   ========================================================= */
+.move-destination-info{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:8px 0 6px;
+  padding:8px 10px;
+  border:1px solid #78a8d1;
+  border-radius:9px;
+  background:#172634;
+  color:#fff;
+}
+.move-destination-info[hidden]{
+  display:none!important;
+}
+.move-destination-info b{
+  font-size:11px;
+}
+.move-destination-info span{
+  font-size:9px;
+  color:#b8dfc2;
+  font-weight:800;
+  white-space:nowrap;
+}
+.move-casier-choices button{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:1px!important;
+}
+.move-casier-choices button b{
+  font-size:9px!important;
+}
+.move-casier-choices button small{
+  font-size:7px!important;
+  color:#b8dfc2!important;
+  line-height:1.1!important;
+}
+.move-mode .slot.empty.move-target{
+  background:#183021!important;
+  border:2px dashed #8ed49e!important;
+  opacity:1!important;
+}
+.move-mode .slot.empty.move-target .pos{
+  color:#d8f3df!important;
+  opacity:.9!important;
+}
+.move-mode .slot.empty.move-target .name{
+  color:#c9f0d2!important;
+  font-weight:900!important;
+}
+.move-mode .slot.occupied:not(.move-source){
+  opacity:.28!important;
+}
+
+
+/* =========================================================
+   V6.6 — casier destination clairement identifié
+   ========================================================= */
+#moveDestinationInfo.move-destination-info{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:10px 0 8px;
+  padding:10px 12px;
+  border:2px solid #82b7e4;
+  border-radius:10px;
+  background:#18314a;
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
+}
+#moveDestinationInfo.move-destination-info[hidden]{
+  display:none!important;
+}
+.move-destination-title{
+  font-size:13px;
+  font-weight:700;
+}
+.move-destination-title b{
+  font-size:14px;
+  color:#fff;
+}
+.move-destination-free{
+  flex:0 0 auto;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#1f5131;
+  color:#d8f7e0;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+
+/* =========================================================
+   V6.7 — destination casier réellement indépendante
+   ========================================================= */
+.move-mode #grid .slot .pos{
+  opacity:1!important;
+  font-weight:850!important;
+}
+.move-mode #grid .slot.empty.move-target .pos{
+  color:#dff6e4!important;
+}
+
+
+/* =========================================================
+   V6.8 — contrôle visuel du vrai casier destination
+   ========================================================= */
+.move-grid-marker{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-height:38px;
+  padding:7px 10px;
+  border:2px solid #86bce8;
+  border-radius:9px;
+  background:#17344d;
+  color:#fff;
+}
+.move-grid-marker b{
+  font-size:14px;
+  letter-spacing:.3px;
+}
+.move-grid-marker span{
+  padding:3px 7px;
+  border-radius:999px;
+  background:#215b36;
+  color:#dcf7e4;
+  font-size:9px;
+  font-weight:900;
+}
+
+\n/* =========================================================\n   V6.9 — grille de destination dédiée au déplacement\n   ========================================================= */\n.move-direct-panel{margin:10px 0 8px;padding:10px;border:2px solid #80b7e3;border-radius:11px;background:#142a3d}\n.move-direct-panel[hidden]{display:none!important}\n.move-direct-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}\n.move-direct-head b{font-size:14px}\n.move-direct-head span{padding:4px 7px;border-radius:999px;background:#205235;color:#d9f4df;font-size:9px;font-weight:900}\n.move-direct-grid{display:grid;grid-template-columns:repeat(var(--move-bpl,5),minmax(52px,1fr));gap:6px}\n.move-direct-slot{min-height:66px;padding:7px 5px;border:2px dashed #7fc58f;border-radius:9px;background:#1b3a25;color:#fff;text-align:left}\n.move-direct-slot b{display:block;font-size:9px;line-height:1.2}\n.move-direct-slot span{display:block;margin-top:5px;color:#ccefd4;font-size:8px;font-weight:800}\n.move-direct-empty{grid-column:1/-1;padding:14px;border-radius:8px;background:#2b2828;color:#bbb;text-align:center;font-size:10px}\nbody.move-mode #grid{display:none!important}\nbody.move-mode #moveDestinationInfo{display:none!important}\n
+
+/* =========================================================
+   V6.10 — fenêtre de destination pour les déplacements
+   ========================================================= */
+.move-slot-dialog{
+  width:min(96vw,680px);
+  max-height:92vh;
+}
+.move-slot-dlg{
+  padding:14px;
+}
+.move-slot-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.move-slot-head h2{
+  margin:0;
+  font-size:17px;
+}
+.move-slot-head .where{
+  margin:3px 0 0;
+}
+.move-slot-head>button{
+  flex:0 0 auto;
+  padding:8px 10px;
+  border:0;
+  border-radius:8px;
+}
+.move-slot-section{
+  margin-top:10px;
+}
+.move-slot-section>b{
+  display:block;
+  margin-bottom:6px;
+  font-size:10px;
+  color:#bbb;
+}
+.move-slot-caves,
+.move-slot-casiers{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding-bottom:2px;
+  scrollbar-width:none;
+}
+.move-slot-caves::-webkit-scrollbar,
+.move-slot-casiers::-webkit-scrollbar{
+  display:none;
+}
+.move-slot-caves button,
+.move-slot-casiers button{
+  flex:0 0 auto;
+  min-width:88px;
+  min-height:48px;
+  padding:7px 8px;
+  border:1px solid #5b5555;
+  border-radius:9px;
+  background:#2a2626;
+  color:#ddd;
+}
+.move-slot-caves button.active,
+.move-slot-casiers button.active{
+  border-color:#9cc9eb;
+  background:#315c7f;
+  color:#fff;
+  box-shadow:0 0 0 1px #fff inset;
+}
+.move-slot-caves b,
+.move-slot-caves span,
+.move-slot-caves small,
+.move-slot-casiers b,
+.move-slot-casiers small{
+  display:block;
+}
+.move-slot-caves b,
+.move-slot-casiers b{
+  font-size:10px;
+}
+.move-slot-caves span{
+  margin-top:1px;
+  font-size:8px;
+}
+.move-slot-caves small,
+.move-slot-casiers small{
+  margin-top:3px;
+  font-size:7px;
+  color:#bde7c7;
+}
+.move-slot-summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:11px 0 7px;
+  padding:8px 9px;
+  border:1px solid #6c9fc6;
+  border-radius:8px;
+  background:#19344b;
+}
+.move-slot-summary b{
+  font-size:12px;
+}
+.move-slot-summary span{
+  padding:3px 6px;
+  border-radius:999px;
+  background:#215b36;
+  color:#d8f6df;
+  font-size:8px;
+  font-weight:900;
+}
+.move-slot-grid{
+  display:grid;
+  grid-template-columns:repeat(var(--move-slot-bpl,5),minmax(52px,1fr));
+  gap:6px;
+  max-height:48vh;
+  overflow:auto;
+  padding:2px;
+}
+.move-slot-place{
+  min-height:68px;
+  padding:7px 5px;
+  border:2px dashed #86cf98;
+  border-radius:9px;
+  background:#1b3b26;
+  color:#fff;
+  text-align:left;
+}
+.move-slot-place b{
+  display:block;
+  font-size:9px;
+  line-height:1.2;
+}
+.move-slot-place span{
+  display:block;
+  margin-top:6px;
+  color:#ccefd4;
+  font-size:8px;
+  font-weight:900;
+}
+.move-slot-empty,
+.move-slot-no-casier{
+  grid-column:1/-1;
+  padding:14px;
+  border-radius:8px;
+  background:#292525;
+  color:#aaa;
+  text-align:center;
+  font-size:10px;
+}
+.move-slot-no-casier{
+  width:100%;
+}
+.move-slot-bottom{
+  margin-top:11px;
+}
+
+
+/* =========================================================
+   V6.11 — casier complet dans la fenêtre de déplacement
+   ========================================================= */
+.move-slot-grid{
+  align-items:stretch;
+}
+.move-slot-place{
+  position:relative;
+  min-height:118px!important;
+  height:118px!important;
+  padding:0!important;
+  overflow:hidden;
+  border-radius:11px!important;
+  text-align:left;
+}
+.move-slot-place.occupied{
+  border:0!important;
+  background:transparent!important;
+  cursor:default;
+  opacity:.72;
+}
+.move-slot-place.empty{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:8px!important;
+  border:2px dashed #86cf98!important;
+  background:#343131!important;
+  color:#fff!important;
+}
+.move-slot-place.empty small{
+  display:block;
+  margin-bottom:7px;
+  font-size:8px;
+  opacity:.8;
+}
+.move-slot-place.empty b{
+  display:block;
+  font-size:11px;
+}
+.move-slot-place.empty span{
+  display:block;
+  margin-top:6px;
+  color:#ccefd4;
+  font-size:8px;
+  font-weight:900;
+}
+.move-slot-vintage{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:900;
+}
+.move-slot-main{
+  position:absolute;
+  top:28px;
+  left:0;
+  right:0;
+  bottom:0;
+  display:block;
+  padding:8px 7px 8px;
+}
+.move-slot-main small{
+  display:block;
+  font-size:8px;
+  opacity:.72;
+  white-space:nowrap;
+}
+.move-slot-main b{
+  display:block;
+  margin-top:5px;
+  font-size:11px;
+  line-height:1.08;
+  overflow:hidden;
+}
+.move-slot-main em{
+  display:block;
+  margin-top:3px;
+  font-size:8px;
+  line-height:1.05;
+  font-style:normal;
+  opacity:.76;
+  overflow:hidden;
+}
+.move-slot-source{
+  box-shadow:0 0 0 2px #7db9e8 inset;
+}
+.move-slot-source-badge{
+  position:absolute;
+  z-index:5;
+  top:31px;
+  right:4px;
+  padding:2px 4px;
+  border-radius:5px;
+  background:#3d6f96;
+  color:#fff;
+  font-size:7px;
+  font-weight:900;
+}
+@media(max-width:430px){
+  .move-slot-grid{
+    gap:5px;
+  }
+  .move-slot-place{
+    min-height:110px!important;
+    height:110px!important;
+  }
+}
+
 </style>
 </head>
 <body>
 <header>
-  <span class="app-version">v5.12</span>
+  <span class="app-version">v6.13</span>
   <h1>🍷 Ma Cave à Vin</h1>
   <div class="topstats">
     <div class="metric"><b id="count">—</b><span>contenants</span></div>
@@ -3402,9 +4049,10 @@ header .stock-filter.active{
   </div>
 
   <section id="moveBanner" class="move-banner" hidden>
-    <div>
+    <div class="move-banner-main">
       <b id="moveBannerTitle">📦 Déplacer une bouteille</b>
       <span id="moveBannerText">Choisis une cave, un casier puis touche un emplacement libre.</span>
+      <div id="moveCasierChoices" class="move-casier-choices" hidden></div>
     </div>
     <div class="move-banner-actions">
       <button id="moveBannerToBulk" type="button" class="move-btn" hidden>📦 Vers Vrac</button>
@@ -3412,6 +4060,7 @@ header .stock-filter.active{
     </div>
   </section>
 
+  <div id="moveDestinationInfo" class="move-destination-info" hidden></div>
   <div id="grid"></div>
 
   <section id="bulkPanel" class="bulk-panel" hidden>
@@ -3421,6 +4070,13 @@ header .stock-filter.active{
       <button type="button" id="moveToBulk" class="move-btn" hidden>📦 Déplacer ici</button>
     </div>
     <div id="bulkList" class="bulk-list"></div>
+  </section>
+
+  <section class="price-ranking-launcher">
+    <button id="openPriceRanking" type="button" class="price-ranking-btn">
+      💶 Classement des vins par prix
+    </button>
+    <small>Prix unitaire par bouteille</small>
   </section>
 
   <section class="valuebox">
@@ -3482,6 +4138,25 @@ header .stock-filter.active{
 </main>
 
 
+
+<dialog id="priceRankingDialog" class="price-ranking-dialog">
+  <div class="dlg price-ranking-inner">
+    <div class="price-ranking-head">
+      <div>
+        <h2>💶 Classement des vins par prix</h2>
+        <small id="priceRankingSubtitle">Classement par prix unitaire décroissant</small>
+      </div>
+      <button id="priceRankingClose" type="button" class="secondary">Fermer</button>
+    </div>
+
+    <div class="price-ranking-mode" role="group" aria-label="Type de classement">
+      <button id="priceModeUnit" type="button" class="active">Prix individuel</button>
+      <button id="priceModeLot" type="button">Prix du lot</button>
+    </div>
+
+    <div id="priceRankingList" class="price-ranking-list"></div>
+  </div>
+</dialog>
 
 <dialog id="undoHistoryDialog" class="undo-history-dialog">
   <div class="dlg">
@@ -3827,6 +4502,40 @@ header .stock-filter.active{
   </div>
 </dialog>
 
+<dialog id="moveSlotDialog" class="move-slot-dialog">
+  <div class="dlg move-slot-dlg">
+    <div class="move-slot-head">
+      <div>
+        <h2>📦 Choisir la destination</h2>
+        <p id="moveSlotWine" class="where"></p>
+      </div>
+      <button id="moveSlotClose" type="button" class="secondary">Fermer</button>
+    </div>
+
+    <div class="move-slot-section">
+      <b>Cave de destination</b>
+      <div id="moveSlotCaves" class="move-slot-caves"></div>
+    </div>
+
+    <div class="move-slot-section">
+      <b>Casier</b>
+      <div id="moveSlotCasiers" class="move-slot-casiers"></div>
+    </div>
+
+    <div class="move-slot-summary">
+      <b id="moveSlotTitle">Destination</b>
+      <span id="moveSlotCount"></span>
+    </div>
+
+    <div id="moveSlotGrid" class="move-slot-grid"></div>
+
+    <div class="dlgactions move-slot-bottom">
+      <button id="moveSlotToBulk" type="button" class="move-btn">📦 Vers Vrac</button>
+      <button id="moveSlotCancel" type="button" class="secondary">Annuler le déplacement</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="moveConfirmDialog" class="move-confirm-dialog">
   <div class="dlg">
     <h2>📦 Valider le déplacement</h2>
@@ -3934,6 +4643,7 @@ header .stock-filter.active{
   </div>
 </dialog>
 
-<script src="app.js?v=5.12"></script>
+<script src="app.js?v=6.13"></script>
+\n\n
 </body>
 </html>

@@ -80,6 +80,9 @@ let activeCasier=1;
 let selected=null;
 let moveSource=null; // {items:[{type:'grid'|'bulk', key|id, refId}, ...]}
 let moveTargetKeys=new Set();
+let moveDestinationCasier=null;
+let moveSlotDialogCaveId='';
+let moveSlotDialogCasier=1;
 let pendingAddRefId='';
 let editScope=null; // 'single' | 'all' | 'new'
 let selectedEmptyKeys=new Set();
@@ -98,6 +101,7 @@ let voiceExactRefId='';
 let voiceSimilarRefId='';
 let dialogHistory=false;
 let preserveMoveOnNextPop=false;
+let priceRankingMode='unit';
 
 if(config){
   inv=buildInventory(config,inv);
@@ -1433,6 +1437,25 @@ function renderCaveTabs(s){
   scheduleTabCentering();
 }
 
+function setMoveDestinationCasier(n){
+  const cave=activeCave();
+  const target=Number(n);
+  if(!moveSource?.items?.length || !cave) return false;
+  if(!Number.isInteger(target) || target<1 || target>cave.casiers) return false;
+
+  moveDestinationCasier=target;
+  activeCasier=target;
+  render();
+  return true;
+}
+
+function displayedCasier(){
+  if(moveSource?.items?.length && Number.isInteger(moveDestinationCasier)){
+    return moveDestinationCasier;
+  }
+  return activeCasier;
+}
+
 function renderCasierTabs(s){
   const tabs=$('#casierTabs');
   const cave=activeCave();
@@ -1446,12 +1469,127 @@ function renderCasierTabs(s){
 
   tabs.hidden=false;
   const counts=s.byCaveCasier[cave.id]||{};
+  const moving=!!moveSource?.items?.length;
+  const shownCasier=displayedCasier();
   tabs.innerHTML=Array.from({length:cave.casiers},(_,i)=>{
     const c=i+1;
-    return `<button class="tab ${c===activeCasier?'active':''}" data-c="${c}"><b>Casier ${c}</b><small>${counts[c]||0} bt</small></button>`;
+    const free=inv.filter(x=>x.caveId===cave.id && x.casier===c && !x.refId).length;
+    const sub=moving
+      ? `${free} libre${free>1?'s':''}`
+      : `${counts[c]||0} bt`;
+    return `<button class="tab ${c===shownCasier?'active':''}" data-c="${c}"><b>Casier ${c}</b><small>${sub}</small></button>`;
   }).join('');
   scheduleTabCentering();
 }
+
+function isStandard75clFormat(format){
+  const raw=String(format||'').trim();
+  if(!raw) return true;
+
+  const f=normalizeSearchText(raw)
+    .replace(/,/g,'.')
+    .replace(/\s+/g,' ')
+    .trim();
+
+  return (
+    f==='75 cl' ||
+    f==='75cl' ||
+    f==='750 ml' ||
+    f==='750ml' ||
+    f==='0.75 l' ||
+    f==='0.75l' ||
+    f==='0.750 l' ||
+    f==='0.750l'
+  );
+}
+
+function priceRankingFormatLabel(r){
+  const format=String(r?.format||'').trim();
+  if(!format || isStandard75clFormat(format)) return '';
+  if(isMagnumFormat(format)) return 'Magnum';
+  return format;
+}
+
+function priceRankingItems(){
+  const counts=new Map();
+
+  inv.forEach(x=>{
+    if(!x?.refId || !ref(x.refId)) return;
+    counts.set(x.refId,(counts.get(x.refId)||0)+1);
+  });
+  bulk.forEach(x=>{
+    if(!x?.refId || !ref(x.refId)) return;
+    counts.set(x.refId,(counts.get(x.refId)||0)+1);
+  });
+
+  const items=refs
+    .filter(r=>r?.id && counts.get(r.id))
+    .map(r=>{
+      const count=counts.get(r.id)||0;
+      const unitPrice=Number(r.prix)||0;
+      return {
+        r,
+        count,
+        unitPrice,
+        lotPrice:unitPrice*count
+      };
+    });
+
+  return items.sort((a,b)=>{
+    const av=priceRankingMode==='lot' ? a.lotPrice : a.unitPrice;
+    const bv=priceRankingMode==='lot' ? b.lotPrice : b.unitPrice;
+
+    return (
+      bv-av ||
+      b.count-a.count ||
+      normalizeSearchText(a.r.domaine||'').localeCompare(normalizeSearchText(b.r.domaine||''),'fr') ||
+      normalizeSearchText(a.r.vin||'').localeCompare(normalizeSearchText(b.r.vin||''),'fr')
+    );
+  });
+}
+
+function renderPriceRanking(){
+  const list=$('#priceRankingList');
+  if(!list) return;
+
+  const unitMode=priceRankingMode!=='lot';
+  const unitBtn=$('#priceModeUnit');
+  const lotBtn=$('#priceModeLot');
+  if(unitBtn) unitBtn.classList.toggle('active',unitMode);
+  if(lotBtn) lotBtn.classList.toggle('active',!unitMode);
+
+  const subtitle=$('#priceRankingSubtitle');
+  if(subtitle){
+    subtitle.textContent=unitMode
+      ? 'Classement par prix unitaire décroissant'
+      : 'Classement par valeur totale du lot décroissante';
+  }
+
+  const items=priceRankingItems();
+  if(!items.length){
+    list.innerHTML='<div class="price-ranking-empty">Aucun vin en stock.</div>';
+    return;
+  }
+
+  list.innerHTML=items.map(({r,count,unitPrice,lotPrice},index)=>`
+    <div class="price-ranking-row wine-color ${wineClass(r.couleur)}">
+      <span class="price-ranking-rank">${index+1}</span>
+      <span class="price-ranking-main">
+        <b>${esc(r.vin||'Vin')}${r.millesime?` · ${esc(r.millesime)}`:''}</b>
+        <small>${esc(r.domaine||'')}${count>1?` · ×${count}`:''}</small>
+        ${priceRankingFormatLabel(r)?`<span class="price-ranking-format">${esc(priceRankingFormatLabel(r))}</span>`:''}
+        ${!unitMode ? `<small class="price-ranking-calc">${count} × ${euro(unitPrice)} = ${euro(lotPrice)}</small>` : ''}
+      </span>
+      <strong>${unitMode ? euro(unitPrice) : euro(lotPrice)}</strong>
+    </div>
+  `).join('');
+}
+
+function openPriceRanking(){
+  renderPriceRanking();
+  showDialog($('#priceRankingDialog'));
+}
+
 
 function renderStats(){
   const s=statsData();
@@ -2494,7 +2632,8 @@ function renderBulk(){
       <b>${esc(r.vin)}${r.millesime?` · ${esc(r.millesime)}`:''}</b>
       ${isMagnumFormat(r.format)?'<em class="magnum-badge bulk-magnum-badge">Magnum</em>':''}
       <span>${esc(r.domaine||'')}</span>
-      <small>📍 ${esc(bulkLocationLabel(sample.locationText))} · ${euro((Number(r.prix)||0)*items.length)}</small>
+      <small>${esc(bulkLocationLabel(sample.locationText))}</small>
+      ${maturityGaugeHtml(r)?`<span class="bulk-maturity-gauge">${maturityGaugeHtml(r)}</span>`:''}
     </button>`;
   }).join('');
 }
@@ -2566,7 +2705,7 @@ function openBulkGroup(id){
   bulkActionIds=ids;
   const r=ref(seed.refId),cave=caveById(seed.caveId);
   $('#bulkActionTitle').textContent=r?.vin||'Vin en vrac';
-  $('#bulkActionInfo').innerHTML=`<b>${esc(r?.vin||'Vin')}${r?.millesime?` · ${esc(r.millesime)}`:''}</b>${isMagnumFormat(r?.format)?'<em class="magnum-badge bulk-magnum-badge">Magnum</em>':''}<span>${esc(r?.domaine||'')}</span><small>${esc(cave?.code||'')} · 📍 ${esc(bulkLocationLabel(seed.locationText))} · ${ids.length} bouteille${ids.length>1?'s':''}</small>`;
+  $('#bulkActionInfo').innerHTML=`<b>${esc(r?.vin||'Vin')}${r?.millesime?` · ${esc(r.millesime)}`:''}</b>${isMagnumFormat(r?.format)?'<em class="magnum-badge bulk-magnum-badge">Magnum</em>':''}<span>${esc(r?.domaine||'')}</span><small>${esc(cave?.code||'')} · 📍 ${esc(bulkLocationLabel(seed.locationText))} · ${ids.length} bouteille${ids.length>1?'s':''}</small>${maturityGaugeHtml(r)?`<span class="bulk-action-maturity-gauge">${maturityGaugeHtml(r)}</span>`:''}`;
   $('#bulkActionQty').max=ids.length;
   $('#bulkActionQty').value=ids.length;
   $('#bulkActionSell').hidden=!moduleEnabled('sales');
@@ -2719,6 +2858,7 @@ function updateMoveBanner(){
   if(sources.length!==needed){
     moveSource=null;
     moveTargetKeys.clear();
+    moveDestinationCasier=null;
     banner.hidden=true;
     document.body.classList.remove('move-mode');
     return;
@@ -2736,11 +2876,31 @@ function updateMoveBanner(){
   banner.hidden=false;
   document.body.classList.add('move-mode');
 
+  const cave=activeCave();
+
   const bulkButton=$('#moveBannerToBulk');
   if(bulkButton){
     bulkButton.hidden=!moduleEnabled('bulk');
-    const cave=activeCave();
     bulkButton.textContent=cave ? `📦 Vers Vrac ${cave.code}` : '📦 Vers Vrac';
+  }
+
+  const casierChoices=$('#moveCasierChoices');
+  if(casierChoices){
+    if(cave && cave.casiers>0){
+      casierChoices.hidden=false;
+      const shownCasier=displayedCasier();
+      casierChoices.innerHTML=Array.from({length:cave.casiers},(_,i)=>{
+        const n=i+1;
+        const free=inv.filter(x=>x.caveId===cave.id && x.casier===n && !x.refId).length;
+        return `<button type="button" class="${n===shownCasier?'active':''}" data-move-casier="${n}">
+          <b>Casier ${n}</b>
+          <small>${free} libre${free>1?'s':''}</small>
+        </button>`;
+      }).join('');
+    }else{
+      casierChoices.hidden=true;
+      casierChoices.innerHTML='';
+    }
   }
 
   $('#moveBannerTitle').textContent=needed===1
@@ -2764,6 +2924,7 @@ function updateMoveBanner(){
 function finishMoveMode(message){
   moveSource=null;
   moveTargetKeys.clear();
+  moveDestinationCasier=null;
   selected=null;
   clearEmptySelection();
   clearOccupiedSelection();
@@ -2776,6 +2937,7 @@ function finishMoveMode(message){
 function cancelMoveMode(){
   moveSource=null;
   moveTargetKeys.clear();
+  moveDestinationCasier=null;
   selected=null;
   clearEmptySelection();
   clearOccupiedSelection();
@@ -2789,6 +2951,7 @@ function beginMoveFromItems(items,sourceDialog=null){
 
   moveSource={items:descriptors};
   moveTargetKeys.clear();
+  moveDestinationCasier=activeCasier;
 
   clearEmptySelection();
   clearOccupiedSelection();
@@ -2935,6 +3098,146 @@ function confirmMoveTargets(){
   const targets=validMoveTargets();
   if($('#moveConfirmDialog').open) $('#moveConfirmDialog').close();
   moveSourcesToGrid(targets);
+}
+
+function renderMoveSlotDialog(){
+  if(!moveSource?.items?.length) return;
+
+  let cave=caveById(moveSlotDialogCaveId);
+  if(!cave){
+    cave=activeCave();
+    moveSlotDialogCaveId=cave?.id||'';
+  }
+  if(!cave) return;
+
+  const sources=moveSourceItems();
+  const first=sources[0]?.ref;
+  const needed=moveSourceCount();
+
+  $('#moveSlotWine').textContent=needed===1
+    ? `${first?.vin||'Vin'}${first?.millesime?` · ${first.millesime}`:''}`
+    : `${needed} bouteilles à déplacer`;
+
+  $('#moveSlotCaves').innerHTML=config.caves.map(c=>{
+    const free=inv.filter(x=>x.caveId===c.id && !x.refId).length;
+    return `<button type="button"
+      class="${c.id===cave.id?'active':''}"
+      data-move-slot-cave="${esc(c.id)}">
+      <b>${esc(c.code)}</b>
+      <span>${esc(c.name)}</span>
+      <small>${free} place${free>1?'s':''} libre${free>1?'s':''}</small>
+    </button>`;
+  }).join('');
+
+  const casiers=Number(cave.casiers)||0;
+
+  if(casiers<=0){
+    moveSlotDialogCasier=0;
+    $('#moveSlotCasiers').innerHTML='<div class="move-slot-no-casier">Cette cave est configurée uniquement en Vrac.</div>';
+    $('#moveSlotTitle').textContent=`${cave.code} · Vrac uniquement`;
+    $('#moveSlotCount').textContent='';
+    $('#moveSlotGrid').innerHTML='<div class="move-slot-empty">Aucun casier dans cette cave.</div>';
+    $('#moveSlotToBulk').hidden=cave.bulkEnabled===false;
+    return;
+  }
+
+  if(!Number.isInteger(moveSlotDialogCasier) ||
+     moveSlotDialogCasier<1 ||
+     moveSlotDialogCasier>casiers){
+    moveSlotDialogCasier=1;
+  }
+
+  $('#moveSlotCasiers').innerHTML=Array.from({length:casiers},(_,i)=>{
+    const n=i+1;
+    const free=inv.filter(x=>x.caveId===cave.id && Number(x.casier)===n && !x.refId).length;
+    return `<button type="button"
+      class="${n===moveSlotDialogCasier?'active':''}"
+      data-move-slot-casier="${n}">
+      <b>Casier ${n}</b>
+      <small>${free} libre${free>1?'s':''}</small>
+    </button>`;
+  }).join('');
+
+  const slots=inv
+    .filter(x=>
+      x.caveId===cave.id &&
+      Number(x.casier)===moveSlotDialogCasier
+    )
+    .sort((a,b)=>
+      Number(a.ligne)-Number(b.ligne) ||
+      Number(a.position)-Number(b.position)
+    );
+
+  const freeCount=slots.filter(x=>!x.refId).length;
+
+  $('#moveSlotTitle').textContent=`${cave.code} · Casier ${moveSlotDialogCasier}`;
+  $('#moveSlotCount').textContent=
+    `${freeCount} place${freeCount>1?'s':''} libre${freeCount>1?'s':''}`;
+
+  $('#moveSlotGrid').style.setProperty('--move-slot-bpl',String(cave.positions||5));
+
+  $('#moveSlotGrid').innerHTML=slots.length
+    ? slots.map(x=>{
+        const r=ref(x.refId);
+        const occupied=!!r;
+        const wc=occupied?wineClass(r.couleur):'';
+        const ac=occupied?ageClass(r.millesime):'';
+        const source=occupied && isMoveSourceGridSlot(x);
+
+        if(occupied){
+          return `
+            <div class="move-slot-place occupied ${source?'move-source':''}">
+              ${source?'<span class="move-slot-source-badge">Départ</span>':''}
+              <span class="move-slot-vintage age-color ${ac}">${esc(r.millesime||'Sans année')}</span>
+              <span class="move-slot-main wine-color ${wc}">
+                <small>C${Number(x.casier)} · L${Number(x.ligne)} · P${Number(x.position)}</small>
+                <b>${esc(r.vin||'Vin')}</b>
+                ${r.domaine?`<em>${esc(r.domaine)}</em>`:''}
+              </span>
+            </div>
+          `;
+        }
+
+        return `
+          <button type="button" class="move-slot-place empty"
+            data-move-slot-cave-id="${esc(x.caveId)}"
+            data-move-slot-casier-id="${Number(x.casier)}"
+            data-move-slot-line="${Number(x.ligne)}"
+            data-move-slot-pos="${Number(x.position)}">
+            <small>C${Number(x.casier)} · L${Number(x.ligne)} · P${Number(x.position)}</small>
+            <b>＋ Vide</b>
+            <span>Déplacer ici</span>
+          </button>
+        `;
+      }).join('')
+    : '<div class="move-slot-empty">Aucun emplacement configuré dans ce casier.</div>';
+
+  $('#moveSlotToBulk').hidden=cave.bulkEnabled===false;
+}
+
+function openMoveSlotDialog(caveId=activeCaveId,casier=1){
+  if(!moveSource?.items?.length) return;
+
+  const cave=caveById(caveId)||activeCave();
+  if(!cave) return;
+
+  moveSlotDialogCaveId=cave.id;
+
+  const max=Number(cave.casiers)||0;
+  const n=Number(casier);
+  moveSlotDialogCasier=max>0
+    ? (Number.isInteger(n)&&n>=1&&n<=max ? n : 1)
+    : 0;
+
+  renderMoveSlotDialog();
+
+  const d=$('#moveSlotDialog');
+  if(!d.open) d.showModal();
+}
+
+function closeMoveSlotDialog(){
+  const d=$('#moveSlotDialog');
+  if(d?.open) d.close();
 }
 
 function openMoveToBulk(){
@@ -3144,8 +3447,20 @@ function render(){
   if(!config) return;
   if(!caveById(activeCaveId)) activeCaveId=config.caves[0].id;
   const activeDef=activeCave();
-  if(activeDef.casiers===0) activeCasier=0;
-  else if(activeCasier<1 || activeCasier>activeDef.casiers) activeCasier=1;
+  if(activeDef.casiers===0){
+    activeCasier=0;
+    if(moveSource?.items?.length) moveDestinationCasier=0;
+  }else{
+    if(activeCasier<1 || activeCasier>activeDef.casiers) activeCasier=1;
+    if(moveSource?.items?.length){
+      if(!Number.isInteger(moveDestinationCasier) ||
+         moveDestinationCasier<1 ||
+         moveDestinationCasier>activeDef.casiers){
+        moveDestinationCasier=activeCasier;
+      }
+      activeCasier=moveDestinationCasier;
+    }
+  }
 
   selectedEmptyKeys.forEach(key=>{
     const x=inv.find(p=>slotKey(p)===key);
@@ -3166,17 +3481,48 @@ function render(){
   const g=$('#grid');
   g.style.setProperty('--bpl',cave.positions);
   g.innerHTML='';
+  const shownCasier=displayedCasier();
+
+  const moveInfo=$('#moveDestinationInfo');
+  if(moveInfo){
+    if(moveSource?.items?.length && cave.casiers>0 && activeCasier>0){
+      const freeCount=inv.filter(x=>
+        x.caveId===activeCaveId &&
+        x.casier===shownCasier &&
+        !x.refId
+      ).length;
+
+      moveInfo.hidden=false;
+      moveInfo.style.display='flex';
+      moveInfo.innerHTML=`
+        <span class="move-destination-title">Destination : <b>${esc(cave.code)} · Casier ${shownCasier}</b></span>
+        <span class="move-destination-free">${freeCount} place${freeCount>1?'s':''} libre${freeCount>1?'s':''}</span>
+      `;
+    }else{
+      moveInfo.hidden=true;
+      moveInfo.style.display='none';
+      moveInfo.innerHTML='';
+    }
+  }
 
   if(cave.casiers===0&&cave.lignes===0&&cave.positions===0){
     g.innerHTML='<div class="bulk-only-grid-message"><b>📦 Cave en vrac uniquement</b><span>Aucun casier n’est configuré pour cette cave.</span></div>';
   }
 
-  inv.filter(x=>x.caveId===activeCaveId && x.casier===activeCasier).forEach(x=>{
+  if(moveSource?.items?.length && cave.casiers>0){
+    const freeCount=inv.filter(x=>x.caveId===activeCaveId && x.casier===shownCasier && !x.refId).length;
+    const marker=document.createElement('div');
+    marker.className='move-grid-marker';
+    marker.innerHTML=`<b>CASIER ${shownCasier}</b><span>${freeCount} place${freeCount>1?'s':''} libre${freeCount>1?'s':''}</span>`;
+    g.appendChild(marker);
+  }
+
+  inv.filter(x=>x.caveId===activeCaveId && x.casier===shownCasier).forEach(x=>{
     const r=ref(x.refId);
     const hay=r?[r.vin,r.domaine,r.millesime,r.couleur,r.format,x.emplacement].join(' ').toLowerCase():'';
     const b=document.createElement('button');
     b.type='button';
-    b.dataset.line=x.ligne; b.dataset.pos=x.position;
+    b.dataset.casier=shownCasier; b.dataset.line=x.ligne; b.dataset.pos=x.position;
     const isMultiSelected=!r && selectedEmptyKeys.has(slotKey(x));
     const isExitSelected=!!r && selectedOccupiedKeys.has(slotKey(x));
     const isMoveSource=isMoveSourceGridSlot(x);
@@ -3191,7 +3537,7 @@ function render(){
         ${isMoveSource?'<span class="move-source-badge">Départ</span>':''}
         <span class="vintage-strip age-color ${ac}">${esc(r.millesime||'Sans année')}</span>
         <span class="slot-main wine-color ${wc}">
-          <span class="pos">L${x.ligne}·P${x.position}</span>
+          <span class="pos">${moveSource?.items?.length?`C${shownCasier}·`:``}L${x.ligne}·P${x.position}</span>
           ${isMagnumFormat(r.format)?'<span class="magnum-badge">Magnum</span>':''}
           <span class="name">${esc(r.vin)}</span>
           ${r.domaine?`<span class="domain">${esc(r.domaine)}</span>`:''}
@@ -3200,16 +3546,18 @@ function render(){
       `;
     }else{
       b.innerHTML=`
-        <span class="pos">L${x.ligne}·P${x.position}</span>
+        <span class="pos">${moveSource?.items?.length?`C${shownCasier}·`:``}L${x.ligne}·P${x.position}</span>
         <span class="name">${moveSource?.items?.length
-          ? (isMoveTargetSelected ? `✓ Destination ${[...moveTargetKeys].indexOf(slotKey(x))+1} · toucher pour valider` : '→ Déplacer ici')
+          ? (isMoveTargetSelected
+              ? `✓ Destination ${[...moveTargetKeys].indexOf(slotKey(x))+1} · toucher pour valider`
+              : `Libre · déplacer ici`)
           : (isMultiSelected?'✓ Sélectionnée':'＋ Vide')}</span>
       `;
     }
     b.addEventListener('click',()=>r?handleOccupiedSlotClick(x,r):handleEmptySlotClick(x));
     g.appendChild(b);
   });
-  $$('.tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.c)===activeCasier));
+  $$('.tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.c)===shownCasier));
   renderConsumption();
   if(moduleEnabled('sales')) renderSales();
 }
@@ -3227,7 +3575,7 @@ function closeDialogsFromPop(){
   const keepMove=preserveMoveOnNextPop && !!moveSource?.items?.length;
   preserveMoveOnNextPop=false;
 
-  [$('#dialog'),$('#addDialog'),$('#voiceDialog'),$('#rankingDialog'),$('#photoDialog'),$('#configDialog'),$('#batchExitDialog'),$('#saleDialog'),$('#bulkAddDialog'),$('#bulkActionDialog'),$('#consumptionDialog'),$('#salesHistoryDialog'),$('#drinkRatingDialog'),$('#moveBulkDialog'),$('#moveConfirmDialog'),$('#undoHistoryDialog')].forEach(d=>{ if(d.open) d.close(); });
+  [$('#dialog'),$('#addDialog'),$('#voiceDialog'),$('#rankingDialog'),$('#photoDialog'),$('#configDialog'),$('#batchExitDialog'),$('#saleDialog'),$('#bulkAddDialog'),$('#bulkActionDialog'),$('#consumptionDialog'),$('#salesHistoryDialog'),$('#drinkRatingDialog'),$('#moveBulkDialog'),$('#moveConfirmDialog'),$('#undoHistoryDialog'),$('#priceRankingDialog'),$('#moveSlotDialog')].forEach(d=>{ if(d.open) d.close(); });
   dialogHistory=false;
   selected=null;
   pendingAddRefId='';
@@ -3239,6 +3587,7 @@ function closeDialogsFromPop(){
   if(!keepMove){
     moveSource=null;
     moveTargetKeys.clear();
+    moveDestinationCasier=null;
   }
   voiceExactRefId='';
   voiceSimilarRefId='';
@@ -4595,6 +4944,14 @@ $$('.stock-filter').forEach(b=>b.addEventListener('click',()=>{
 
 $('#caveTabs').addEventListener('click',async e=>{
   const b=e.target.closest('.cave-tab');if(!b)return;
+
+  if(moveSource?.items?.length){
+    const caveId=b.dataset.caveId;
+    const cave=caveById(caveId);
+    openMoveSlotDialog(caveId,Number(cave?.casiers||0)>0?1:0);
+    return;
+  }
+
   activeCaveId=b.dataset.caveId;
   activeCasier=activeCave()?.casiers===0 ? 0 : 1;
   $('#search').value='';clearMaturityFilter();clearYearFilter();clearStockFilter();hideResultPanel();
@@ -4604,7 +4961,14 @@ $('#caveTabs').addEventListener('click',async e=>{
 $('#casierTabs').addEventListener('click',async e=>{
   const b=e.target.closest('.tab');
   if(!b) return;
-  activeCasier=Number(b.dataset.c);
+  const requestedCasier=Number(b.dataset.c);
+
+  if(moveSource?.items?.length){
+    openMoveSlotDialog(activeCaveId,requestedCasier);
+    return;
+  }
+
+  activeCasier=requestedCasier;
   $('#search').value='';
   clearMaturityFilter();
   clearYearFilter();
@@ -4613,6 +4977,95 @@ $('#casierTabs').addEventListener('click',async e=>{
   render();
   await refreshPhotoButtons();
 });
+
+$('#moveCasierChoices').addEventListener('click',e=>{
+  const b=e.target.closest('[data-move-casier]');
+  if(!b || !moveSource?.items?.length) return;
+
+  const n=Number(b.dataset.moveCasier);
+  const cave=activeCave();
+  if(!cave || !Number.isInteger(n) || n<1 || n>cave.casiers) return;
+
+  openMoveSlotDialog(activeCaveId,n);
+});
+
+$('#moveSlotCaves').addEventListener('click',e=>{
+  const b=e.target.closest('[data-move-slot-cave]');
+  if(!b || !moveSource?.items?.length) return;
+
+  const cave=caveById(b.dataset.moveSlotCave);
+  if(!cave) return;
+
+  moveSlotDialogCaveId=cave.id;
+  moveSlotDialogCasier=Number(cave.casiers||0)>0 ? 1 : 0;
+  renderMoveSlotDialog();
+});
+
+$('#moveSlotCasiers').addEventListener('click',e=>{
+  const b=e.target.closest('[data-move-slot-casier]');
+  if(!b || !moveSource?.items?.length) return;
+
+  const cave=caveById(moveSlotDialogCaveId);
+  const n=Number(b.dataset.moveSlotCasier);
+  if(!cave || !Number.isInteger(n) || n<1 || n>cave.casiers) return;
+
+  moveSlotDialogCasier=n;
+  renderMoveSlotDialog();
+});
+
+$('#moveSlotGrid').addEventListener('click',e=>{
+  const b=e.target.closest('.move-slot-place.empty[data-move-slot-line]');
+  if(!b || !moveSource?.items?.length) return;
+
+  const caveId=b.dataset.moveSlotCaveId;
+  const casier=Number(b.dataset.moveSlotCasierId);
+  const ligne=Number(b.dataset.moveSlotLine);
+  const position=Number(b.dataset.moveSlotPos);
+
+  const target=inv.find(x=>
+    x.caveId===caveId &&
+    Number(x.casier)===casier &&
+    Number(x.ligne)===ligne &&
+    Number(x.position)===position
+  );
+
+  if(!target || target.refId) return;
+
+  const single=moveSourceCount()===1;
+  if(single) closeMoveSlotDialog();
+
+  activeCaveId=caveId;
+  activeCasier=casier;
+  moveDestinationCasier=casier;
+
+  completeMoveToGrid(target);
+
+  if(!single && moveSource?.items?.length){
+    renderMoveSlotDialog();
+  }
+});
+
+$('#moveSlotToBulk').addEventListener('click',()=>{
+  if(!moveSource?.items?.length) return;
+
+  const cave=caveById(moveSlotDialogCaveId);
+  if(!cave || cave.bulkEnabled===false) return;
+
+  activeCaveId=cave.id;
+  activeCasier=Number(cave.casiers||0)>0 ? Math.max(1,moveSlotDialogCasier||1) : 0;
+  moveDestinationCasier=activeCasier;
+
+  closeMoveSlotDialog();
+  render();
+  openMoveToBulk();
+});
+
+$('#moveSlotClose').addEventListener('click',closeMoveSlotDialog);
+$('#moveSlotCancel').addEventListener('click',()=>{
+  closeMoveSlotDialog();
+  cancelMoveMode();
+});
+$('#moveSlotDialog').addEventListener('click',backdropClose);
 
 $('#openBulkAdd').addEventListener('click',openBulkAdd);
 $('#moveBannerToBulk').addEventListener('click',openMoveToBulk);
@@ -4670,6 +5123,18 @@ $('#bulkActionEdit').addEventListener('click',()=>{
 });
 $('#bulkActionClose').addEventListener('click',()=>requestClose($('#bulkActionDialog')));
 
+
+$('#openPriceRanking').addEventListener('click',openPriceRanking);
+$('#priceRankingClose').addEventListener('click',()=>requestClose($('#priceRankingDialog')));
+$('#priceRankingDialog').addEventListener('click',backdropClose);
+$('#priceModeUnit').addEventListener('click',()=>{
+  priceRankingMode='unit';
+  renderPriceRanking();
+});
+$('#priceModeLot').addEventListener('click',()=>{
+  priceRankingMode='lot';
+  renderPriceRanking();
+});
 
 $('#openConsumptionWindow').addEventListener('click',()=>{
   $('#consumptionSearch').value='';
@@ -4839,8 +5304,8 @@ async function saveBackupFileOnDevice(json,filename){
 
 function makeBackupPayload(){
   return {
-    version:51200,
-    app:'ma-cave-configurable-v5.12',
+    version:61300,
+    app:'ma-cave-configurable-v6.13',
     exportedAt:new Date().toISOString(),
     config,inv,refs,consumed,sales,bulk
   };
@@ -4931,7 +5396,7 @@ function applyRestoredBackup(d,sourceLabel='Sauvegarde'){
 $('#export').addEventListener('click',async ()=>{
   const payload=makeBackupPayload();
   const json=JSON.stringify(payload,null,2);
-  const filename='sauvegarde-ma-cave-configurable-v5-12.json';
+  const filename='sauvegarde-ma-cave-configurable-v6-13.json';
 
   // Copie 1 : sauvegarde interne du navigateur.
   let internalSaved=false;
@@ -5149,11 +5614,21 @@ $('#grid').addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-swipeStartX,dy=e.changedTouches[0].clientY-swipeStartY;
   swipeStartX=swipeStartY=null;
   if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.35)return;
-  if(dx<0&&activeCave()&&activeCasier<activeCave().casiers) activeCasier++;
-  else if(dx>0&&activeCasier>1) activeCasier--;
-  else return;
+  if(moveSource?.items?.length){
+    let next=displayedCasier();
+    if(dx<0&&activeCave()&&next<activeCave().casiers) next++;
+    else if(dx>0&&next>1) next--;
+    else return;
+    moveDestinationCasier=next;
+    activeCasier=next;
+  }else{
+    if(dx<0&&activeCave()&&activeCasier<activeCave().casiers) activeCasier++;
+    else if(dx>0&&activeCasier>1) activeCasier--;
+    else return;
+  }
   render(); refreshPhotoButtons();
-  document.querySelector('.tabs').scrollIntoView({behavior:'smooth',block:'start'});
+  const scrollTarget=moveSource?.items?.length ? $('#moveDestinationInfo') : document.querySelector('.tabs');
+  if(scrollTarget) scrollTarget.scrollIntoView({behavior:'smooth',block:'start'});
 },{passive:true});
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
