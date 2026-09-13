@@ -1489,10 +1489,10 @@ function renderCaveTabs(s){
 
   const total=s.occ.length;
   tabs.innerHTML=
-    caveButtons+
     `<button class="cave-tab all-caves-tab ${mainAllCaves?'active':''}" data-cave-id="${MAIN_ALL_CAVES}" title="Toutes les caves">
       <b>Toutes</b><span>caves</span><small>${total} bt</small>
-    </button>`;
+    </button>`+
+    caveButtons;
 
   scheduleTabCentering();
 }
@@ -1615,13 +1615,13 @@ function renderRankingCaveFilter(containerId,scope){
   `).join('');
 
   box.innerHTML=
-    buttons+
     `<button type="button"
       class="${scope===RANKING_ALL_CAVES?'active':''}"
       data-ranking-cave="${RANKING_ALL_CAVES}">
       <b>Toutes</b>
       <small>caves</small>
-    </button>`;
+    </button>`+
+    buttons;
 }
 
 function priceRankingLocations(refId,scope=priceRankingCaveScope){
@@ -1751,7 +1751,7 @@ function renderPriceRanking(){
 
     return `
       <button type="button"
-        class="price-ranking-row wine-color ${wineClass(r.couleur)}"
+        class="price-ranking-row ${unitMode?'price-ranking-unit':'price-ranking-lot'} wine-color ${wineClass(r.couleur)}"
         data-price-ref="${esc(r.id)}">
 
         <span class="price-ranking-rank">${index+1}</span>
@@ -1767,8 +1767,10 @@ function renderPriceRanking(){
             <strong class="price-stock-count">×${count}</strong>
           </span>
 
-          ${format?`<span class="price-ranking-format">${esc(format)}</span>`:''}
-          ${!unitMode ? `<small class="price-ranking-calc">${count} × ${euro(unitPrice)} = ${euro(lotPrice)}</small>` : ''}
+          ${(format || !unitMode) ? `<span class="price-ranking-bottom">
+            ${format?`<span class="price-ranking-format">${esc(format)}</span>`:''}
+            ${!unitMode ? `<small class="price-ranking-calc">${count} × ${euro(unitPrice)} = ${euro(lotPrice)}</small>` : ''}
+          </span>` : ''}
         </span>
 
         <span class="price-ranking-side">
@@ -2198,7 +2200,7 @@ function localMonthValue(d=new Date()){
 }
 
 function consumptionRange(){
-  const mode=$('#consumptionPeriod')?.value||'current';
+  const mode=$('#consumptionPeriod')?.value||'all';
   const now=new Date();
   let start=null,end=null;
 
@@ -2311,7 +2313,7 @@ function setConsumedComment(id,comment){
 
 
 function consumptionPeriodLabel(){
-  const mode=$('#consumptionPeriod')?.value||'current';
+  const mode=$('#consumptionPeriod')?.value||'all';
   const labels={
     current:'Ce mois',
     previous:'Mois précédent',
@@ -2451,6 +2453,7 @@ function renderConsumedRanking(){
 
   renderRankingCaveFilter('consumedRankingCaveFilter',consumedRankingCaveScope);
   $('#rankingPeriodLabel').textContent=`Tout l’historique · ${rankingCaveLabel(consumedRankingCaveScope)}`;
+
   const data=consumedRankingData();
 
   if(!data.length){
@@ -2460,12 +2463,21 @@ function renderConsumedRanking(){
 
   list.innerHTML=data.map((g,index)=>{
     const e=g.sample;
-    const score=Math.round(g.score);
+    const stock=rankingStockInfo(e,consumedRankingCaveScope);
+
+    // Total de référence pour la jauge = bouteilles déjà bues + bouteilles encore en stock.
+    // Exemple : 3 bues + 12 restantes = 3 bues sur 15.
+    const totalKnown=g.total+stock.count;
+    const drunkPct=totalKnown>0
+      ? Math.max(0,Math.min(100,(g.total/totalKnown)*100))
+      : 0;
+
+    const score=Math.max(-200,Math.min(200,Math.round(g.score)));
     const scoreClass=score>0?'positive':score<0?'negative':'neutral';
+
     const mill=e.millesime ? ` · ${esc(e.millesime)}` : '';
     const isMagnum=/magnum|150\s*cl|1[.,]5\s*l/i.test(String(e.format||''));
     const format=isMagnum ? ' · Magnum' : '';
-    const stock=rankingStockInfo(e,consumedRankingCaveScope);
 
     return `
       <button type="button"
@@ -2478,26 +2490,28 @@ function renderConsumedRanking(){
           <b>${esc(e.vin)}${mill}${format}</b>
           ${e.domaine?`<span class="ranking-domain">${esc(e.domaine)}</span>`:''}
 
-          <span class="ranking-counts">
-            ${g.total} bue${g.total>1?'s':''} · 👍👍 ${g.verygood} · 👍 ${g.good} · 👎 ${g.bad} · 👎👎 ${g.verybad} · neutre ${g.neutral}
-          </span>
-
-          <span class="ranking-stock-summary ${stock.count?'has-stock':'no-stock'}">
-            ${stock.count
-              ? `🍾 ${stock.count} restante${stock.count>1?'s':''} · toucher pour voir où`
-              : 'Stock : aucune bouteille restante'}
+          <span class="ranking-consumption-progress">
+            <span class="ranking-consumption-track"
+                  aria-label="${g.total} bouteille${g.total>1?'s':''} bue${g.total>1?'s':''} sur ${totalKnown}">
+              <span class="ranking-consumption-fill" style="width:${drunkPct}%"></span>
+              <span class="ranking-consumption-text">
+                ${g.total} bouteille${g.total>1?'s':''} bue${g.total>1?'s':''} sur ${totalKnown}
+              </span>
+            </span>
+            <small>${stock.count
+              ? `${stock.count} restante${stock.count>1?'s':''} · toucher pour voir le détail`
+              : 'Stock épuisé · toucher pour voir le bilan'}</small>
           </span>
         </span>
 
         <span class="ranking-score ${scoreClass}">
           <b>${score>0?'+':''}${score}%</b>
-          <small>${score<0?'score négatif':'score'}</small>
+          <small>score</small>
         </span>
       </button>
     `;
   }).join('');
 }
-
 function openRankingStockDialog(index){
   const data=consumedRankingData();
   const g=data[Number(index)];
@@ -2505,9 +2519,24 @@ function openRankingStockDialog(index){
 
   const e=g.sample;
   const stock=rankingStockInfo(e,consumedRankingCaveScope);
+  const score=Math.max(-200,Math.min(200,Math.round(g.score)));
 
   $('#rankingStockWine').textContent=
     `${e.vin||'Vin'}${e.millesime?` · ${e.millesime}`:''}${e.domaine?` · ${e.domaine}`:''}`;
+
+  $('#rankingVoteSummary').innerHTML=`
+    <div><span>Bouteilles bues</span><b>${g.total}</b></div>
+    <div><span>Points cumulés</span><b>${g.raw>0?'+':''}${g.raw}</b></div>
+    <div><span>Score</span><b class="${score>0?'positive':score<0?'negative':'neutral'}">${score>0?'+':''}${score}%</b></div>
+  `;
+
+  $('#rankingVoteBreakdown').innerHTML=`
+    <div><span>Très bon</span><small>+2</small><b>${g.verygood}</b></div>
+    <div><span>Bon</span><small>+1</small><b>${g.good}</b></div>
+    <div><span>Neutre</span><small>0</small><b>${g.neutral}</b></div>
+    <div><span>Mauvais</span><small>−1</small><b>${g.bad}</b></div>
+    <div><span>Très mauvais</span><small>−2</small><b>${g.verybad}</b></div>
+  `;
 
   $('#rankingStockSummary').textContent=stock.count
     ? `${stock.count} bouteille${stock.count>1?'s':''} actuellement en stock`
@@ -4051,6 +4080,41 @@ function render(){
   renderConsumption();
   if(moduleEnabled('sales')) renderSales();
 }
+
+function installNoAutoKeyboardOnDialogs(){
+  if(typeof HTMLDialogElement==='undefined') return;
+  if(HTMLDialogElement.prototype.__noAutoKeyboardInstalled) return;
+
+  const nativeShowModal=HTMLDialogElement.prototype.showModal;
+
+  HTMLDialogElement.prototype.showModal=function(...args){
+    const result=nativeShowModal.apply(this,args);
+
+    // Le navigateur mobile choisit parfois automatiquement le premier champ.
+    // On reprend immédiatement le focus sur la fenêtre elle-même.
+    if(!this.hasAttribute('tabindex')) this.setAttribute('tabindex','-1');
+
+    try{
+      this.focus({preventScroll:true});
+    }catch(e){}
+
+    const active=document.activeElement;
+    if(active && (
+      active.tagName==='INPUT' ||
+      active.tagName==='TEXTAREA' ||
+      active.tagName==='SELECT' ||
+      active.isContentEditable
+    )){
+      try{active.blur();}catch(e){}
+      try{this.focus({preventScroll:true});}catch(e){}
+    }
+
+    return result;
+  };
+
+  HTMLDialogElement.prototype.__noAutoKeyboardInstalled=true;
+}
+installNoAutoKeyboardOnDialogs();
 
 function pushDialogHistory(){
   if(dialogHistory) return;
@@ -5989,8 +6053,8 @@ async function saveBackupFileOnDevice(json,filename){
 
 function makeBackupPayload(){
   return {
-    version:62400,
-    app:'ma-cave-configurable-v6.24',
+    version:70800,
+    app:'ma-cave-configurable-v7.9',
     exportedAt:new Date().toISOString(),
     config,inv,refs,consumed,sales,bulk
   };
@@ -6081,7 +6145,7 @@ function applyRestoredBackup(d,sourceLabel='Sauvegarde'){
 $('#export').addEventListener('click',async ()=>{
   const payload=makeBackupPayload();
   const json=JSON.stringify(payload,null,2);
-  const filename='sauvegarde-ma-cave-configurable-v6-24.json';
+  const filename='sauvegarde-ma-cave-configurable-v7-4.json';
 
   // Copie 1 : sauvegarde interne du navigateur.
   let internalSaved=false;
