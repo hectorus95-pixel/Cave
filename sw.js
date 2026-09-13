@@ -1,5 +1,5 @@
-const C='ma-cave-configurable-v6-13';
-const A=['./','./index.html','./app.js?v=6.13','./manifest.webmanifest?v=6.13'];
+const C='ma-cave-configurable-v6-24';
+const A=['./','./index.html','./app.js?v=6.24','./manifest.webmanifest?v=6.24'];
 
 self.addEventListener('install',e=>{
   self.skipWaiting();
@@ -10,7 +10,7 @@ self.addEventListener('activate',e=>e.waitUntil(Promise.all([
   self.clients.claim(),
   caches.keys().then(keys=>Promise.all(
     keys.filter(k=>k.startsWith('ma-cave-configurable-')&&k!==C)
-        .map(k=>caches.delete(k))
+      .map(k=>caches.delete(k))
   ))
 ])));
 
